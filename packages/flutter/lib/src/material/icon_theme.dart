@@ -7,11 +7,8 @@ import 'package:flutter/widgets.dart';
 import 'icon_theme_data.dart';
 
 class IconTheme extends InheritedWidget {
-  IconTheme({
-    Key key,
-    this.data,
-    Widget child
-  }) : super(key: key, child: child) {
+  IconTheme({Key key, this.data, Widget child})
+      : super(key: key, child: child) {
     assert(data != null);
     assert(child != null);
   }

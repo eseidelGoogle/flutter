@@ -18,14 +18,14 @@ typedef Widget DialogBuilder(NavigatorState navigator);
 ///
 /// <https://www.google.com/design/spec/components/dialogs.html>
 class Dialog extends StatelessComponent {
-  Dialog({
-    Key key,
-    this.title,
-    this.titlePadding,
-    this.content,
-    this.contentPadding,
-    this.actions
-  }) : super(key: key);
+  Dialog(
+      {Key key,
+      this.title,
+      this.titlePadding,
+      this.content,
+      this.contentPadding,
+      this.actions})
+      : super(key: key);
 
   /// The (optional) title of the dialog is displayed in a large font at the top
   /// of the dialog.
@@ -56,70 +56,52 @@ class Dialog extends StatelessComponent {
   }
 
   Widget build(BuildContext context) {
-
     List<Widget> dialogBody = new List<Widget>();
 
     if (title != null) {
       EdgeDims padding = titlePadding;
-      if (padding == null)
-        padding = new EdgeDims.TRBL(24.0, 24.0, content == null ? 20.0 : 0.0, 24.0);
+      if (padding == null) padding =
+          new EdgeDims.TRBL(24.0, 24.0, content == null ? 20.0 : 0.0, 24.0);
       dialogBody.add(new Padding(
-        padding: padding,
-        child: new DefaultTextStyle(
-          style: Theme.of(context).text.title,
-          child: title
-        )
-      ));
+          padding: padding,
+          child: new DefaultTextStyle(
+              style: Theme.of(context).text.title, child: title)));
     }
 
     if (content != null) {
       EdgeDims padding = contentPadding;
-      if (padding == null)
-        padding = const EdgeDims.TRBL(20.0, 24.0, 24.0, 24.0);
+      if (padding == null) padding =
+          const EdgeDims.TRBL(20.0, 24.0, 24.0, 24.0);
       dialogBody.add(new Padding(
-        padding: padding,
-        child: new DefaultTextStyle(
-          style: Theme.of(context).text.subhead,
-          child: content
-        )
-      ));
+          padding: padding,
+          child: new DefaultTextStyle(
+              style: Theme.of(context).text.subhead, child: content)));
     }
 
     if (actions != null) {
       dialogBody.add(new ButtonTheme(
-        color: ButtonColor.accent,
-        child: new Container(
-          child: new Row(actions,
-            justifyContent: FlexJustifyContent.end
-          )
-        )
-      ));
+          color: ButtonColor.accent,
+          child: new Container(
+              child:
+                  new Row(actions, justifyContent: FlexJustifyContent.end))));
     }
 
     return new Center(
-      child: new Container(
-        margin: new EdgeDims.symmetric(horizontal: 40.0, vertical: 24.0),
-        child: new ConstrainedBox(
-          constraints: new BoxConstraints(minWidth: 280.0),
-          child: new Material(
-            elevation: 24,
-            color: _getColor(context),
-            type: MaterialType.card,
-            child: new IntrinsicWidth(
-              child: new Block(dialogBody)
-            )
-          )
-        )
-      )
-    );
+        child: new Container(
+            margin: new EdgeDims.symmetric(horizontal: 40.0, vertical: 24.0),
+            child: new ConstrainedBox(
+                constraints: new BoxConstraints(minWidth: 280.0),
+                child: new Material(
+                    elevation: 24,
+                    color: _getColor(context),
+                    type: MaterialType.card,
+                    child: new IntrinsicWidth(child: new Block(dialogBody))))));
   }
 }
 
 class _DialogRoute<T> extends PopupRoute<T> {
-  _DialogRoute({
-    Completer<T> completer,
-    this.child
-  }) : super(completer: completer);
+  _DialogRoute({Completer<T> completer, this.child})
+      : super(completer: completer);
 
   final Widget child;
 
@@ -127,20 +109,22 @@ class _DialogRoute<T> extends PopupRoute<T> {
   bool get barrierDismissable => true;
   Color get barrierColor => Colors.black54;
 
-  Widget buildPage(BuildContext context, PerformanceView performance, PerformanceView forwardPerformance) {
+  Widget buildPage(BuildContext context, PerformanceView performance,
+      PerformanceView forwardPerformance) {
     return child;
   }
 
-  Widget buildTransitions(BuildContext context, PerformanceView performance, PerformanceView forwardPerformance, Widget child) {
+  Widget buildTransitions(BuildContext context, PerformanceView performance,
+      PerformanceView forwardPerformance, Widget child) {
     return new FadeTransition(
-      performance: performance,
-      opacity: new AnimatedValue<double>(0.0, end: 1.0, curve: Curves.easeOut),
-      child: child
-    );
+        performance: performance,
+        opacity:
+            new AnimatedValue<double>(0.0, end: 1.0, curve: Curves.easeOut),
+        child: child);
   }
 }
 
-Future showDialog({ BuildContext context, Widget child }) {
+Future showDialog({BuildContext context, Widget child}) {
   Completer completer = new Completer();
   Navigator.push(context, new _DialogRoute(completer: completer, child: child));
   return completer.future;

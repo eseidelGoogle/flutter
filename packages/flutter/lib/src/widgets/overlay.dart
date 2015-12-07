@@ -6,18 +6,14 @@ import 'basic.dart';
 import 'framework.dart';
 
 class OverlayEntry {
-  OverlayEntry({
-    this.builder,
-    bool opaque: false
-  }) : _opaque = opaque;
+  OverlayEntry({this.builder, bool opaque: false}) : _opaque = opaque;
 
   final WidgetBuilder builder;
 
   bool get opaque => _opaque;
   bool _opaque;
-  void set opaque (bool value) {
-    if (_opaque == value)
-      return;
+  void set opaque(bool value) {
+    if (_opaque == value) return;
     _opaque = value;
     markNeedsBuild();
   }
@@ -37,14 +33,12 @@ class OverlayEntry {
 }
 
 class Overlay extends StatefulComponent {
-  Overlay({
-    Key key,
-    this.initialEntries
-  }) : super(key: key);
+  Overlay({Key key, this.initialEntries}) : super(key: key);
 
   final List<OverlayEntry> initialEntries;
 
-  static OverlayState of(BuildContext context) => context.ancestorStateOfType(OverlayState);
+  static OverlayState of(BuildContext context) =>
+      context.ancestorStateOfType(OverlayState);
 
   OverlayState createState() => new OverlayState();
 }
@@ -57,7 +51,7 @@ class OverlayState extends State<Overlay> {
     insertAll(config.initialEntries);
   }
 
-  void insert(OverlayEntry entry, { OverlayEntry above }) {
+  void insert(OverlayEntry entry, {OverlayEntry above}) {
     assert(entry._state == null);
     assert(above == null || (above._state == this && _entries.contains(above)));
     entry._state = this;
@@ -67,7 +61,7 @@ class OverlayState extends State<Overlay> {
     });
   }
 
-  void insertAll(Iterable<OverlayEntry> entries, { OverlayEntry above }) {
+  void insertAll(Iterable<OverlayEntry> entries, {OverlayEntry above}) {
     assert(above == null || (above._state == this && _entries.contains(above)));
     for (OverlayEntry entry in entries) {
       assert(entry._state == null);
@@ -97,8 +91,7 @@ class OverlayState extends State<Overlay> {
           result = true;
           break;
         }
-        if (entry.opaque)
-          break;
+        if (entry.opaque) break;
       }
       return true;
     });
@@ -111,11 +104,8 @@ class OverlayState extends State<Overlay> {
     for (int i = _entries.length - 1; i >= 0; --i) {
       OverlayEntry entry = _entries[i];
       backwardsChildren.add(new KeyedSubtree(
-        key: new ObjectKey(entry),
-        child: entry.builder(context)
-      ));
-      if (entry.opaque)
-        break;
+          key: new ObjectKey(entry), child: entry.builder(context)));
+      if (entry.opaque) break;
     }
 
     return new Stack(backwardsChildren.reversed.toList(growable: false));

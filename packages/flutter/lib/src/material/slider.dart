@@ -13,13 +13,8 @@ import 'constants.dart';
 import 'theme.dart';
 
 class Slider extends StatelessComponent {
-  Slider({
-    Key key,
-    this.value,
-    this.min: 0.0,
-    this.max: 1.0,
-    this.onChanged
-  }) : super(key: key) {
+  Slider({Key key, this.value, this.min: 0.0, this.max: 1.0, this.onChanged})
+      : super(key: key) {
     assert(value != null);
     assert(min != null);
     assert(max != null);
@@ -38,15 +33,15 @@ class Slider extends StatelessComponent {
 
   Widget build(BuildContext context) {
     return new _SliderRenderObjectWidget(
-      value: (value - min) / (max - min),
-      primaryColor: Theme.of(context).accentColor,
-      onChanged: onChanged != null ? _handleChanged : null
-    );
+        value: (value - min) / (max - min),
+        primaryColor: Theme.of(context).accentColor,
+        onChanged: onChanged != null ? _handleChanged : null);
   }
 }
 
 class _SliderRenderObjectWidget extends LeafRenderObjectWidget {
-  _SliderRenderObjectWidget({ Key key, this.value, this.primaryColor, this.onChanged })
+  _SliderRenderObjectWidget(
+      {Key key, this.value, this.primaryColor, this.onChanged})
       : super(key: key);
 
   final double value;
@@ -54,12 +49,10 @@ class _SliderRenderObjectWidget extends LeafRenderObjectWidget {
   final ValueChanged<double> onChanged;
 
   _RenderSlider createRenderObject() => new _RenderSlider(
-    value: value,
-    primaryColor: primaryColor,
-    onChanged: onChanged
-  );
+      value: value, primaryColor: primaryColor, onChanged: onChanged);
 
-  void updateRenderObject(_RenderSlider renderObject, _SliderRenderObjectWidget oldWidget) {
+  void updateRenderObject(
+      _RenderSlider renderObject, _SliderRenderObjectWidget oldWidget) {
     renderObject.value = value;
     renderObject.primaryColor = primaryColor;
     renderObject.onChanged = onChanged;
@@ -74,30 +67,30 @@ final Color _kInactiveTrackColor = Colors.grey[400];
 final Color _kActiveTrackColor = Colors.grey[500];
 
 class _RenderSlider extends RenderConstrainedBox {
-  _RenderSlider({
-    double value,
-    Color primaryColor,
-    this.onChanged
-  }) : _value = value,
-       _primaryColor = primaryColor,
-        super(additionalConstraints: const BoxConstraints.tightFor(width: _kTrackWidth + 2 * _kReactionRadius, height: 2 * _kReactionRadius)) {
+  _RenderSlider({double value, Color primaryColor, this.onChanged})
+      : _value = value,
+        _primaryColor = primaryColor,
+        super(
+            additionalConstraints: const BoxConstraints.tightFor(
+                width: _kTrackWidth + 2 * _kReactionRadius,
+                height: 2 * _kReactionRadius)) {
     assert(value != null && value >= 0.0 && value <= 1.0);
-    _drag = new HorizontalDragGestureRecognizer(router: FlutterBinding.instance.pointerRouter)
+    _drag = new HorizontalDragGestureRecognizer(
+        router: FlutterBinding.instance.pointerRouter)
       ..onStart = _handleDragStart
       ..onUpdate = _handleDragUpdate
       ..onEnd = _handleDragEnd;
     _reaction = new ValuePerformance<double>(
-      variable: new AnimatedValue<double>(_kThumbRadius, end: _kReactionRadius, curve: Curves.ease),
-      duration: kRadialReactionDuration
-    )..addListener(markNeedsPaint);
+        variable: new AnimatedValue<double>(_kThumbRadius,
+            end: _kReactionRadius, curve: Curves.ease),
+        duration: kRadialReactionDuration)..addListener(markNeedsPaint);
   }
 
   double get value => _value;
   double _value;
   void set value(double newValue) {
     assert(newValue != null && newValue >= 0.0 && newValue <= 1.0);
-    if (newValue == _value)
-      return;
+    if (newValue == _value) return;
     _value = newValue;
     markNeedsPaint();
   }
@@ -105,8 +98,7 @@ class _RenderSlider extends RenderConstrainedBox {
   Color get primaryColor => _primaryColor;
   Color _primaryColor;
   void set primaryColor(Color value) {
-    if (value == _primaryColor)
-      return;
+    if (value == _primaryColor) return;
     _primaryColor = value;
     markNeedsPaint();
   }
@@ -123,7 +115,8 @@ class _RenderSlider extends RenderConstrainedBox {
   void _handleDragStart(Point globalPosition) {
     if (onChanged != null) {
       _active = true;
-      _currentDragValue = (globalToLocal(globalPosition).x - _kReactionRadius) / _trackLength;
+      _currentDragValue =
+          (globalToLocal(globalPosition).x - _kReactionRadius) / _trackLength;
       onChanged(_currentDragValue.clamp(0.0, 1.0));
       _reaction.forward();
       markNeedsPaint();
@@ -149,8 +142,7 @@ class _RenderSlider extends RenderConstrainedBox {
   bool hitTestSelf(Point position) => true;
 
   void handleEvent(PointerEvent event, BoxHitTestEntry entry) {
-    if (event is PointerDownEvent && onChanged != null)
-      _drag.addPointer(event);
+    if (event is PointerDownEvent && onChanged != null) _drag.addPointer(event);
   }
 
   void paint(PaintingContext context, Offset offset) {
@@ -166,18 +158,24 @@ class _RenderSlider extends RenderConstrainedBox {
     double trackRight = trackLeft + trackLength;
     double trackActive = trackLeft + trackLength * value;
 
-    Paint primaryPaint = new Paint()..color = enabled ? _primaryColor : _kInactiveTrackColor;
-    Paint trackPaint = new Paint()..color = _active ? _kActiveTrackColor : _kInactiveTrackColor;
+    Paint primaryPaint = new Paint()
+      ..color = enabled ? _primaryColor : _kInactiveTrackColor;
+    Paint trackPaint = new Paint()
+      ..color = _active ? _kActiveTrackColor : _kInactiveTrackColor;
 
     double thumbRadius = enabled ? _kThumbRadius : _kThumbRadiusDisabled;
 
-    canvas.drawRect(new Rect.fromLTRB(trackLeft, trackTop, trackRight, trackBottom), trackPaint);
-    if (_value > 0.0)
-      canvas.drawRect(new Rect.fromLTRB(trackLeft, trackTop, trackActive, trackBottom), primaryPaint);
+    canvas.drawRect(
+        new Rect.fromLTRB(trackLeft, trackTop, trackRight, trackBottom),
+        trackPaint);
+    if (_value > 0.0) canvas.drawRect(
+        new Rect.fromLTRB(trackLeft, trackTop, trackActive, trackBottom),
+        primaryPaint);
 
     Point activeLocation = new Point(trackActive, trackCenter);
     if (_reaction.status != PerformanceStatus.dismissed) {
-      Paint reactionPaint = new Paint()..color = _primaryColor.withAlpha(kRadialReactionAlpha);
+      Paint reactionPaint = new Paint()
+        ..color = _primaryColor.withAlpha(kRadialReactionAlpha);
       canvas.drawCircle(activeLocation, _reaction.value, reactionPaint);
     }
     canvas.drawCircle(activeLocation, thumbRadius, primaryPaint);

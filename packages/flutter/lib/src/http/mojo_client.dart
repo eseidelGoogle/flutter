@@ -18,27 +18,26 @@ import 'response.dart';
 
 /// A `mojo`-based HTTP client
 class MojoClient {
-
   Future<Response> head(url, {Map<String, String> headers}) =>
-    _send("HEAD", url, headers);
+      _send("HEAD", url, headers);
 
   Future<Response> get(url, {Map<String, String> headers}) =>
-    _send("GET", url, headers);
+      _send("GET", url, headers);
 
-  Future<Response> post(url, {Map<String, String> headers, body,
-      Encoding encoding}) =>
-    _send("POST", url, headers, body, encoding);
+  Future<Response> post(url,
+          {Map<String, String> headers, body, Encoding encoding}) =>
+      _send("POST", url, headers, body, encoding);
 
-  Future<Response> put(url, {Map<String, String> headers, body,
-      Encoding encoding}) =>
-    _send("PUT", url, headers, body, encoding);
+  Future<Response> put(url,
+          {Map<String, String> headers, body, Encoding encoding}) =>
+      _send("PUT", url, headers, body, encoding);
 
-  Future<Response> patch(url, {Map<String, String> headers, body,
-      Encoding encoding}) =>
-    _send("PATCH", url, headers, body, encoding);
+  Future<Response> patch(url,
+          {Map<String, String> headers, body, Encoding encoding}) =>
+      _send("PATCH", url, headers, body, encoding);
 
   Future<Response> delete(url, {Map<String, String> headers}) =>
-    _send("DELETE", url, headers);
+      _send("DELETE", url, headers);
 
   Future<String> read(url, {Map<String, String> headers}) {
     return get(url, headers: headers).then((response) {
@@ -54,8 +53,8 @@ class MojoClient {
     });
   }
 
-  Future<Response> _send(String method, url,
-      Map<String, String> headers, [body, Encoding encoding]) async {
+  Future<Response> _send(String method, url, Map<String, String> headers,
+      [body, Encoding encoding]) async {
     mojo.UrlLoaderProxy loader = new mojo.UrlLoaderProxy.unbound();
     List<mojo.HttpHeader> mojoHeaders = <mojo.HttpHeader>[];
     headers?.forEach((String name, String value) {
@@ -81,7 +80,10 @@ class MojoClient {
       ByteData data = await mojo.DataPipeDrainer.drainHandle(response.body);
       Uint8List bodyBytes = new Uint8List.view(data.buffer);
       String bodyString = new String.fromCharCodes(bodyBytes);
-      return new Response(body: bodyString, bodyBytes: bodyBytes, statusCode: response.statusCode);
+      return new Response(
+          body: bodyString,
+          bodyBytes: bodyBytes,
+          statusCode: response.statusCode);
     } catch (e) {
       print("NetworkService unavailable $e");
       return new Response(statusCode: 500);
@@ -91,9 +93,9 @@ class MojoClient {
   }
 
   void _checkResponseSuccess(url, Response response) {
-    if (response.statusCode < 400)
-      return;
-    throw new Exception("Request to $url failed with status ${response.statusCode}.");
+    if (response.statusCode < 400) return;
+    throw new Exception(
+        "Request to $url failed with status ${response.statusCode}.");
   }
 
   void close() {}

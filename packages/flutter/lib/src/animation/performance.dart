@@ -22,12 +22,16 @@ abstract class PerformanceView {
 
   /// Update the given variable according to the current progress of the performance
   void updateVariable(Animatable variable);
+
   /// Calls the listener every time the progress of the performance changes
   void addListener(VoidCallback listener);
+
   /// Stop calling the listener every time the progress of the performance changes
   void removeListener(VoidCallback listener);
+
   /// Calls listener every time the status of the performance changes
   void addStatusListener(PerformanceStatusListener listener);
+
   /// Stops calling the listener every time the status of the performance changes
   void removeStatusListener(PerformanceStatusListener listener);
 
@@ -63,19 +67,21 @@ class AlwaysCompletePerformance extends PerformanceView {
   }
 
   // this performance never changes state
-  void addListener(VoidCallback listener) { }
-  void removeListener(VoidCallback listener) { }
-  void addStatusListener(PerformanceStatusListener listener) { }
-  void removeStatusListener(PerformanceStatusListener listener) { }
+  void addListener(VoidCallback listener) {}
+  void removeListener(VoidCallback listener) {}
+  void addStatusListener(PerformanceStatusListener listener) {}
+  void removeStatusListener(PerformanceStatusListener listener) {}
   PerformanceStatus get status => PerformanceStatus.completed;
   AnimationDirection get direction => AnimationDirection.forward;
   AnimationDirection get curveDirection => AnimationDirection.forward;
   double get progress => 1.0;
 }
-const AlwaysCompletePerformance alwaysCompletePerformance = const AlwaysCompletePerformance();
+
+const AlwaysCompletePerformance alwaysCompletePerformance =
+    const AlwaysCompletePerformance();
 
 class ReversePerformance extends PerformanceView
-  with LazyListenerMixin, LocalPerformanceStatusListenersMixin {
+    with LazyListenerMixin, LocalPerformanceStatusListenersMixin {
   ReversePerformance(this.masterPerformance);
 
   final PerformanceView masterPerformance;
@@ -88,6 +94,7 @@ class ReversePerformance extends PerformanceView
     didRegisterListener();
     masterPerformance.addListener(listener);
   }
+
   void removeListener(VoidCallback listener) {
     masterPerformance.removeListener(listener);
     didUnregisterListener();
@@ -106,29 +113,40 @@ class ReversePerformance extends PerformanceView
   }
 
   PerformanceStatus get status => _reverseStatus(masterPerformance.status);
-  AnimationDirection get direction => _reverseDirection(masterPerformance.direction);
-  AnimationDirection get curveDirection => _reverseDirection(masterPerformance.curveDirection);
+  AnimationDirection get direction =>
+      _reverseDirection(masterPerformance.direction);
+  AnimationDirection get curveDirection =>
+      _reverseDirection(masterPerformance.curveDirection);
   double get progress => 1.0 - masterPerformance.progress;
 
   PerformanceStatus _reverseStatus(PerformanceStatus status) {
     switch (status) {
-      case PerformanceStatus.forward: return PerformanceStatus.reverse;
-      case PerformanceStatus.reverse: return PerformanceStatus.forward;
-      case PerformanceStatus.completed: return PerformanceStatus.dismissed;
-      case PerformanceStatus.dismissed: return PerformanceStatus.completed;
+      case PerformanceStatus.forward:
+        return PerformanceStatus.reverse;
+      case PerformanceStatus.reverse:
+        return PerformanceStatus.forward;
+      case PerformanceStatus.completed:
+        return PerformanceStatus.dismissed;
+      case PerformanceStatus.dismissed:
+        return PerformanceStatus.completed;
     }
   }
 
   AnimationDirection _reverseDirection(AnimationDirection direction) {
     switch (direction) {
-      case AnimationDirection.forward: return AnimationDirection.reverse;
-      case AnimationDirection.reverse: return AnimationDirection.forward;
+      case AnimationDirection.forward:
+        return AnimationDirection.reverse;
+      case AnimationDirection.reverse:
+        return AnimationDirection.forward;
     }
   }
 }
 
 class MeanPerformance extends PerformanceView
-  with LazyListenerMixin, LocalPerformanceListenersMixin, LocalPerformanceStatusListenersMixin {
+    with
+        LazyListenerMixin,
+        LocalPerformanceListenersMixin,
+        LocalPerformanceStatusListenersMixin {
   MeanPerformance(this._performances) {
     assert(_performances != null);
   }
@@ -178,14 +196,10 @@ class MeanPerformance extends PerformanceView
           break;
       }
     }
-    if (direction > 1)
-      return PerformanceStatus.forward;
-    if (direction < 1)
-      return PerformanceStatus.reverse;
-    if (dismissed)
-      return PerformanceStatus.dismissed; // all performances were dismissed, or we had none
-    if (completed)
-      return PerformanceStatus.completed; // all performances were completed
+    if (direction > 1) return PerformanceStatus.forward;
+    if (direction < 1) return PerformanceStatus.reverse;
+    if (dismissed) return PerformanceStatus.dismissed; // all performances were dismissed, or we had none
+    if (completed) return PerformanceStatus.completed; // all performances were completed
     // Performances were conflicted.
     // Either we had an equal non-zero number of forwards and reverse
     // transitions, or we had both completed and dismissed transitions.
@@ -195,8 +209,7 @@ class MeanPerformance extends PerformanceView
   }
 
   AnimationDirection get direction {
-    if (_performances.isEmpty)
-      return AnimationDirection.forward;
+    if (_performances.isEmpty) return AnimationDirection.forward;
     int direction = 0;
     for (PerformanceView performance in _performances) {
       switch (performance.direction) {
@@ -208,18 +221,15 @@ class MeanPerformance extends PerformanceView
           break;
       }
     }
-    if (direction > 1)
-      return AnimationDirection.forward;
-    if (direction < 1)
-      return AnimationDirection.reverse;
+    if (direction > 1) return AnimationDirection.forward;
+    if (direction < 1) return AnimationDirection.reverse;
     // We had an equal (non-zero) number of forwards and reverse transitions.
     // Default to the first one.
     return _performances[0].direction;
   }
 
   AnimationDirection get curveDirection {
-    if (_performances.isEmpty)
-      return AnimationDirection.forward;
+    if (_performances.isEmpty) return AnimationDirection.forward;
     int curveDirection = 0;
     for (PerformanceView performance in _performances) {
       switch (performance.curveDirection) {
@@ -231,21 +241,18 @@ class MeanPerformance extends PerformanceView
           break;
       }
     }
-    if (curveDirection > 1)
-      return AnimationDirection.forward;
-    if (curveDirection < 1)
-      return AnimationDirection.reverse;
+    if (curveDirection > 1) return AnimationDirection.forward;
+    if (curveDirection < 1) return AnimationDirection.reverse;
     // We had an equal (non-zero) number of forwards and reverse transitions.
     // Default to the first one.
     return _performances[0].curveDirection;
   }
 
   double get progress {
-    if (_performances.isEmpty)
-      return 0.0;
+    if (_performances.isEmpty) return 0.0;
     double result = 0.0;
-    for (PerformanceView performance in _performances)
-      result += performance.progress;
+    for (PerformanceView performance
+        in _performances) result += performance.progress;
     return result / _performances.length;
   }
 }
@@ -263,8 +270,12 @@ enum _TrainHoppingMode { minimize, maximize }
 /// removed, it exposes a [dispose()] method. Call this method to shut this
 /// object down.
 class TrainHoppingPerformance extends PerformanceView
-  with EagerListenerMixin, LocalPerformanceListenersMixin, LocalPerformanceStatusListenersMixin {
-  TrainHoppingPerformance(this._currentTrain, this._nextTrain, { this.onSwitchedTrain }) {
+    with
+        EagerListenerMixin,
+        LocalPerformanceListenersMixin,
+        LocalPerformanceStatusListenersMixin {
+  TrainHoppingPerformance(this._currentTrain, this._nextTrain,
+      {this.onSwitchedTrain}) {
     assert(_currentTrain != null);
     if (_nextTrain != null) {
       if (_currentTrain.progress > _nextTrain.progress) {
@@ -279,8 +290,7 @@ class TrainHoppingPerformance extends PerformanceView
     }
     _currentTrain.addStatusListener(_statusChangeHandler);
     _currentTrain.addListener(_valueChangeHandler);
-    if (_nextTrain != null)
-      _nextTrain.addListener(_valueChangeHandler);
+    if (_nextTrain != null) _nextTrain.addListener(_valueChangeHandler);
     assert(_mode != null);
   }
 
@@ -310,7 +320,7 @@ class TrainHoppingPerformance extends PerformanceView
   AnimationDirection get direction => _currentTrain.direction;
   AnimationDirection get curveDirection => _currentTrain.curveDirection;
 
-  double _lastProgress;  
+  double _lastProgress;
   void _valueChangeHandler() {
     assert(_currentTrain != null);
     bool hop = false;
@@ -319,7 +329,7 @@ class TrainHoppingPerformance extends PerformanceView
         case _TrainHoppingMode.minimize:
           hop = _nextTrain.progress <= _currentTrain.progress;
           break;
-        case _TrainHoppingMode.maximize: 
+        case _TrainHoppingMode.maximize:
           hop = _nextTrain.progress >= _currentTrain.progress;
           break;
       }
@@ -337,8 +347,7 @@ class TrainHoppingPerformance extends PerformanceView
       _lastProgress = newProgress;
     }
     assert(_lastProgress != null);
-    if (hop && onSwitchedTrain != null)
-      onSwitchedTrain();
+    if (hop && onSwitchedTrain != null) onSwitchedTrain();
   }
 
   double get progress => _currentTrain.progress;
@@ -358,7 +367,10 @@ class TrainHoppingPerformance extends PerformanceView
 }
 
 class ProxyPerformance extends PerformanceView
-  with LazyListenerMixin, LocalPerformanceListenersMixin, LocalPerformanceStatusListenersMixin {
+    with
+        LazyListenerMixin,
+        LocalPerformanceListenersMixin,
+        LocalPerformanceStatusListenersMixin {
   ProxyPerformance([PerformanceView performance]) {
     _masterPerformance = performance;
     if (_masterPerformance == null) {
@@ -377,24 +389,20 @@ class ProxyPerformance extends PerformanceView
   PerformanceView get masterPerformance => _masterPerformance;
   PerformanceView _masterPerformance;
   void set masterPerformance(PerformanceView value) {
-    if (value == _masterPerformance)
-      return;
+    if (value == _masterPerformance) return;
     if (_masterPerformance != null) {
       _status = _masterPerformance.status;
       _direction = _masterPerformance.direction;
       _curveDirection = _masterPerformance.curveDirection;
       _progress = _masterPerformance.progress;
-      if (isListening)
-        didStopListening();
+      if (isListening) didStopListening();
     }
     _masterPerformance = value;
     if (_masterPerformance != null) {
-      if (isListening)
-        didStartListening();
-      if (_progress != _masterPerformance.progress)
-        notifyListeners();
-      if (_status != _masterPerformance.status)
-        notifyStatusListeners(_masterPerformance.status);
+      if (isListening) didStartListening();
+      if (_progress != _masterPerformance.progress) notifyListeners();
+      if (_status != _masterPerformance.status) notifyStatusListeners(
+          _masterPerformance.status);
       _status = null;
       _direction = null;
       _curveDirection = null;
@@ -420,14 +428,19 @@ class ProxyPerformance extends PerformanceView
     variable.setProgress(progress, curveDirection);
   }
 
-  PerformanceStatus get status => _masterPerformance != null ? _masterPerformance.status : _status;
-  AnimationDirection get direction => _masterPerformance != null ? _masterPerformance.direction : _direction;
-  AnimationDirection get curveDirection => _masterPerformance != null ? _masterPerformance.curveDirection : _curveDirection;
-  double get progress => _masterPerformance != null ? _masterPerformance.progress : _progress;
+  PerformanceStatus get status =>
+      _masterPerformance != null ? _masterPerformance.status : _status;
+  AnimationDirection get direction =>
+      _masterPerformance != null ? _masterPerformance.direction : _direction;
+  AnimationDirection get curveDirection => _masterPerformance != null
+      ? _masterPerformance.curveDirection
+      : _curveDirection;
+  double get progress =>
+      _masterPerformance != null ? _masterPerformance.progress : _progress;
 }
 
 class CurvedPerformance extends PerformanceView {
-  CurvedPerformance(this._performance, { this.curve, this.reverseCurve });
+  CurvedPerformance(this._performance, {this.curve, this.reverseCurve});
 
   final PerformanceView _performance;
 
@@ -442,6 +455,7 @@ class CurvedPerformance extends PerformanceView {
   void addListener(VoidCallback listener) {
     _performance.addListener(listener);
   }
+
   void removeListener(VoidCallback listener) {
     _performance.removeListener(listener);
   }
@@ -449,6 +463,7 @@ class CurvedPerformance extends PerformanceView {
   void addStatusListener(PerformanceStatusListener listener) {
     _performance.addStatusListener(listener);
   }
+
   void removeStatusListener(PerformanceStatusListener listener) {
     _performance.removeStatusListener(listener);
   }
@@ -462,12 +477,10 @@ class CurvedPerformance extends PerformanceView {
   AnimationDirection get curveDirection => _performance.curveDirection;
   double get progress {
     Curve activeCurve;
-    if (curveDirection == AnimationDirection.forward || reverseCurve == null)
-      activeCurve = curve;
-    else
-      activeCurve = reverseCurve;
-    if (activeCurve == null)
-      return _performance.progress;
+    if (curveDirection == AnimationDirection.forward ||
+        reverseCurve == null) activeCurve = curve;
+    else activeCurve = reverseCurve;
+    if (activeCurve == null) return _performance.progress;
     if (_performance.status == PerformanceStatus.dismissed) {
       assert(_performance.progress == 0.0);
       assert(activeCurve.transform(0.0).roundToDouble() == 0.0);
@@ -491,11 +504,13 @@ class CurvedPerformance extends PerformanceView {
 /// [fling] the timeline causing a physics-based simulation to take over the
 /// progression.
 class Performance extends PerformanceView
-  with EagerListenerMixin, LocalPerformanceListenersMixin, LocalPerformanceStatusListenersMixin {
-  Performance({ this.duration, double progress, this.debugLabel }) {
+    with
+        EagerListenerMixin,
+        LocalPerformanceListenersMixin,
+        LocalPerformanceStatusListenersMixin {
+  Performance({this.duration, double progress, this.debugLabel}) {
     _timeline = new SimulationStepper(_tick);
-    if (progress != null)
-      _timeline.value = progress.clamp(0.0, 1.0);
+    if (progress != null) _timeline.value = progress.clamp(0.0, 1.0);
   }
 
   /// A label that is used in the toString() output. Intended to aid with
@@ -530,13 +545,11 @@ class Performance extends PerformanceView
   bool get isAnimating => _timeline.isAnimating;
 
   PerformanceStatus get status {
-    if (!isAnimating && progress == 1.0)
-      return PerformanceStatus.completed;
-    if (!isAnimating && progress == 0.0)
-      return PerformanceStatus.dismissed;
-    return _direction == AnimationDirection.forward ?
-        PerformanceStatus.forward :
-        PerformanceStatus.reverse;
+    if (!isAnimating && progress == 1.0) return PerformanceStatus.completed;
+    if (!isAnimating && progress == 0.0) return PerformanceStatus.dismissed;
+    return _direction == AnimationDirection.forward
+        ? PerformanceStatus.forward
+        : PerformanceStatus.reverse;
   }
 
   /// Update the given varaible according to the current progress of this performance
@@ -579,38 +592,37 @@ class Performance extends PerformanceView
   /// damped spring) and initial velocity. If velocity is positive, the
   /// animation will complete, otherwise it will dismiss.
   Future fling({double velocity: 1.0, Force force}) {
-    if (force == null)
-      force = kDefaultSpringForce;
-    _direction = velocity < 0.0 ? AnimationDirection.reverse : AnimationDirection.forward;
+    if (force == null) force = kDefaultSpringForce;
+    _direction = velocity < 0.0
+        ? AnimationDirection.reverse
+        : AnimationDirection.forward;
     return _timeline.animateWith(force.release(progress, velocity));
   }
 
-  Future repeat({ double min: 0.0, double max: 1.0, Duration period }) {
-    if (period == null)
-      period = duration;
+  Future repeat({double min: 0.0, double max: 1.0, Duration period}) {
+    if (period == null) period = duration;
     return _timeline.animateWith(new _RepeatingSimulation(min, max, period));
   }
 
   PerformanceStatus _lastStatus = PerformanceStatus.dismissed;
   void _checkStatusChanged() {
     PerformanceStatus currentStatus = status;
-    if (currentStatus != _lastStatus)
-      notifyStatusListeners(status);
+    if (currentStatus != _lastStatus) notifyStatusListeners(status);
     _lastStatus = currentStatus;
   }
 
   void _updateCurveDirection() {
     if (status != _lastStatus) {
-      if (_lastStatus == PerformanceStatus.dismissed || _lastStatus == PerformanceStatus.completed)
-        _curveDirection = _direction;
+      if (_lastStatus == PerformanceStatus.dismissed ||
+          _lastStatus == PerformanceStatus.completed) _curveDirection =
+          _direction;
     }
   }
 
   Future _animateTo(double target) {
     Duration remainingDuration = duration * (target - _timeline.value).abs();
     _timeline.stop();
-    if (remainingDuration == Duration.ZERO)
-      return new Future.value();
+    if (remainingDuration == Duration.ZERO) return new Future.value();
     return _timeline.animateTo(target, duration: remainingDuration);
   }
 
@@ -625,30 +637,29 @@ class Performance extends PerformanceView
   }
 
   String toString() {
-    if (debugLabel != null)
-      return '$runtimeType at $progress for $debugLabel';
+    if (debugLabel != null) return '$runtimeType at $progress for $debugLabel';
     return '$runtimeType at $progress';
   }
 }
 
 /// An animation performance with an animated variable with a concrete type
 class ValuePerformance<T> extends Performance {
-  ValuePerformance({ this.variable, Duration duration, double progress }) :
-    super(duration: duration, progress: progress);
+  ValuePerformance({this.variable, Duration duration, double progress})
+      : super(duration: duration, progress: progress);
 
   AnimatedValue<T> variable;
   T get value => variable.value;
 
   void didTick(double t) {
-    if (variable != null)
-      variable.setProgress(progress, _curveDirection);
+    if (variable != null) variable.setProgress(progress, _curveDirection);
     super.didTick(t);
   }
 }
 
 class _RepeatingSimulation extends Simulation {
   _RepeatingSimulation(this.min, this.max, Duration period)
-    : _periodInSeconds = period.inMicroseconds.toDouble() / Duration.MICROSECONDS_PER_SECOND {
+      : _periodInSeconds = period.inMicroseconds.toDouble() /
+            Duration.MICROSECONDS_PER_SECOND {
     assert(_periodInSeconds > 0.0);
   }
 

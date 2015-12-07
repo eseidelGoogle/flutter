@@ -6,7 +6,7 @@ import 'basic.dart';
 import 'framework.dart';
 
 class Placeholder extends StatefulComponent {
-  Placeholder({ Key key }) : super(key: key);
+  Placeholder({Key key}) : super(key: key);
 
   PlaceholderState createState() => new PlaceholderState();
 }
@@ -15,16 +15,14 @@ class PlaceholderState extends State<Placeholder> {
   Widget get child => _child;
   Widget _child;
   void set child(Widget child) {
-    if (_child == child)
-      return;
+    if (_child == child) return;
     setState(() {
       _child = child;
     });
   }
 
   Widget build(BuildContext context) {
-    if (_child != null)
-      return child;
+    if (_child != null) return child;
     return new SizedBox(width: 0.0, height: 0.0);
   }
 }

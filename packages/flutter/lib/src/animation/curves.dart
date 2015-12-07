@@ -29,7 +29,7 @@ class Linear implements Curve {
 
 /// A curve that is 0.0 until start, then curved from 0.0 to 1.0 at end, then 1.0
 class Interval implements Curve {
-  const Interval(this.start, this.end, { this.curve: Curves.linear });
+  const Interval(this.start, this.end, {this.curve: Curves.linear});
 
   /// The smallest value for which this interval is 0.0
   final double start;
@@ -47,8 +47,7 @@ class Interval implements Curve {
     assert(end <= 1.0);
     assert(end >= start);
     t = ((t - start) / (end - start)).clamp(0.0, 1.0);
-    if (t == 0.0 || t == 1.0)
-      return t;
+    if (t == 0.0 || t == 1.0) return t;
     return curve.transform(t);
   }
 }
@@ -68,12 +67,10 @@ class Cubic implements Curve {
     while (true) {
       double midpoint = (start + end) / 2;
       double estimate = _evaluateCubic(a, c, midpoint);
-      if ((t - estimate).abs() < _kCubicErrorBound)
-        return _evaluateCubic(b, d, midpoint);
-      if (estimate < t)
-        start = midpoint;
-      else
-        end = midpoint;
+      if ((t - estimate).abs() <
+          _kCubicErrorBound) return _evaluateCubic(b, d, midpoint);
+      if (estimate < t) start = midpoint;
+      else end = midpoint;
     }
   }
 }
@@ -112,10 +109,8 @@ class BounceOutCurve implements Curve {
 class BounceInOutCurve implements Curve {
   const BounceInOutCurve();
   double transform(double t) {
-    if (t < 0.5)
-      return (1.0 - _bounce(1.0 - t)) * 0.5;
-    else
-      return _bounce(t * 2.0 - 1.0) * 0.5 + 0.5;
+    if (t < 0.5) return (1.0 - _bounce(1.0 - t)) * 0.5;
+    else return _bounce(t * 2.0 - 1.0) * 0.5 + 0.5;
   }
 }
 
@@ -126,7 +121,8 @@ class ElasticInCurve implements Curve {
   double transform(double t) {
     double s = period / 4.0;
     t = t - 1.0;
-    return -math.pow(2.0, 10.0 * t) * math.sin((t - s) * (math.PI * 2.0) / period);
+    return -math.pow(2.0, 10.0 * t) *
+        math.sin((t - s) * (math.PI * 2.0) / period);
   }
 }
 
@@ -136,7 +132,9 @@ class ElasticOutCurve implements Curve {
   final double period;
   double transform(double t) {
     double s = period / 4.0;
-    return math.pow(2.0, -10 * t) * math.sin((t - s) * (math.PI * 2.0) / period) + 1.0;
+    return math.pow(2.0, -10 * t) *
+            math.sin((t - s) * (math.PI * 2.0) / period) +
+        1.0;
   }
 }
 
@@ -147,10 +145,13 @@ class ElasticInOutCurve implements Curve {
   double transform(double t) {
     double s = period / 4.0;
     t = 2.0 * t - 1.0;
-    if (t < 0.0)
-      return -0.5 * math.pow(2.0, 10.0 * t) * math.sin((t - s) * (math.PI * 2.0) / period);
-    else
-      return math.pow(2.0, -10.0 * t) * math.sin((t - s) * (math.PI * 2.0) / period) * 0.5 + 1.0;
+    if (t < 0.0) return -0.5 *
+        math.pow(2.0, 10.0 * t) *
+        math.sin((t - s) * (math.PI * 2.0) / period);
+    else return math.pow(2.0, -10.0 * t) *
+            math.sin((t - s) * (math.PI * 2.0) / period) *
+            0.5 +
+        1.0;
   }
 }
 

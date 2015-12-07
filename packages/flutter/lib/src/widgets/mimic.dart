@@ -40,11 +40,8 @@ class MimicOverlayEntry {
   Curve _curve;
   Performance _performance;
 
-  Future animateTo({
-    GlobalKey targetKey,
-    Duration duration,
-    Curve curve: Curves.linear
-  }) {
+  Future animateTo(
+      {GlobalKey targetKey, Duration duration, Curve curve: Curves.linear}) {
     assert(_key != null);
     assert(_overlayEntry != null);
     assert(targetKey != null);
@@ -60,8 +57,8 @@ class MimicOverlayEntry {
   }
 
   void markNeedsBuild() {
-   _overlayEntry?.markNeedsBuild();
- }
+    _overlayEntry?.markNeedsBuild();
+  }
 
   void dispose() {
     _targetKey = null;
@@ -88,38 +85,39 @@ class MimicOverlayEntry {
         Point localPosition = box.localToGlobal(Point.origin);
         double t = _curve.transform(_performance.progress);
         // TODO(abarth): Add Point.lerp.
-        globalPosition = new Point(ui.lerpDouble(globalPosition.x, localPosition.x, t),
-                                 ui.lerpDouble(globalPosition.y, localPosition.y, t));
+        globalPosition = new Point(
+            ui.lerpDouble(globalPosition.x, localPosition.x, t),
+            ui.lerpDouble(globalPosition.y, localPosition.y, t));
       }
     }
 
     RenderBox stack = context.ancestorRenderObjectOfType(RenderStack);
     // TODO(abarth): Handle the case where the transform here isn't just a translation.
-    Point localPosition = stack == null ? globalPosition: stack.globalToLocal(globalPosition);
+    Point localPosition =
+        stack == null ? globalPosition : stack.globalToLocal(globalPosition);
     return new Positioned(
-      left: localPosition.x,
-      top: localPosition.y,
-      width: globalBounds.width,
-      height: globalBounds.height,
-      child: new Mimic(original: _key)
-    );
+        left: localPosition.x,
+        top: localPosition.y,
+        width: globalBounds.width,
+        height: globalBounds.height,
+        child: new Mimic(original: _key));
   }
 }
 
 class Mimic extends StatelessComponent {
-  Mimic({ Key key, this.original }) : super(key: key);
+  Mimic({Key key, this.original}) : super(key: key);
 
   final MimicableKey original;
 
   Widget build(BuildContext context) {
-    if (original != null && original._state._beingMimicked)
-      return original._state.config.child;
+    if (original != null && original._state._beingMimicked) return original
+        ._state.config.child;
     return new Container();
   }
 }
 
 class Mimicable extends StatefulComponent {
-  Mimicable({ Key key, this.child }) : super(key: key);
+  Mimicable({Key key, this.child}) : super(key: key);
 
   final Widget child;
 
@@ -171,13 +169,9 @@ class MimicableState extends State<Mimicable> {
 
   Widget build(BuildContext context) {
     if (_beingMimicked) {
-      return new ConstrainedBox(
-        constraints: new BoxConstraints.tight(_size)
-      );
+      return new ConstrainedBox(constraints: new BoxConstraints.tight(_size));
     }
     return new SizeObserver(
-      onSizeChanged: _handleSizeChanged,
-      child: config.child
-    );
+        onSizeChanged: _handleSizeChanged, child: config.child);
   }
 }

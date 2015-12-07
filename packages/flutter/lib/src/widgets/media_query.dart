@@ -8,18 +8,18 @@ import 'framework.dart';
 enum Orientation { portrait, landscape }
 
 class MediaQueryData {
-
-  const MediaQueryData({ this.size });
+  const MediaQueryData({this.size});
 
   final Size size;
 
   Orientation get orientation {
-    return size.width > size.height ? Orientation.landscape : Orientation.portrait;
+    return size.width > size.height
+        ? Orientation.landscape
+        : Orientation.portrait;
   }
 
-  bool operator==(Object other) {
-    if (other.runtimeType != runtimeType)
-      return false;
+  bool operator ==(Object other) {
+    if (other.runtimeType != runtimeType) return false;
     MediaQueryData typedOther = other;
     return typedOther.size == size;
   }
@@ -30,11 +30,8 @@ class MediaQueryData {
 }
 
 class MediaQuery extends InheritedWidget {
-  MediaQuery({
-    Key key,
-    this.data,
-    Widget child
-  }) : super(key: key, child: child) {
+  MediaQuery({Key key, this.data, Widget child})
+      : super(key: key, child: child) {
     assert(child != null);
     assert(data != null);
   }

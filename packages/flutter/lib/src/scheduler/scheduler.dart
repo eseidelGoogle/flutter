@@ -20,6 +20,7 @@ double timeDilation = 1.0;
 typedef void FrameCallback(Duration timeStamp);
 
 typedef void SchedulerExceptionHandler(dynamic exception, StackTrace stack);
+
 /// This callback is invoked whenever an exception is caught by the scheduler.
 /// The 'exception' argument contains the object that was thrown, and the
 /// 'stack' argument contains the stack trace. If the callback is set, it is
@@ -88,12 +89,11 @@ class Scheduler {
 
   SchedulingStrategy schedulingStrategy = new DefaultSchedulingStrategy();
 
-  final PriorityQueue _taskQueue = new HeapPriorityQueue<_TaskEntry>(
-    (_TaskEntry e1, _TaskEntry e2) {
-      // Note that we inverse the priority.
-      return -e1.priority.compareTo(e2.priority);
-    }
-  );
+  final PriorityQueue _taskQueue =
+      new HeapPriorityQueue<_TaskEntry>((_TaskEntry e1, _TaskEntry e2) {
+    // Note that we inverse the priority.
+    return -e1.priority.compareTo(e2.priority);
+  });
 
   /// Whether this scheduler already requested to be called from the event loop.
   bool _hasRequestedAnEventLoopCallback = false;
@@ -106,8 +106,7 @@ class Scheduler {
   void scheduleTask(ui.VoidCallback task, Priority priority) {
     bool isFirstTask = _taskQueue.isEmpty;
     _taskQueue.add(new _TaskEntry(task, priority._value));
-    if (isFirstTask)
-      _ensureEventLoopCallback();
+    if (isFirstTask) _ensureEventLoopCallback();
   }
 
   /// Invoked by the system when there is time to run tasks.
@@ -117,15 +116,13 @@ class Scheduler {
   }
 
   void _runTasks() {
-    if (_taskQueue.isEmpty)
-      return;
+    if (_taskQueue.isEmpty) return;
     _TaskEntry entry = _taskQueue.first;
     if (schedulingStrategy.shouldRunTaskWithPriority(entry.priority)) {
       try {
         (_taskQueue.removeFirst().task)();
       } finally {
-        if (_taskQueue.isNotEmpty)
-          _ensureEventLoopCallback();
+        if (_taskQueue.isNotEmpty) _ensureEventLoopCallback();
       }
     } else {
       // TODO(floitsch): we shouldn't need to request a frame. Just schedule
@@ -213,8 +210,7 @@ class Scheduler {
     Map<int, FrameCallback> callbacks = _transientCallbacks;
     _transientCallbacks = new Map<int, FrameCallback>();
     callbacks.forEach((int id, FrameCallback callback) {
-      if (!_removedIds.contains(id))
-        invokeFrameCallback(callback, timeStamp);
+      if (!_removedIds.contains(id)) invokeFrameCallback(callback, timeStamp);
     });
     _removedIds.clear();
     Timeline.finishSync();
@@ -236,14 +232,14 @@ class Scheduler {
     _hasRequestedABeginFrameCallback = false;
     _invokeTransientFrameCallbacks(timeStamp);
 
-    for (FrameCallback callback in _persistentCallbacks)
-      invokeFrameCallback(callback, timeStamp);
+    for (FrameCallback callback
+        in _persistentCallbacks) invokeFrameCallback(callback, timeStamp);
 
     List<FrameCallback> localPostFrameCallbacks =
         new List<FrameCallback>.from(_postFrameCallbacks);
     _postFrameCallbacks.clear();
-    for (FrameCallback callback in localPostFrameCallbacks)
-      invokeFrameCallback(callback, timeStamp);
+    for (FrameCallback callback
+        in localPostFrameCallbacks) invokeFrameCallback(callback, timeStamp);
 
     _isInFrame = false;
     Timeline.finishSync();
@@ -275,8 +271,7 @@ class Scheduler {
 
   /// Ensures that the scheduler is woken by the event loop.
   void _ensureEventLoopCallback() {
-    if (_hasRequestedAnEventLoopCallback)
-      return;
+    if (_hasRequestedAnEventLoopCallback) return;
     Timer.run(handleEventLoopCallback);
     _hasRequestedAnEventLoopCallback = true;
   }
@@ -288,8 +283,7 @@ class Scheduler {
 
   /// Schedules a new frame.
   void _ensureBeginFrameCallback() {
-    if (_hasRequestedABeginFrameCallback)
-      return;
+    if (_hasRequestedABeginFrameCallback) return;
     ui.window.scheduleFrame();
     _hasRequestedABeginFrameCallback = true;
   }
@@ -306,8 +300,8 @@ class DefaultSchedulingStrategy implements SchedulingStrategy {
   // interesting to provide more info (like, how long the task ran the last
   // time).
   bool shouldRunTaskWithPriority(int priority) {
-    if (scheduler.transientCallbackCount > 0)
-      return priority >= Priority.animation._value;
+    if (scheduler.transientCallbackCount > 0) return priority >=
+        Priority.animation._value;
     return true;
   }
 }

@@ -38,11 +38,11 @@
 ///   still be 2. This is all managed automatically assuming you call
 ///   'adoptChild()' and 'dropChild()' appropriately.
 class AbstractNode {
-
   // AbstractNode represents a node in a tree.
   // The AbstractNode protocol is described in README.md.
 
   int _depth = 0;
+
   /// The depth of this node in the tree.
   ///
   /// The depth of nodes in a tree monotonically increases as you traverse down
@@ -60,9 +60,10 @@ class AbstractNode {
 
   /// Override this function in subclasses with child nodes to call
   /// redepthChild(child) for each child. Do not call directly.
-  void redepthChildren() { }
+  void redepthChildren() {}
 
   bool _attached = false;
+
   /// Whether this node is in a tree whose root is attached to something.
   bool get attached => _attached;
 
@@ -83,6 +84,7 @@ class AbstractNode {
   }
 
   AbstractNode _parent;
+
   /// The parent of this node in the tree.
   AbstractNode get parent => _parent;
 
@@ -91,8 +93,7 @@ class AbstractNode {
     assert(child != null);
     assert(child._parent == null);
     child._parent = this;
-    if (attached)
-      child.attach();
+    if (attached) child.attach();
     redepthChild(child);
   }
 
@@ -102,8 +103,6 @@ class AbstractNode {
     assert(child._parent == this);
     assert(child.attached == attached);
     child._parent = null;
-    if (attached)
-      child.detach();
+    if (attached) child.detach();
   }
-
 }

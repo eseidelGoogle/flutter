@@ -16,10 +16,7 @@ import 'object.dart';
 
 /// The layout constraints for the root render object
 class ViewConstraints {
-  const ViewConstraints({
-    this.size: Size.zero,
-    this.orientation
-  });
+  const ViewConstraints({this.size: Size.zero, this.orientation});
 
   /// The size of the output surface
   final Size size;
@@ -35,11 +32,11 @@ class ViewConstraints {
 /// The view represents the total output surface of the render tree and handles
 /// bootstraping the rendering pipeline. The view has a unique child
 /// [RenderBox], which is required to fill the entire output surface.
-class RenderView extends RenderObject with RenderObjectWithChildMixin<RenderBox> {
-  RenderView({
-    RenderBox child,
-    this.timeForRotation: const Duration(microseconds: 83333)
-  }) {
+class RenderView extends RenderObject
+    with RenderObjectWithChildMixin<RenderBox> {
+  RenderView(
+      {RenderBox child,
+      this.timeForRotation: const Duration(microseconds: 83333)}) {
     this.child = child;
   }
 
@@ -58,8 +55,7 @@ class RenderView extends RenderObject with RenderObjectWithChildMixin<RenderBox>
   ViewConstraints get rootConstraints => _rootConstraints;
   ViewConstraints _rootConstraints;
   void set rootConstraints(ViewConstraints value) {
-    if (rootConstraints == value)
-      return;
+    if (rootConstraints == value) return;
     _rootConstraints = value;
     markNeedsLayout();
   }
@@ -72,13 +68,17 @@ class RenderView extends RenderObject with RenderObjectWithChildMixin<RenderBox>
   /// Bootstrap the rendering pipeline by scheduling the first frame
   void scheduleInitialFrame() {
     scheduleInitialLayout();
-    scheduleInitialPaint(new TransformLayer(transform: _logicalToDeviceTransform));
+    scheduleInitialPaint(
+        new TransformLayer(transform: _logicalToDeviceTransform));
     scheduler.ensureVisualUpdate();
   }
 
   // We never call layout() on this class, so this should never get
   // checked. (This class is laid out using scheduleInitialLayout().)
-  bool debugDoesMeetConstraints() { assert(false); return false; }
+  bool debugDoesMeetConstraints() {
+    assert(false);
+    return false;
+  }
 
   void performResize() {
     assert(false);
@@ -86,24 +86,25 @@ class RenderView extends RenderObject with RenderObjectWithChildMixin<RenderBox>
 
   void performLayout() {
     if (rootConstraints.orientation != _orientation) {
-      if (_orientation != null && child != null)
-        child.rotate(oldAngle: _orientation, newAngle: rootConstraints.orientation, time: timeForRotation);
+      if (_orientation != null && child != null) child.rotate(
+          oldAngle: _orientation,
+          newAngle: rootConstraints.orientation,
+          time: timeForRotation);
       _orientation = rootConstraints.orientation;
     }
     _size = rootConstraints.size;
     assert(!_size.isInfinite);
 
-    if (child != null)
-      child.layout(new BoxConstraints.tight(_size));
+    if (child != null) child.layout(new BoxConstraints.tight(_size));
   }
 
-  void rotate({ int oldAngle, int newAngle, Duration time }) {
-    assert(false); // nobody tells the screen to rotate, the whole rotate() dance is started from our performResize()
+  void rotate({int oldAngle, int newAngle, Duration time}) {
+    assert(
+        false); // nobody tells the screen to rotate, the whole rotate() dance is started from our performResize()
   }
 
-  bool hitTest(HitTestResult result, { Point position }) {
-    if (child != null)
-      child.hitTest(result, position: position);
+  bool hitTest(HitTestResult result, {Point position}) {
+    if (child != null) child.hitTest(result, position: position);
     result.add(new HitTestEntry(this));
     return true;
   }
@@ -111,8 +112,7 @@ class RenderView extends RenderObject with RenderObjectWithChildMixin<RenderBox>
   bool get hasLayer => true;
 
   void paint(PaintingContext context, Offset offset) {
-    if (child != null)
-      context.paintChild(child, offset);
+    if (child != null) context.paintChild(child, offset);
   }
 
   /// Uploads the composited layer tree to the engine
@@ -131,8 +131,9 @@ class RenderView extends RenderObject with RenderObjectWithChildMixin<RenderBox>
       ui.window.render(scene);
       scene.dispose();
       assert(() {
-        if (debugEnableRepaintRainbox)
-          debugCurrentRepaintColor = debugCurrentRepaintColor.withHue(debugCurrentRepaintColor.hue + debugRepaintRainboxHueIncrement);
+        if (debugEnableRepaintRainbox) debugCurrentRepaintColor =
+            debugCurrentRepaintColor.withHue(
+                debugCurrentRepaintColor.hue + debugRepaintRainboxHueIncrement);
         return true;
       });
     } finally {
@@ -145,7 +146,8 @@ class RenderView extends RenderObject with RenderObjectWithChildMixin<RenderBox>
   void debugDescribeSettings(List<String> settings) {
     // call to ${super.debugDescribeSettings(prefix)} is omitted because the root superclasses don't include any interesting information for this class
     settings.add('window size: ${ui.window.size} (in device pixels)');
-    settings.add('device pixel ratio: ${ui.window.devicePixelRatio} (device pixels per logical pixel)');
+    settings.add(
+        'device pixel ratio: ${ui.window.devicePixelRatio} (device pixels per logical pixel)');
     settings.add('root constraints: $rootConstraints (in logical pixels)');
   }
 }

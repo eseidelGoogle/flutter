@@ -10,12 +10,8 @@ import 'theme.dart';
 import 'typography.dart';
 
 class CircleAvatar extends StatelessComponent {
-  CircleAvatar({
-    Key key,
-    this.label,
-    this.backgroundColor,
-    this.textTheme
-  }) : super(key: key);
+  CircleAvatar({Key key, this.label, this.backgroundColor, this.textTheme})
+      : super(key: key);
 
   final String label;
   final Color backgroundColor;
@@ -32,16 +28,11 @@ class CircleAvatar extends StatelessComponent {
     }
 
     return new AnimatedContainer(
-      duration: kThemeChangeDuration,
-      decoration: new BoxDecoration(
-        backgroundColor: color,
-        shape: Shape.circle
-      ),
-      width: 40.0,
-      height: 40.0,
-      child: new Center(
-        child: new Text(label, style: style)
-      )
-    );
+        duration: kThemeChangeDuration,
+        decoration:
+            new BoxDecoration(backgroundColor: color, shape: Shape.circle),
+        width: 40.0,
+        height: 40.0,
+        child: new Center(child: new Text(label, style: style)));
   }
 }

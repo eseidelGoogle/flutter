@@ -15,14 +15,14 @@ import 'theme.dart';
 const double _kSize = 56.0;
 
 class FloatingActionButton extends StatefulComponent {
-  const FloatingActionButton({
-    Key key,
-    this.child,
-    this.backgroundColor,
-    this.elevation: 6,
-    this.highlightElevation: 12,
-    this.onPressed
-  }) : super(key: key);
+  const FloatingActionButton(
+      {Key key,
+      this.child,
+      this.backgroundColor,
+      this.elevation: 6,
+      this.highlightElevation: 12,
+      this.onPressed})
+      : super(key: key);
 
   final Widget child;
   final Color backgroundColor;
@@ -48,27 +48,24 @@ class _FloatingActionButtonState extends State<FloatingActionButton> {
     if (materialColor == null) {
       ThemeData themeData = Theme.of(context);
       materialColor = themeData.accentColor;
-      iconThemeColor = themeData.accentColorBrightness == ThemeBrightness.dark ? IconThemeColor.white : IconThemeColor.black;
+      iconThemeColor = themeData.accentColorBrightness == ThemeBrightness.dark
+          ? IconThemeColor.white
+          : IconThemeColor.black;
     }
 
     return new Material(
-      color: materialColor,
-      type: MaterialType.circle,
-      elevation: _highlight ? config.highlightElevation : config.elevation,
-      child: new Container(
-        width: _kSize,
-        height: _kSize,
-        child: new InkWell(
-          onTap: config.onPressed,
-          onHighlightChanged: _handleHighlightChanged,
-          child: new Center(
-            child: new IconTheme(
-              data: new IconThemeData(color: iconThemeColor),
-              child: config.child
-            )
-          )
-        )
-      )
-    );
+        color: materialColor,
+        type: MaterialType.circle,
+        elevation: _highlight ? config.highlightElevation : config.elevation,
+        child: new Container(
+            width: _kSize,
+            height: _kSize,
+            child: new InkWell(
+                onTap: config.onPressed,
+                onHighlightChanged: _handleHighlightChanged,
+                child: new Center(
+                    child: new IconTheme(
+                        data: new IconThemeData(color: iconThemeColor),
+                        child: config.child)))));
   }
 }

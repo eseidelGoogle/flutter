@@ -41,11 +41,11 @@ abstract class _AutoLayoutParamMixin {
 
   void _setupEditVariablesInSolver(al.Solver solver, double priority) {
     solver.addEditVariables(<al.Variable>[
-        _leftEdge.variable,
-        _rightEdge.variable,
-        _topEdge.variable,
-        _bottomEdge.variable
-      ], priority);
+      _leftEdge.variable,
+      _rightEdge.variable,
+      _topEdge.variable,
+      _bottomEdge.variable
+    ], priority);
   }
 
   void _applyEditsAtSize(al.Solver solver, Size size) {
@@ -91,8 +91,8 @@ abstract class _AutoLayoutParamMixin {
   }
 }
 
-class AutoLayoutParentData extends ContainerBoxParentDataMixin<RenderBox> with _AutoLayoutParamMixin {
-
+class AutoLayoutParentData extends ContainerBoxParentDataMixin<RenderBox>
+    with _AutoLayoutParamMixin {
   AutoLayoutParentData(this._renderBox) {
     _setupLayoutParameters(this);
   }
@@ -108,9 +108,8 @@ class AutoLayoutParentData extends ContainerBoxParentDataMixin<RenderBox> with _
       assert(parent.debugDoingThisLayout);
     });
     BoxConstraints size = new BoxConstraints.tightFor(
-      width: _rightEdge.value - _leftEdge.value,
-      height: _bottomEdge.value - _topEdge.value
-    );
+        width: _rightEdge.value - _leftEdge.value,
+        height: _bottomEdge.value - _topEdge.value);
     _renderBox.layout(size);
     position = new Point(_leftEdge.value, _topEdge.value);
   }
@@ -121,15 +120,14 @@ class AutoLayoutParentData extends ContainerBoxParentDataMixin<RenderBox> with _
       _rightEdge >= _leftEdge, // Width must be positive.
     ];
   }
-
 }
 
 class RenderAutoLayout extends RenderBox
-    with ContainerRenderObjectMixin<RenderBox, AutoLayoutParentData>,
-         RenderBoxContainerDefaultsMixin<RenderBox, AutoLayoutParentData>,
-         _AutoLayoutParamMixin {
-
-  RenderAutoLayout({ List<RenderBox> children }) {
+    with
+        ContainerRenderObjectMixin<RenderBox, AutoLayoutParentData>,
+        RenderBoxContainerDefaultsMixin<RenderBox, AutoLayoutParentData>,
+        _AutoLayoutParamMixin {
+  RenderAutoLayout({List<RenderBox> children}) {
     _setupLayoutParameters(this);
     _setupEditVariablesInSolver(_solver, al.Priority.required - 1);
     addAll(children);
@@ -189,8 +187,8 @@ class RenderAutoLayout extends RenderBox
   }
 
   void setupParentData(RenderObject child) {
-    if (child.parentData is! AutoLayoutParentData)
-      child.parentData = new AutoLayoutParentData(child);
+    if (child.parentData is! AutoLayoutParentData) child.parentData =
+        new AutoLayoutParentData(child);
   }
 
   bool get sizedByParent => true;

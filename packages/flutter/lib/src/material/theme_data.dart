@@ -28,25 +28,39 @@ const Color _kDarkThemeHighlightColor = const Color(0x40CCCCCC);
 const Color _kDarkThemeSplashColor = const Color(0x40CCCCCC);
 
 class ThemeData {
-
-  ThemeData({
-    ThemeBrightness brightness: ThemeBrightness.light,
-    Map<int, Color> primarySwatch,
-    Color accentColor,
-    this.accentColorBrightness: ThemeBrightness.dark,
-    TextTheme text
-  }): this.brightness = brightness,
-      this.primarySwatch = primarySwatch,
-      primaryColorBrightness = primarySwatch == null ? brightness : ThemeBrightness.dark,
-      canvasColor = brightness == ThemeBrightness.dark ? Colors.grey[850] : Colors.grey[50],
-      cardColor = brightness == ThemeBrightness.dark ? Colors.grey[800] : Colors.white,
-      dividerColor = brightness == ThemeBrightness.dark ? const Color(0x1FFFFFFF) : const Color(0x1F000000),
-      // Some users want the pre-multiplied color, others just want the opacity.
-      hintColor = brightness == ThemeBrightness.dark ? const Color(0x42FFFFFF) : const Color(0x4C000000),
-      hintOpacity = brightness == ThemeBrightness.dark ? 0.26 : 0.30,
-      highlightColor = brightness == ThemeBrightness.dark ? _kDarkThemeHighlightColor : _kLightThemeHighlightColor,
-      splashColor = brightness == ThemeBrightness.dark ? _kDarkThemeSplashColor : _kLightThemeSplashColor,
-      text = brightness == ThemeBrightness.dark ? Typography.white : Typography.black {
+  ThemeData(
+      {ThemeBrightness brightness: ThemeBrightness.light,
+      Map<int, Color> primarySwatch,
+      Color accentColor,
+      this.accentColorBrightness: ThemeBrightness.dark,
+      TextTheme text})
+      : this.brightness = brightness,
+        this.primarySwatch = primarySwatch,
+        primaryColorBrightness =
+            primarySwatch == null ? brightness : ThemeBrightness.dark,
+        canvasColor = brightness == ThemeBrightness.dark
+            ? Colors.grey[850]
+            : Colors.grey[50],
+        cardColor = brightness == ThemeBrightness.dark
+            ? Colors.grey[800]
+            : Colors.white,
+        dividerColor = brightness == ThemeBrightness.dark
+            ? const Color(0x1FFFFFFF)
+            : const Color(0x1F000000),
+        // Some users want the pre-multiplied color, others just want the opacity.
+        hintColor = brightness == ThemeBrightness.dark
+            ? const Color(0x42FFFFFF)
+            : const Color(0x4C000000),
+        hintOpacity = brightness == ThemeBrightness.dark ? 0.26 : 0.30,
+        highlightColor = brightness == ThemeBrightness.dark
+            ? _kDarkThemeHighlightColor
+            : _kLightThemeHighlightColor,
+        splashColor = brightness == ThemeBrightness.dark
+            ? _kDarkThemeSplashColor
+            : _kLightThemeSplashColor,
+        text = brightness == ThemeBrightness.dark
+            ? Typography.white
+            : Typography.black {
     assert(brightness != null);
 
     if (primarySwatch == null) {
@@ -60,13 +74,15 @@ class ThemeData {
     }
 
     if (accentColor == null) {
-      _accentColor = primarySwatch == null ? Colors.blue[500] : primarySwatch[500];
+      _accentColor =
+          primarySwatch == null ? Colors.blue[500] : primarySwatch[500];
     } else {
       _accentColor = accentColor;
     }
   }
 
-  factory ThemeData.light() => new ThemeData(primarySwatch: Colors.blue, brightness: ThemeBrightness.light);
+  factory ThemeData.light() => new ThemeData(
+      primarySwatch: Colors.blue, brightness: ThemeBrightness.light);
   factory ThemeData.dark() => new ThemeData(brightness: ThemeBrightness.dark);
   factory ThemeData.fallback() => new ThemeData.light();
 
@@ -104,26 +120,24 @@ class ThemeData {
 
   /// A text theme that contrasts with the primary color.
   TextTheme get primaryTextTheme {
-    if (primaryColorBrightness == ThemeBrightness.dark)
-      return Typography.white;
+    if (primaryColorBrightness == ThemeBrightness.dark) return Typography.white;
     return Typography.black;
   }
 
   IconThemeData get primaryIconTheme {
-    if (primaryColorBrightness == ThemeBrightness.dark)
-      return const IconThemeData(color: IconThemeColor.white);
+    if (primaryColorBrightness ==
+        ThemeBrightness.dark) return const IconThemeData(
+        color: IconThemeColor.white);
     return const IconThemeData(color: IconThemeColor.black);
   }
 
   Color get unselectedColor {
-    if (brightness == ThemeBrightness.dark)
-      return Colors.white70;
+    if (brightness == ThemeBrightness.dark) return Colors.white70;
     return Colors.black54;
   }
 
   Color get disabledColor {
-    if (brightness == ThemeBrightness.dark)
-      return Colors.white30;
+    if (brightness == ThemeBrightness.dark) return Colors.white30;
     return Colors.black26;
   }
 
@@ -136,22 +150,22 @@ class ThemeData {
   /// action button).
   final ThemeBrightness accentColorBrightness;
 
-  bool operator==(Object other) {
-    if (other.runtimeType != runtimeType)
-      return false;
+  bool operator ==(Object other) {
+    if (other.runtimeType != runtimeType) return false;
     ThemeData otherData = other;
     return (otherData.brightness == brightness) &&
-           (otherData.primarySwatch == primarySwatch) &&
-           (otherData.canvasColor == canvasColor) &&
-           (otherData.cardColor == cardColor) &&
-           (otherData.dividerColor == dividerColor) &&
-           (otherData.hintColor == hintColor) &&
-           (otherData.highlightColor == highlightColor) &&
-           (otherData.hintOpacity == hintOpacity) &&
-           (otherData.text == text) &&
-           (otherData.primaryColorBrightness == primaryColorBrightness) &&
-           (otherData.accentColorBrightness == accentColorBrightness);
+        (otherData.primarySwatch == primarySwatch) &&
+        (otherData.canvasColor == canvasColor) &&
+        (otherData.cardColor == cardColor) &&
+        (otherData.dividerColor == dividerColor) &&
+        (otherData.hintColor == hintColor) &&
+        (otherData.highlightColor == highlightColor) &&
+        (otherData.hintOpacity == hintOpacity) &&
+        (otherData.text == text) &&
+        (otherData.primaryColorBrightness == primaryColorBrightness) &&
+        (otherData.accentColorBrightness == accentColorBrightness);
   }
+
   int get hashCode {
     int value = 373;
     value = 37 * value + brightness.hashCode;

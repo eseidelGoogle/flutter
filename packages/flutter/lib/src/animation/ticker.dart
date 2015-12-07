@@ -34,8 +34,7 @@ class Ticker {
   ///
   /// Causes the future returned by [start] to resolve.
   void stop() {
-    if (!isTicking)
-      return;
+    if (!isTicking) return;
 
     _startTime = null;
 
@@ -61,14 +60,12 @@ class Ticker {
     assert(_animationId != null);
     _animationId = null;
 
-    if (_startTime == null)
-      _startTime = timeStamp;
+    if (_startTime == null) _startTime = timeStamp;
 
     _onTick(timeStamp - _startTime);
 
     // The onTick callback may have scheduled another tick already.
-    if (isTicking && _animationId == null)
-      _scheduleTick();
+    if (isTicking && _animationId == null) _scheduleTick();
   }
 
   void _scheduleTick() {

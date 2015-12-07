@@ -8,22 +8,23 @@ import 'material_button.dart';
 import 'theme.dart';
 
 class FlatButton extends MaterialButton {
-  FlatButton({
-    Key key,
-    Widget child,
-    ButtonColor textTheme,
-    Color textColor,
-    Color disabledTextColor,
-    this.color,
-    this.colorBrightness,
-    this.disabledColor,
-    VoidCallback onPressed
-  }) : super(key: key,
-             child: child,
-             textTheme: textTheme,
-             textColor: textColor,
-             disabledTextColor: disabledTextColor,
-             onPressed: onPressed);
+  FlatButton(
+      {Key key,
+      Widget child,
+      ButtonColor textTheme,
+      Color textColor,
+      Color disabledTextColor,
+      this.color,
+      this.colorBrightness,
+      this.disabledColor,
+      VoidCallback onPressed})
+      : super(
+            key: key,
+            child: child,
+            textTheme: textTheme,
+            textColor: textColor,
+            disabledTextColor: disabledTextColor,
+            onPressed: onPressed);
 
   // These default to null, meaning transparent.
   final Color color;
@@ -36,17 +37,14 @@ class FlatButton extends MaterialButton {
 }
 
 class _FlatButtonState extends MaterialButtonState<FlatButton> {
-
   int get elevation => 0;
 
   Color getColor(BuildContext context) {
-    if (!config.enabled)
-      return config.disabledColor;
+    if (!config.enabled) return config.disabledColor;
     return config.color;
   }
 
   ThemeBrightness getColorBrightness(BuildContext context) {
     return config.colorBrightness ?? Theme.of(context).brightness;
   }
-
 }

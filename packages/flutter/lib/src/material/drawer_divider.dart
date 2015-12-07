@@ -7,19 +7,14 @@ import 'package:flutter/widgets.dart';
 import 'theme.dart';
 
 class DrawerDivider extends StatelessComponent {
-  const DrawerDivider({ Key key }) : super(key: key);
+  const DrawerDivider({Key key}) : super(key: key);
 
   Widget build(BuildContext context) {
     return new Container(
-      height: 0.0,
-      decoration: new BoxDecoration(
-        border: new Border(
-          bottom: new BorderSide(
-            color: Theme.of(context).dividerColor
-          )
-        )
-      ),
-      margin: const EdgeDims.symmetric(vertical: 8.0)
-    );
+        height: 0.0,
+        decoration: new BoxDecoration(
+            border: new Border(
+                bottom: new BorderSide(color: Theme.of(context).dividerColor))),
+        margin: const EdgeDims.symmetric(vertical: 8.0));
   }
 }

@@ -10,15 +10,13 @@ import 'package:flutter/scheduler.dart';
 import 'framework.dart';
 
 class WidgetFlutterBinding extends FlutterBinding {
-
   WidgetFlutterBinding() {
     BuildableElement.scheduleBuildFor = scheduleBuildFor;
   }
 
   /// Ensures that there is a FlutterBinding object instantiated.
   static void ensureInitialized() {
-    if (FlutterBinding.instance == null)
-      new WidgetFlutterBinding();
+    if (FlutterBinding.instance == null) new WidgetFlutterBinding();
     assert(FlutterBinding.instance is WidgetFlutterBinding);
   }
 
@@ -37,8 +35,7 @@ class WidgetFlutterBinding extends FlutterBinding {
   void scheduleBuildFor(BuildableElement element) {
     assert(!_dirtyElements.contains(element));
     assert(element.dirty);
-    if (_dirtyElements.isEmpty)
-      scheduler.ensureVisualUpdate();
+    if (_dirtyElements.isEmpty) scheduler.ensureVisualUpdate();
     _dirtyElements.add(element);
   }
 
@@ -47,18 +44,19 @@ class WidgetFlutterBinding extends FlutterBinding {
   /// has yet reached.
   /// This is called by beginFrame().
   void buildDirtyElements() {
-    if (_dirtyElements.isEmpty)
-      return;
+    if (_dirtyElements.isEmpty) return;
     Timeline.startSync('Build');
     BuildableElement.lockState(() {
-      _dirtyElements.sort((BuildableElement a, BuildableElement b) => a.depth - b.depth);
+      _dirtyElements
+          .sort((BuildableElement a, BuildableElement b) => a.depth - b.depth);
       int dirtyCount = _dirtyElements.length;
       int index = 0;
       while (index < dirtyCount) {
         _dirtyElements[index].rebuild();
         index += 1;
         if (dirtyCount < _dirtyElements.length) {
-          _dirtyElements.sort((BuildableElement a, BuildableElement b) => a.depth - b.depth);
+          _dirtyElements.sort(
+              (BuildableElement a, BuildableElement b) => a.depth - b.depth);
           dirtyCount = _dirtyElements.length;
         }
       }
@@ -75,9 +73,8 @@ class WidgetFlutterBinding extends FlutterBinding {
   Element _renderViewElement;
   void _runApp(Widget app) {
     _renderViewElement = new RenderObjectToWidgetAdapter<RenderBox>(
-      container: renderView,
-      child: app
-    ).attachToRenderTree(_renderViewElement);
+        container: renderView,
+        child: app).attachToRenderTree(_renderViewElement);
     beginFrame();
   }
 }
@@ -91,7 +88,10 @@ void debugDumpApp() {
   assert(WidgetFlutterBinding.instance != null);
   assert(WidgetFlutterBinding.instance.renderViewElement != null);
   String mode = 'RELEASE MODE';
-  assert(() { mode = 'CHECKED MODE'; return true; });
+  assert(() {
+    mode = 'CHECKED MODE';
+    return true;
+  });
   debugPrint('${WidgetFlutterBinding.instance.runtimeType} - $mode');
   debugPrint(WidgetFlutterBinding.instance.renderViewElement.toStringDeep());
 }
@@ -101,20 +101,26 @@ void debugDumpApp() {
 /// into. It must be a RenderObject that implements the
 /// RenderObjectWithChildMixin protocol. The type argument T is the kind of
 /// RenderObject that the container expects as its child.
-class RenderObjectToWidgetAdapter<T extends RenderObject> extends RenderObjectWidget {
-  RenderObjectToWidgetAdapter({ this.child, RenderObjectWithChildMixin<T> container })
-    : container = container, super(key: new GlobalObjectKey(container));
+class RenderObjectToWidgetAdapter<T extends RenderObject>
+    extends RenderObjectWidget {
+  RenderObjectToWidgetAdapter(
+      {this.child, RenderObjectWithChildMixin<T> container})
+      : container = container,
+        super(key: new GlobalObjectKey(container));
 
   final Widget child;
   final RenderObjectWithChildMixin<T> container;
 
-  RenderObjectToWidgetElement<T> createElement() => new RenderObjectToWidgetElement<T>(this);
+  RenderObjectToWidgetElement<T> createElement() =>
+      new RenderObjectToWidgetElement<T>(this);
 
   RenderObjectWithChildMixin<T> createRenderObject() => container;
 
-  void updateRenderObject(RenderObject renderObject, RenderObjectWidget oldWidget) { }
+  void updateRenderObject(
+      RenderObject renderObject, RenderObjectWidget oldWidget) {}
 
-  RenderObjectToWidgetElement<T> attachToRenderTree([RenderObjectToWidgetElement<T> element]) {
+  RenderObjectToWidgetElement<T> attachToRenderTree(
+      [RenderObjectToWidgetElement<T> element]) {
     BuildableElement.lockState(() {
       if (element == null) {
         element = createElement();
@@ -135,16 +141,17 @@ class RenderObjectToWidgetAdapter<T extends RenderObject> extends RenderObjectWi
 /// whose container is the RenderView that connects to the Flutter engine. In
 /// this usage, it is normally instantiated by the bootstrapping logic in the
 /// WidgetFlutterBinding singleton created by runApp().
-class RenderObjectToWidgetElement<T extends RenderObject> extends RenderObjectElement {
-  RenderObjectToWidgetElement(RenderObjectToWidgetAdapter<T> widget) : super(widget);
+class RenderObjectToWidgetElement<T extends RenderObject>
+    extends RenderObjectElement {
+  RenderObjectToWidgetElement(RenderObjectToWidgetAdapter<T> widget)
+      : super(widget);
 
   Element _child;
 
   static const _rootChild = const Object();
 
   void visitChildren(ElementVisitor visitor) {
-    if (_child != null)
-      visitor(_child);
+    if (_child != null) visitor(_child);
   }
 
   void mount(Element parent, dynamic newSlot) {

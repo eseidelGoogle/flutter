@@ -5,7 +5,8 @@
 import 'framework.dart';
 
 /// Return true to cancel the notification bubbling.
-typedef bool NotificationListenerCallback<T extends Notification>(T notification);
+typedef bool NotificationListenerCallback<T extends Notification>(
+    T notification);
 
 abstract class Notification {
   void dispatch(BuildContext target) {
@@ -13,8 +14,7 @@ abstract class Notification {
       if (element is StatelessComponentElement &&
           element.widget is NotificationListener) {
         final NotificationListener widget = element.widget;
-        if (widget._dispatch(this))
-          return false;
+        if (widget._dispatch(this)) return false;
       }
       return true;
     });
@@ -22,18 +22,15 @@ abstract class Notification {
 }
 
 class NotificationListener<T extends Notification> extends StatelessComponent {
-  NotificationListener({
-    Key key,
-    this.child,
-    this.onNotification
-  }) : super(key: key);
+  NotificationListener({Key key, this.child, this.onNotification})
+      : super(key: key);
 
   final Widget child;
   final NotificationListenerCallback<T> onNotification;
 
   bool _dispatch(Notification notification) {
-    if (onNotification != null && notification is T)
-      return onNotification(notification);
+    if (onNotification != null &&
+        notification is T) return onNotification(notification);
     return false;
   }
 
@@ -52,4 +49,4 @@ class NotificationListener<T extends Notification> extends StatelessComponent {
 /// dispatched automatically. If an ancestor expects to be notified for any
 /// layout change, make sure you only use widgets that either never change
 /// layout, or that do notify their ancestors when appropriate.
-class LayoutChangedNotification extends Notification { }
+class LayoutChangedNotification extends Notification {}

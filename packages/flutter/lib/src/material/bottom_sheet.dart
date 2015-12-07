@@ -19,13 +19,13 @@ const Color _kTransparent = const Color(0x00000000);
 const Color _kBarrierColor = Colors.black54;
 
 class BottomSheet extends StatelessComponent {
-  BottomSheet({
-    Key key,
-    this.performance,
-    this.onClosing,
-    this.childHeight,
-    this.builder
-  }) : super(key: key) {
+  BottomSheet(
+      {Key key,
+      this.performance,
+      this.onClosing,
+      this.childHeight,
+      this.builder})
+      : super(key: key) {
     assert(onClosing != null);
   }
 
@@ -39,27 +39,23 @@ class BottomSheet extends StatelessComponent {
 
   static Performance createPerformanceController() {
     return new Performance(
-      duration: _kBottomSheetDuration,
-      debugLabel: 'BottomSheet'
-    );
+        duration: _kBottomSheetDuration, debugLabel: 'BottomSheet');
   }
 
-  bool get _dismissUnderway => performance.direction == AnimationDirection.reverse;
+  bool get _dismissUnderway =>
+      performance.direction == AnimationDirection.reverse;
 
   void _handleDragUpdate(double delta) {
-    if (_dismissUnderway)
-      return;
+    if (_dismissUnderway) return;
     performance.progress -= delta / (childHeight ?? delta);
   }
 
   void _handleDragEnd(Offset velocity) {
-    if (_dismissUnderway)
-      return;
+    if (_dismissUnderway) return;
     if (velocity.dy > _kMinFlingVelocity) {
       double flingVelocity = -velocity.dy / childHeight;
       performance.fling(velocity: flingVelocity);
-      if (flingVelocity < 0.0)
-        onClosing();
+      if (flingVelocity < 0.0) onClosing();
     } else if (performance.progress < _kCloseProgressThreshold) {
       performance.fling(velocity: -1.0);
       onClosing();
@@ -70,19 +66,15 @@ class BottomSheet extends StatelessComponent {
 
   Widget build(BuildContext context) {
     return new GestureDetector(
-      onVerticalDragUpdate: _handleDragUpdate,
-      onVerticalDragEnd: _handleDragEnd,
-      child: new Material(
-        child: builder(context)
-      )
-    );
+        onVerticalDragUpdate: _handleDragUpdate,
+        onVerticalDragEnd: _handleDragEnd,
+        child: new Material(child: builder(context)));
   }
 }
 
 // PERSISTENT BOTTOM SHEETS
 
 // See scaffold.dart
-
 
 // MODAL BOTTOM SHEETS
 
@@ -92,11 +84,10 @@ class _ModalBottomSheetLayout extends OneChildLayoutDelegate {
 
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
     return new BoxConstraints(
-      minWidth: constraints.maxWidth,
-      maxWidth: constraints.maxWidth,
-      minHeight: 0.0,
-      maxHeight: constraints.maxHeight * 9.0 / 16.0
-    );
+        minWidth: constraints.maxWidth,
+        maxWidth: constraints.maxWidth,
+        minHeight: 0.0,
+        maxHeight: constraints.maxHeight * 9.0 / 16.0);
   }
 
   Point getPositionForChild(Size size, Size childSize) {
@@ -106,7 +97,7 @@ class _ModalBottomSheetLayout extends OneChildLayoutDelegate {
 }
 
 class _ModalBottomSheet extends StatefulComponent {
-  _ModalBottomSheet({ Key key, this.route }) : super(key: key);
+  _ModalBottomSheet({Key key, this.route}) : super(key: key);
 
   final _ModalBottomSheetRoute route;
 
@@ -114,39 +105,31 @@ class _ModalBottomSheet extends StatefulComponent {
 }
 
 class _ModalBottomSheetState extends State<_ModalBottomSheet> {
-
   final _ModalBottomSheetLayout _layout = new _ModalBottomSheetLayout();
 
   Widget build(BuildContext context) {
     return new GestureDetector(
-      onTap: () => Navigator.pop(context),
-      child: new BuilderTransition(
-        performance: config.route.performance,
-        variables: <AnimatedValue<double>>[_layout.childTop],
-        builder: (BuildContext context) {
+        onTap: () => Navigator.pop(context),
+        child: new BuilderTransition(
+            performance: config.route.performance,
+            variables: <AnimatedValue<double>>[_layout.childTop],
+            builder: (BuildContext context) {
           return new ClipRect(
-            child: new CustomOneChildLayout(
-              delegate: _layout,
-              token: _layout.childTop.value,
-              child: new BottomSheet(
-                performance: config.route.performance,
-                onClosing: () => Navigator.pop(context),
-                childHeight: _layout.childTop.end,
-                builder: config.route.builder
-              )
-            )
-          );
-        }
-      )
-    );
+              child: new CustomOneChildLayout(
+                  delegate: _layout,
+                  token: _layout.childTop.value,
+                  child: new BottomSheet(
+                      performance: config.route.performance,
+                      onClosing: () => Navigator.pop(context),
+                      childHeight: _layout.childTop.end,
+                      builder: config.route.builder)));
+        }));
   }
 }
 
 class _ModalBottomSheetRoute<T> extends PopupRoute<T> {
-  _ModalBottomSheetRoute({
-    Completer<T> completer,
-    this.builder
-  }) : super(completer: completer);
+  _ModalBottomSheetRoute({Completer<T> completer, this.builder})
+      : super(completer: completer);
 
   final WidgetBuilder builder;
 
@@ -158,18 +141,17 @@ class _ModalBottomSheetRoute<T> extends PopupRoute<T> {
     return BottomSheet.createPerformanceController();
   }
 
-  Widget buildPage(BuildContext context, PerformanceView performance, PerformanceView forwardPerformance) {
+  Widget buildPage(BuildContext context, PerformanceView performance,
+      PerformanceView forwardPerformance) {
     return new _ModalBottomSheet(route: this);
   }
 }
 
-Future showModalBottomSheet({ BuildContext context, WidgetBuilder builder }) {
+Future showModalBottomSheet({BuildContext context, WidgetBuilder builder}) {
   assert(context != null);
   assert(builder != null);
   final Completer completer = new Completer();
-  Navigator.push(context, new _ModalBottomSheetRoute(
-    completer: completer,
-    builder: builder
-  ));
+  Navigator.push(context,
+      new _ModalBottomSheetRoute(completer: completer, builder: builder));
   return completer.future;
 }

@@ -20,19 +20,22 @@ typedef bool OverrideConnectToService(String url, Object proxy);
 OverrideConnectToService overrideConnectToService;
 
 ShellProxy _initShellProxy() {
-  core.MojoHandle shellHandle = new core.MojoHandle(internals.takeShellProxyHandle());
-  if (!shellHandle.isValid)
-    return null;
+  core.MojoHandle shellHandle =
+      new core.MojoHandle(internals.takeShellProxyHandle());
+  if (!shellHandle.isValid) return null;
   return new ShellProxy.fromHandle(shellHandle);
 }
 
 ApplicationConnection _initEmbedderConnection() {
-  core.MojoHandle servicesHandle = new core.MojoHandle(internals.takeServicesProvidedByEmbedder());
-  core.MojoHandle exposedServicesHandle = new core.MojoHandle(internals.takeServicesProvidedToEmbedder());
-  if (!servicesHandle.isValid || !exposedServicesHandle.isValid)
-    return null;
-  ServiceProviderProxy services = new ServiceProviderProxy.fromHandle(servicesHandle);
-  ServiceProviderStub exposedServices = new ServiceProviderStub.fromHandle(exposedServicesHandle);
+  core.MojoHandle servicesHandle =
+      new core.MojoHandle(internals.takeServicesProvidedByEmbedder());
+  core.MojoHandle exposedServicesHandle =
+      new core.MojoHandle(internals.takeServicesProvidedToEmbedder());
+  if (!servicesHandle.isValid || !exposedServicesHandle.isValid) return null;
+  ServiceProviderProxy services =
+      new ServiceProviderProxy.fromHandle(servicesHandle);
+  ServiceProviderStub exposedServices =
+      new ServiceProviderStub.fromHandle(exposedServicesHandle);
   return new ApplicationConnection(exposedServices, services);
 }
 
@@ -44,8 +47,7 @@ class _Shell {
   _Shell._();
 
   ApplicationConnection connectToApplication(String url) {
-    if (_shell == null)
-      return null;
+    if (_shell == null) return null;
     ServiceProviderProxy services = new ServiceProviderProxy.unbound();
     ServiceProviderStub exposedServices = new ServiceProviderStub.unbound();
     _shell.connectToApplication(url, services, exposedServices);
@@ -69,8 +71,8 @@ class _Shell {
   }
 
   void connectToService(String url, Object proxy) {
-    if (overrideConnectToService != null && overrideConnectToService(url, proxy))
-      return;
+    if (overrideConnectToService != null &&
+        overrideConnectToService(url, proxy)) return;
     _connectToService(url, proxy);
   }
 }

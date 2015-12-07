@@ -10,41 +10,29 @@ import 'navigator.dart';
 import 'transitions.dart';
 
 class ModalBarrier extends StatelessComponent {
-  ModalBarrier({
-    Key key,
-    this.color,
-    this.dismissable: true
-  }) : super(key: key);
+  ModalBarrier({Key key, this.color, this.dismissable: true}) : super(key: key);
 
   final Color color;
   final bool dismissable;
 
   Widget build(BuildContext context) {
-    return new Listener(
-      onPointerDown: (_) {
-        if (dismissable)
-          Navigator.pop(context);
-      },
-      behavior: HitTestBehavior.opaque,
-      child: new ConstrainedBox(
-        constraints: const BoxConstraints.expand(),
-        child: color == null ? null : new DecoratedBox(
-          decoration: new BoxDecoration(
-            backgroundColor: color
-          )
-        )
-      )
-    );
+    return new Listener(onPointerDown: (_) {
+      if (dismissable) Navigator.pop(context);
+    },
+        behavior: HitTestBehavior.opaque,
+        child: new ConstrainedBox(
+            constraints: const BoxConstraints.expand(),
+            child: color == null
+                ? null
+                : new DecoratedBox(
+                    decoration: new BoxDecoration(backgroundColor: color))));
   }
 }
 
 class AnimatedModalBarrier extends StatelessComponent {
-  AnimatedModalBarrier({
-    Key key,
-    this.color,
-    this.performance,
-    this.dismissable: true
-  }) : super(key: key);
+  AnimatedModalBarrier(
+      {Key key, this.color, this.performance, this.dismissable: true})
+      : super(key: key);
 
   final AnimatedColorValue color;
   final PerformanceView performance;
@@ -52,17 +40,12 @@ class AnimatedModalBarrier extends StatelessComponent {
 
   Widget build(BuildContext context) {
     return new BuilderTransition(
-      performance: performance,
-      variables: <AnimatedColorValue>[color],
-      builder: (BuildContext context) {
-        return new IgnorePointer(
+        performance: performance, variables: <AnimatedColorValue>[color],
+        builder: (BuildContext context) {
+      return new IgnorePointer(
           ignoring: performance.status == PerformanceStatus.reverse,
-          child: new ModalBarrier(
-            color: color.value,
-            dismissable: dismissable
-          )
-        );
-      }
-    );
+          child:
+              new ModalBarrier(color: color.value, dismissable: dismissable));
+    });
   }
 }

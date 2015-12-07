@@ -43,13 +43,15 @@ ui.Color debugErrorBoxColor = const ui.Color(0xFFFF0000);
 bool debugEnableRepaintRainbox = false;
 
 /// The current color to overlay when repainting a layer.
-HSVColor debugCurrentRepaintColor = const HSVColor.fromAHSV(0.4, 60.0, 1.0, 1.0);
+HSVColor debugCurrentRepaintColor =
+    const HSVColor.fromAHSV(0.4, 60.0, 1.0, 1.0);
 
 /// The amount to increment the hue of the current repaint color.
 double debugRepaintRainboxHueIncrement = 2.0;
 
 List<String> debugDescribeTransform(Matrix4 transform) {
-  List<String> matrix = transform.toString().split('\n').map((String s) => '  $s').toList();
+  List<String> matrix =
+      transform.toString().split('\n').map((String s) => '  $s').toList();
   matrix.removeLast();
   return matrix;
 }
@@ -64,9 +66,9 @@ List<String> debugDescribeTransform(Matrix4 transform) {
 /// messages in the logs.
 void debugPrint(String message) {
   _debugPrintBuffer.addAll(message.split('\n'));
-  if (!_debugPrintScheduled)
-    _debugPrintTask();
+  if (!_debugPrintScheduled) _debugPrintTask();
 }
+
 int _debugPrintedCharacters = 0;
 int _kDebugPrintCapacity = 16 * 1024;
 Duration _kDebugPrintPauseTime = const Duration(seconds: 1);
@@ -80,9 +82,11 @@ void _debugPrintTask() {
     _debugPrintStopwatch.reset();
     _debugPrintedCharacters = 0;
   }
-  while (_debugPrintedCharacters < _kDebugPrintCapacity && _debugPrintBuffer.length > 0) {
+  while (_debugPrintedCharacters < _kDebugPrintCapacity &&
+      _debugPrintBuffer.length > 0) {
     String line = _debugPrintBuffer.removeFirst();
-    _debugPrintedCharacters += line.length; // TODO(ianh): Use the UTF-8 byte length instead
+    _debugPrintedCharacters +=
+        line.length; // TODO(ianh): Use the UTF-8 byte length instead
     print(line);
   }
   if (_debugPrintBuffer.length > 0) {

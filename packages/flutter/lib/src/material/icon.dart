@@ -8,12 +8,7 @@ import 'theme.dart';
 import 'icon_theme.dart';
 import 'icon_theme_data.dart';
 
-enum IconSize {
-  s18,
-  s24,
-  s36,
-  s48,
-}
+enum IconSize { s18, s24, s36, s48, }
 
 const Map<IconSize, int> _kIconSize = const <IconSize, int>{
   IconSize.s18: 18,
@@ -23,13 +18,13 @@ const Map<IconSize, int> _kIconSize = const <IconSize, int>{
 };
 
 class Icon extends StatelessComponent {
-  Icon({
-    Key key,
-    this.size: IconSize.s24,
-    this.icon: '',
-    this.color,
-    this.colorFilter
-  }) : super(key: key) {
+  Icon(
+      {Key key,
+      this.size: IconSize.s24,
+      this.icon: '',
+      this.color,
+      this.colorFilter})
+      : super(key: key) {
     assert(size != null);
     assert(icon != null);
   }
@@ -47,9 +42,11 @@ class Icon extends StatelessComponent {
     }
     if (iconThemeColor == null) {
       ThemeBrightness themeBrightness = Theme.of(context).brightness;
-      iconThemeColor = themeBrightness == ThemeBrightness.dark ? IconThemeColor.white : IconThemeColor.black;
+      iconThemeColor = themeBrightness == ThemeBrightness.dark
+          ? IconThemeColor.white
+          : IconThemeColor.black;
     }
-    switch(iconThemeColor) {
+    switch (iconThemeColor) {
       case IconThemeColor.white:
         return "white";
       case IconThemeColor.black:
@@ -71,11 +68,11 @@ class Icon extends StatelessComponent {
     String colorSuffix = _getColorSuffix(context);
     int iconSize = _kIconSize[size];
     return new AssetImage(
-      name: '$category/$density/ic_${subtype}_${colorSuffix}_${iconSize}dp.png',
-      width: iconSize.toDouble(),
-      height: iconSize.toDouble(),
-      colorFilter: colorFilter
-    );
+        name:
+            '$category/$density/ic_${subtype}_${colorSuffix}_${iconSize}dp.png',
+        width: iconSize.toDouble(),
+        height: iconSize.toDouble(),
+        colorFilter: colorFilter);
   }
 
   void debugFillDescription(List<String> description) {

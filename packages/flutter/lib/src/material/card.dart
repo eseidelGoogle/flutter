@@ -12,20 +12,15 @@ const EdgeDims _kCardMargins = const EdgeDims.all(4.0);
 ///
 /// <https://www.google.com/design/spec/components/cards.html>
 class Card extends StatelessComponent {
-  const Card({ Key key, this.child, this.color }) : super(key: key);
+  const Card({Key key, this.child, this.color}) : super(key: key);
 
   final Widget child;
   final Color color;
 
   Widget build(BuildContext context) {
     return new Container(
-      margin: _kCardMargins,
-      child: new Material(
-        color: color,
-        type: MaterialType.card,
-        elevation: 2,
-        child: child
-      )
-    );
+        margin: _kCardMargins,
+        child: new Material(
+            color: color, type: MaterialType.card, elevation: 2, child: child));
   }
 }

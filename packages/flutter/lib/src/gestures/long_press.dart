@@ -11,19 +11,17 @@ import 'recognizer.dart';
 typedef void GestureLongPressCallback();
 
 class LongPressGestureRecognizer extends PrimaryPointerGestureRecognizer {
-  LongPressGestureRecognizer({ PointerRouter router, this.onLongPress })
-    : super(router: router, deadline: kLongPressTimeout);
+  LongPressGestureRecognizer({PointerRouter router, this.onLongPress})
+      : super(router: router, deadline: kLongPressTimeout);
 
   GestureLongPressCallback onLongPress;
 
   void didExceedDeadline() {
     resolve(GestureDisposition.accepted);
-    if (onLongPress != null)
-      onLongPress();
+    if (onLongPress != null) onLongPress();
   }
 
   void handlePrimaryPointer(PointerEvent event) {
-    if (event is PointerUpEvent)
-      resolve(GestureDisposition.rejected);
+    if (event is PointerUpEvent) resolve(GestureDisposition.rejected);
   }
 }

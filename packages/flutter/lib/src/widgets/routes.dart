@@ -25,8 +25,8 @@ abstract class OverlayRoute<T> extends Route<T> {
 
   void install(OverlayEntry insertionPoint) {
     assert(_overlayEntries.isEmpty);
-    for (WidgetBuilder builder in builders)
-      _overlayEntries.add(new OverlayEntry(builder: builder));
+    for (WidgetBuilder builder
+        in builders) _overlayEntries.add(new OverlayEntry(builder: builder));
     navigator.overlay?.insertAll(_overlayEntries, above: insertionPoint);
   }
 
@@ -44,8 +44,7 @@ abstract class OverlayRoute<T> extends Route<T> {
   ///
   /// Do not call this method outside of this context.
   void finished() {
-    for (OverlayEntry entry in _overlayEntries)
-      entry.remove();
+    for (OverlayEntry entry in _overlayEntries) entry.remove();
     _overlayEntries.clear();
   }
 
@@ -55,16 +54,15 @@ abstract class OverlayRoute<T> extends Route<T> {
 }
 
 abstract class TransitionRoute<T> extends OverlayRoute<T> {
-  TransitionRoute({
-    Completer<T> popCompleter,
-    Completer<T> transitionCompleter
-  }) : _popCompleter = popCompleter,
-       _transitionCompleter = transitionCompleter;
+  TransitionRoute({Completer<T> popCompleter, Completer<T> transitionCompleter})
+      : _popCompleter = popCompleter,
+        _transitionCompleter = transitionCompleter;
 
   TransitionRoute.explicit(
-    Completer<T> popCompleter,
-    Completer<T> transitionCompleter
-  ) : this(popCompleter: popCompleter, transitionCompleter: transitionCompleter);
+      Completer<T> popCompleter, Completer<T> transitionCompleter)
+      : this(
+            popCompleter: popCompleter,
+            transitionCompleter: transitionCompleter);
 
   /// This future completes once the animation has been dismissed. For
   /// ModalRoutes, this will be after the completer that's passed in, since that
@@ -107,13 +105,11 @@ abstract class TransitionRoute<T> extends OverlayRoute<T> {
   void handleStatusChanged(PerformanceStatus status) {
     switch (status) {
       case PerformanceStatus.completed:
-        if (overlayEntries.isNotEmpty)
-          overlayEntries.first.opaque = opaque;
+        if (overlayEntries.isNotEmpty) overlayEntries.first.opaque = opaque;
         break;
       case PerformanceStatus.forward:
       case PerformanceStatus.reverse:
-        if (overlayEntries.isNotEmpty)
-          overlayEntries.first.opaque = false;
+        if (overlayEntries.isNotEmpty) overlayEntries.first.opaque = false;
         break;
       case PerformanceStatus.dismissed:
         assert(!overlayEntries.first.opaque);
@@ -138,8 +134,8 @@ abstract class TransitionRoute<T> extends OverlayRoute<T> {
   }
 
   void didReplace(Route oldRoute) {
-    if (oldRoute is TransitionRoute)
-      _performanceController.progress = oldRoute._performanceController.progress;
+    if (oldRoute is TransitionRoute) _performanceController.progress =
+        oldRoute._performanceController.progress;
     _performance.addStatusListener(handleStatusChanged);
     super.didReplace(oldRoute);
   }
@@ -161,30 +157,29 @@ abstract class TransitionRoute<T> extends OverlayRoute<T> {
     super.dispose();
   }
 
-
   PerformanceView get forwardPerformance => _forwardPerformance;
   final ProxyPerformance _forwardPerformance = new ProxyPerformance();
 
   void didPushNext(Route nextRoute) {
-    if (nextRoute is TransitionRoute && canTransitionTo(nextRoute) && nextRoute.canTransitionFrom(this)) {
+    if (nextRoute is TransitionRoute &&
+        canTransitionTo(nextRoute) &&
+        nextRoute.canTransitionFrom(this)) {
       PerformanceView current = _forwardPerformance.masterPerformance;
       if (current != null) {
         if (current is TrainHoppingPerformance) {
           TrainHoppingPerformance newPerformance;
           newPerformance = new TrainHoppingPerformance(
-            current.currentTrain,
-            nextRoute.performance,
-            onSwitchedTrain: () {
-              assert(_forwardPerformance.masterPerformance == newPerformance);
-              assert(newPerformance.currentTrain == nextRoute.performance);
-              _forwardPerformance.masterPerformance = newPerformance.currentTrain;
-              newPerformance.dispose();
-            }
-          );
+              current.currentTrain, nextRoute.performance, onSwitchedTrain: () {
+            assert(_forwardPerformance.masterPerformance == newPerformance);
+            assert(newPerformance.currentTrain == nextRoute.performance);
+            _forwardPerformance.masterPerformance = newPerformance.currentTrain;
+            newPerformance.dispose();
+          });
           _forwardPerformance.masterPerformance = newPerformance;
           current.dispose();
         } else {
-          _forwardPerformance.masterPerformance = new TrainHoppingPerformance(current, nextRoute.performance);
+          _forwardPerformance.masterPerformance =
+              new TrainHoppingPerformance(current, nextRoute.performance);
         }
       } else {
         _forwardPerformance.masterPerformance = nextRoute.performance;
@@ -201,16 +196,16 @@ abstract class TransitionRoute<T> extends OverlayRoute<T> {
 }
 
 class LocalHistoryEntry {
-  LocalHistoryEntry({ this.onRemove });
+  LocalHistoryEntry({this.onRemove});
   final VoidCallback onRemove;
   LocalHistoryRoute _owner;
   void remove() {
     _owner.removeLocalHistoryEntry(this);
     assert(_owner == null);
   }
+
   void _notifyRemoved() {
-    if (onRemove != null)
-      onRemove();
+    if (onRemove != null) onRemove();
   }
 }
 
@@ -222,6 +217,7 @@ abstract class LocalHistoryRoute<T> extends Route<T> {
     _localHistory ??= <LocalHistoryEntry>[];
     _localHistory.add(entry);
   }
+
   void removeLocalHistoryEntry(LocalHistoryEntry entry) {
     assert(entry != null);
     assert(entry._owner == this);
@@ -230,6 +226,7 @@ abstract class LocalHistoryRoute<T> extends Route<T> {
     entry._owner = null;
     entry._notifyRemoved();
   }
+
   bool didPop(T result) {
     if (_localHistory != null && _localHistory.length > 0) {
       LocalHistoryEntry entry = _localHistory.removeLast();
@@ -240,18 +237,15 @@ abstract class LocalHistoryRoute<T> extends Route<T> {
     }
     return super.didPop(result);
   }
+
   bool get willHandlePopInternally {
     return _localHistory != null && _localHistory.length > 0;
   }
 }
 
 class _ModalScopeStatus extends InheritedWidget {
-  _ModalScopeStatus({
-    Key key,
-    this.current,
-    this.route,
-    Widget child
-  }) : super(key: key, child: child) {
+  _ModalScopeStatus({Key key, this.current, this.route, Widget child})
+      : super(key: key, child: child) {
     assert(current != null);
     assert(route != null);
     assert(child != null);
@@ -261,8 +255,7 @@ class _ModalScopeStatus extends InheritedWidget {
   final Route route;
 
   bool updateShouldNotify(_ModalScopeStatus old) {
-    return current != old.current ||
-           route != old.route;
+    return current != old.current || route != old.route;
   }
 
   void debugFillDescription(List<String> description) {
@@ -272,15 +265,15 @@ class _ModalScopeStatus extends InheritedWidget {
 }
 
 class _ModalScope extends StatefulComponent {
-  _ModalScope({
-    Key key,
-    this.subtreeKey,
-    this.storageBucket,
-    this.performance,
-    this.forwardPerformance,
-    this.current,
-    this.route
-  }) : super(key: key);
+  _ModalScope(
+      {Key key,
+      this.subtreeKey,
+      this.storageBucket,
+      this.performance,
+      this.forwardPerformance,
+      this.current,
+      this.route})
+      : super(key: key);
 
   final GlobalKey subtreeKey;
   final PageStorageBucket storageBucket;
@@ -305,7 +298,8 @@ class _ModalScopeState extends State<_ModalScope> {
       config.performance?.addStatusListener(_performanceStatusChanged);
     }
     if (config.forwardPerformance != oldConfig.forwardPerformance) {
-      oldConfig.forwardPerformance?.removeStatusListener(_performanceStatusChanged);
+      oldConfig.forwardPerformance
+          ?.removeStatusListener(_performanceStatusChanged);
       config.forwardPerformance?.addStatusListener(_performanceStatusChanged);
     }
   }
@@ -324,93 +318,84 @@ class _ModalScopeState extends State<_ModalScope> {
 
   Widget build(BuildContext context) {
     Widget contents = new PageStorage(
-      key: config.subtreeKey,
-      bucket: config.storageBucket,
-      child: new _ModalScopeStatus(
-        current: config.current,
-        route: config.route,
-        child: config.route.buildPage(context, config.performance, config.forwardPerformance)
-      )
-    );
+        key: config.subtreeKey,
+        bucket: config.storageBucket,
+        child: new _ModalScopeStatus(
+            current: config.current,
+            route: config.route,
+            child: config.route.buildPage(
+                context, config.performance, config.forwardPerformance)));
     if (config.route.offstage) {
       contents = new OffStage(child: contents);
     } else {
       contents = new Focus(
-        key: new GlobalObjectKey(config.route),
-        child: new IgnorePointer(
-          ignoring: config.performance?.status == PerformanceStatus.reverse,
-          child: config.route.buildTransitions(
-            context,
-            config.performance,
-            config.forwardPerformance,
-            contents
-          )
-        )
-      );
+          key: new GlobalObjectKey(config.route),
+          child: new IgnorePointer(
+              ignoring: config.performance?.status == PerformanceStatus.reverse,
+              child: config.route.buildTransitions(context, config.performance,
+                  config.forwardPerformance, contents)));
     }
     contents = new RepaintBoundary(child: contents);
     ModalPosition position = config.route.position;
-    if (position == null)
-      return contents;
+    if (position == null) return contents;
     return new Positioned(
-      top: position.top,
-      right: position.right,
-      bottom: position.bottom,
-      left: position.left,
-      child: contents
-    );
+        top: position.top,
+        right: position.right,
+        bottom: position.bottom,
+        left: position.left,
+        child: contents);
   }
 }
 
 class ModalPosition {
-  const ModalPosition({ this.top, this.right, this.bottom, this.left });
+  const ModalPosition({this.top, this.right, this.bottom, this.left});
   final double top;
   final double right;
   final double bottom;
   final double left;
 }
 
-abstract class ModalRoute<T> extends TransitionRoute<T> with LocalHistoryRoute<T> {
-  ModalRoute({
-    Completer<T> completer,
-    this.settings: const NamedRouteSettings()
-  }) : super.explicit(completer, null);
+abstract class ModalRoute<T> extends TransitionRoute<T>
+    with LocalHistoryRoute<T> {
+  ModalRoute(
+      {Completer<T> completer, this.settings: const NamedRouteSettings()})
+      : super.explicit(completer, null);
 
   // The API for general users of this class
 
   final NamedRouteSettings settings;
 
   static ModalRoute of(BuildContext context) {
-    _ModalScopeStatus widget = context.inheritFromWidgetOfType(_ModalScopeStatus);
+    _ModalScopeStatus widget =
+        context.inheritFromWidgetOfType(_ModalScopeStatus);
     return widget?.route;
   }
-
 
   // The API for subclasses to override - used by _ModalScope
 
   ModalPosition get position => null;
-  Widget buildPage(BuildContext context, PerformanceView performance, PerformanceView forwardPerformance);
-  Widget buildTransitions(BuildContext context, PerformanceView performance, PerformanceView forwardPerformance, Widget child) {
+  Widget buildPage(BuildContext context, PerformanceView performance,
+      PerformanceView forwardPerformance);
+  Widget buildTransitions(BuildContext context, PerformanceView performance,
+      PerformanceView forwardPerformance, Widget child) {
     return child;
   }
-
 
   // The API for subclasses to override - used by this class
 
   /// Whether you can dismiss this route by tapping the modal barrier.
   bool get barrierDismissable;
+
   /// The color to use for the modal barrier. If this is null, the barrier will
   /// be transparent.
   Color get barrierColor;
-
 
   // The API for _ModalScope and HeroController
 
   bool get offstage => _offstage;
   bool _offstage = false;
-  void set offstage (bool value) {
-    if (_offstage == value)
-      return;
+  void set offstage(bool value) {
+    if (_offstage == value) return;
     _offstage = value;
     _scopeKey.currentState?.setState(() {
       // _offstage is the value we're setting, but since there might not be a
@@ -424,10 +409,10 @@ abstract class ModalRoute<T> extends TransitionRoute<T> with LocalHistoryRoute<T
 
   BuildContext get subtreeContext => _subtreeKey.currentContext;
 
-
   // Internals
 
-  final GlobalKey<_ModalScopeState> _scopeKey = new GlobalKey<_ModalScopeState>();
+  final GlobalKey<_ModalScopeState> _scopeKey =
+      new GlobalKey<_ModalScopeState>();
   final GlobalKey _subtreeKey = new GlobalKey();
   final PageStorageBucket _storageBucket = new PageStorageBucket();
 
@@ -435,10 +420,10 @@ abstract class ModalRoute<T> extends TransitionRoute<T> with LocalHistoryRoute<T
     if (barrierColor != null) {
       assert(barrierColor != _kTransparent);
       return new AnimatedModalBarrier(
-        color: new AnimatedColorValue(_kTransparent, end: barrierColor, curve: Curves.ease),
-        performance: performance,
-        dismissable: barrierDismissable
-      );
+          color: new AnimatedColorValue(_kTransparent,
+              end: barrierColor, curve: Curves.ease),
+          performance: performance,
+          dismissable: barrierDismissable);
     } else {
       return new ModalBarrier(dismissable: barrierDismissable);
     }
@@ -446,28 +431,26 @@ abstract class ModalRoute<T> extends TransitionRoute<T> with LocalHistoryRoute<T
 
   Widget _buildModalScope(BuildContext context) {
     return new _ModalScope(
-      key: _scopeKey,
-      subtreeKey: _subtreeKey,
-      storageBucket: _storageBucket,
-      performance: performance,
-      forwardPerformance: forwardPerformance,
-      current: isCurrent,
-      route: this
-      // calls buildTransitions() and buildPage(), defined above
-    );
+        key: _scopeKey,
+        subtreeKey: _subtreeKey,
+        storageBucket: _storageBucket,
+        performance: performance,
+        forwardPerformance: forwardPerformance,
+        current: isCurrent,
+        route: this
+        // calls buildTransitions() and buildPage(), defined above
+        );
   }
 
-  List<WidgetBuilder> get builders => <WidgetBuilder>[
-    _buildModalBarrier,
-    _buildModalScope
-  ];
+  List<WidgetBuilder> get builders =>
+      <WidgetBuilder>[_buildModalBarrier, _buildModalScope];
 
   String toString() => '$runtimeType($settings, performance: $_performance)';
 }
 
 /// A modal route that overlays a widget over the current route.
 abstract class PopupRoute<T> extends ModalRoute<T> {
-  PopupRoute({ Completer<T> completer }) : super(completer: completer);
+  PopupRoute({Completer<T> completer}) : super(completer: completer);
   bool get opaque => false;
   void didPushNext(Route nextRoute) {
     assert(nextRoute is! PageRoute);

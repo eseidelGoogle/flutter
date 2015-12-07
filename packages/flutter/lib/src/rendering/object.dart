@@ -27,7 +27,7 @@ typedef ui.Shader ShaderCallback(Rect bounds);
 /// to other children.
 class ParentData {
   /// Called when the RenderObject is removed from the tree.
-  void detach() { }
+  void detach() {}
 
   /// Override this function in subclasses to merge in data from other instance
   /// into this instance.
@@ -75,7 +75,8 @@ class PaintingContext {
       child._layer.debugOwner = child.debugOwner ?? child.runtimeType;
       return true;
     });
-    PaintingContext childContext = new PaintingContext._(child._layer, child.paintBounds);
+    PaintingContext childContext =
+        new PaintingContext._(child._layer, child.paintBounds);
     child._paintWithContext(childContext, Offset.zero);
     childContext._stopRecordingIfNeeded();
   }
@@ -147,8 +148,7 @@ class PaintingContext {
   /// context, which means it's fragile to hold a reference to the canvas
   /// returned by this getter.
   Canvas get canvas {
-    if (_canvas == null)
-      _startRecording();
+    if (_canvas == null) _startRecording();
     return _canvas;
   }
 
@@ -161,11 +161,10 @@ class PaintingContext {
   }
 
   void _stopRecordingIfNeeded() {
-    if (!_isRecording)
-      return;
+    if (!_isRecording) return;
     assert(() {
-      if (debugEnableRepaintRainbox)
-        canvas.drawRect(_paintBounds, new Paint()..color = debugCurrentRepaintColor.toColor());
+      if (debugEnableRepaintRainbox) canvas.drawRect(_paintBounds,
+          new Paint()..color = debugCurrentRepaintColor.toColor());
       if (debugPaintLayerBordersEnabled) {
         Paint paint = new Paint()
           ..style = ui.PaintingStyle.stroke
@@ -187,13 +186,13 @@ class PaintingContext {
   ///
   /// Statistics overlays are always composited because they're drawn by the
   /// compositor.
-  void pushStatistics(Offset offset, int optionsMask, int rasterizerThreshold, Size size) {
+  void pushStatistics(
+      Offset offset, int optionsMask, int rasterizerThreshold, Size size) {
     _stopRecordingIfNeeded();
     StatisticsLayer statisticsLayer = new StatisticsLayer(
-      paintBounds: new Rect.fromLTWH(0.0, 0.0, size.width, size.height),
-      optionsMask: optionsMask,
-      rasterizerThreshold: rasterizerThreshold
-    );
+        paintBounds: new Rect.fromLTWH(0.0, 0.0, size.width, size.height),
+        optionsMask: optionsMask,
+        rasterizerThreshold: rasterizerThreshold);
     _appendLayer(statisticsLayer, offset);
   }
 
@@ -202,7 +201,8 @@ class PaintingContext {
   /// This function will call painter synchronously with a painting context that
   /// is clipped by the given clip. The given clip should not incorporate the
   /// painting offset.
-  void pushClipRect(bool needsCompositing, Offset offset, Rect clipRect, PaintingContextCallback painter) {
+  void pushClipRect(bool needsCompositing, Offset offset, Rect clipRect,
+      PaintingContextCallback painter) {
     if (needsCompositing) {
       _stopRecordingIfNeeded();
       ClipRectLayer clipLayer = new ClipRectLayer(clipRect: clipRect);
@@ -223,10 +223,12 @@ class PaintingContext {
   /// This function will call painter synchronously with a painting context that
   /// is clipped by the given clip. The given clip should not incorporate the
   /// painting offset.
-  void pushClipRRect(bool needsCompositing, Offset offset, Rect bounds, ui.RRect clipRRect, PaintingContextCallback painter) {
+  void pushClipRRect(bool needsCompositing, Offset offset, Rect bounds,
+      ui.RRect clipRRect, PaintingContextCallback painter) {
     if (needsCompositing) {
       _stopRecordingIfNeeded();
-      ClipRRectLayer clipLayer = new ClipRRectLayer(bounds: bounds, clipRRect: clipRRect);
+      ClipRRectLayer clipLayer =
+          new ClipRRectLayer(bounds: bounds, clipRRect: clipRRect);
       _appendLayer(clipLayer, offset);
       PaintingContext childContext = new PaintingContext._(clipLayer, bounds);
       painter(childContext, Offset.zero);
@@ -246,10 +248,12 @@ class PaintingContext {
   /// This function will call painter synchronously with a painting context that
   /// is clipped by the given clip. The given clip should not incorporate the
   /// painting offset.
-  void pushClipPath(bool needsCompositing, Offset offset, Rect bounds, Path clipPath, PaintingContextCallback painter) {
+  void pushClipPath(bool needsCompositing, Offset offset, Rect bounds,
+      Path clipPath, PaintingContextCallback painter) {
     if (needsCompositing) {
       _stopRecordingIfNeeded();
-      ClipPathLayer clipLayer = new ClipPathLayer(bounds: bounds, clipPath: clipPath);
+      ClipPathLayer clipLayer =
+          new ClipPathLayer(bounds: bounds, clipPath: clipPath);
       _appendLayer(clipLayer, offset);
       PaintingContext childContext = new PaintingContext._(clipLayer, bounds);
       painter(childContext, Offset.zero);
@@ -267,16 +271,19 @@ class PaintingContext {
   /// This function will call painter synchronously with a painting context that
   /// is transformed by the given transform. The given transform should not
   /// incorporate the painting offset.
-  void pushTransform(bool needsCompositing, Offset offset, Matrix4 transform, PaintingContextCallback painter) {
+  void pushTransform(bool needsCompositing, Offset offset, Matrix4 transform,
+      PaintingContextCallback painter) {
     if (needsCompositing) {
       _stopRecordingIfNeeded();
       TransformLayer transformLayer = new TransformLayer(transform: transform);
       _appendLayer(transformLayer, offset);
-      PaintingContext childContext = new PaintingContext._(transformLayer, _paintBounds);
+      PaintingContext childContext =
+          new PaintingContext._(transformLayer, _paintBounds);
       painter(childContext, Offset.zero);
       childContext._stopRecordingIfNeeded();
     } else {
-      Matrix4 offsetMatrix = new Matrix4.translationValues(offset.dx, offset.dy, 0.0);
+      Matrix4 offsetMatrix =
+          new Matrix4.translationValues(offset.dx, offset.dy, 0.0);
       Matrix4 transformWithOffset = offsetMatrix * transform;
       canvas.save();
       canvas.concat(transformWithOffset.storage);
@@ -296,12 +303,15 @@ class PaintingContext {
   ///
   /// This function will call painter synchronously with a painting context that
   /// will be blended with the given alpha value.
-  void pushOpacity(bool needsCompositing, Offset offset, Rect bounds, int alpha, PaintingContextCallback painter) {
+  void pushOpacity(bool needsCompositing, Offset offset, Rect bounds, int alpha,
+      PaintingContextCallback painter) {
     if (needsCompositing) {
       _stopRecordingIfNeeded();
-      OpacityLayer opacityLayer = new OpacityLayer(bounds: bounds, alpha: alpha);
+      OpacityLayer opacityLayer =
+          new OpacityLayer(bounds: bounds, alpha: alpha);
       _appendLayer(opacityLayer, offset);
-      PaintingContext childContext = new PaintingContext._(opacityLayer, _paintBounds);
+      PaintingContext childContext =
+          new PaintingContext._(opacityLayer, _paintBounds);
       painter(childContext, Offset.zero);
       childContext._stopRecordingIfNeeded();
     } else {
@@ -312,12 +322,11 @@ class PaintingContext {
     }
   }
 
-  static Paint _getPaintForShaderMask(Rect bounds,
-                                      ShaderCallback shaderCallback,
-                                      TransferMode transferMode) {
+  static Paint _getPaintForShaderMask(
+      Rect bounds, ShaderCallback shaderCallback, TransferMode transferMode) {
     return new Paint()
-     ..transferMode = transferMode
-     ..shader = shaderCallback(bounds);
+      ..transferMode = transferMode
+      ..shader = shaderCallback(bounds);
   }
 
   /// Push a shader mask.
@@ -326,11 +335,19 @@ class PaintingContext {
   /// will be masked with the given shader.
   ///
   /// WARNING: This function does not yet support compositing.
-  void pushShaderMask(bool needsCompositing, Offset offset, Rect bounds, ShaderCallback shaderCallback, TransferMode transferMode, PaintingContextCallback painter) {
-    assert(!needsCompositing); // TODO(abarth): Implement compositing for shader masks.
+  void pushShaderMask(
+      bool needsCompositing,
+      Offset offset,
+      Rect bounds,
+      ShaderCallback shaderCallback,
+      TransferMode transferMode,
+      PaintingContextCallback painter) {
+    assert(
+        !needsCompositing); // TODO(abarth): Implement compositing for shader masks.
     canvas.saveLayer(bounds.shift(offset), _disableAntialias);
     painter(this, offset);
-    Paint shaderPaint = _getPaintForShaderMask(bounds, shaderCallback, transferMode);
+    Paint shaderPaint =
+        _getPaintForShaderMask(bounds, shaderCallback, transferMode);
     canvas.drawRect(bounds, shaderPaint);
     canvas.restore();
   }
@@ -372,7 +389,9 @@ typedef void RenderObjectVisitor(RenderObject child);
 typedef void LayoutCallback(Constraints constraints);
 typedef double ExtentCallback(Constraints constraints);
 
-typedef void RenderingExceptionHandler(RenderObject source, String method, dynamic exception, StackTrace stack);
+typedef void RenderingExceptionHandler(
+    RenderObject source, String method, dynamic exception, StackTrace stack);
+
 /// This callback is invoked whenever an exception is caught by the rendering
 /// system. The 'source' argument is the [RenderObject] object that caught the
 /// exception. The 'method' argument is the method in which the exception
@@ -388,7 +407,6 @@ RenderingExceptionHandler debugRenderingExceptionHandler;
 /// Render objects have a reference to their parent but do not commit to a model
 /// for their children.
 abstract class RenderObject extends AbstractNode implements HitTestTarget {
-
   // LAYOUT
 
   /// Data for use by the parent render object
@@ -414,8 +432,7 @@ abstract class RenderObject extends AbstractNode implements HitTestTarget {
   /// child is added to the parent's child list.
   void setupParentData(RenderObject child) {
     assert(debugCanPerformMutations);
-    if (child.parentData is! ParentData)
-      child.parentData = new ParentData();
+    if (child.parentData is! ParentData) child.parentData = new ParentData();
   }
 
   /// Called by subclasses when they decide a render object is a child
@@ -450,20 +467,22 @@ abstract class RenderObject extends AbstractNode implements HitTestTarget {
   /// Calls visitor for each immediate child of this render object
   ///
   /// Override in subclasses with children and call the visitor for each child
-  void visitChildren(RenderObjectVisitor visitor) { }
+  void visitChildren(RenderObjectVisitor visitor) {}
 
   dynamic debugOwner;
-  void _debugReportException(String method, dynamic exception, StackTrace stack) {
+  void _debugReportException(
+      String method, dynamic exception, StackTrace stack) {
     debugPrint('-- EXCEPTION --');
     debugPrint('The following exception was raised during $method():');
     debugPrint('$exception');
     debugPrint('Stack trace:');
     debugPrint('$stack');
-    debugPrint('The following RenderObject was being processed when the exception was fired:\n${this}');
-    if (debugOwner != null)
-      debugPrint('That RenderObject had the following owner:\n$debugOwner');
-    if (debugRenderingExceptionHandler != null)
-      debugRenderingExceptionHandler(this, method, exception, stack);
+    debugPrint(
+        'The following RenderObject was being processed when the exception was fired:\n${this}');
+    if (debugOwner != null) debugPrint(
+        'That RenderObject had the following owner:\n$debugOwner');
+    if (debugRenderingExceptionHandler !=
+        null) debugRenderingExceptionHandler(this, method, exception, stack);
   }
 
   static bool _debugDoingLayout = false;
@@ -480,37 +499,36 @@ abstract class RenderObject extends AbstractNode implements HitTestTarget {
   bool get debugCanPerformMutations {
     RenderObject node = this;
     while (true) {
-      if (node._doingThisLayoutWithCallback)
-        return true;
-      if (node._debugMutationsLocked)
-        return false;
-      if (node.parent is! RenderObject)
-        return true;
+      if (node._doingThisLayoutWithCallback) return true;
+      if (node._debugMutationsLocked) return false;
+      if (node.parent is! RenderObject) return true;
       node = node.parent;
     }
   }
 
   static List<RenderObject> _nodesNeedingLayout = new List<RenderObject>();
   bool _needsLayout = true;
+
   /// Whether this render object's layout information is dirty
   bool get needsLayout => _needsLayout;
   RenderObject _relayoutSubtreeRoot;
   bool _doingThisLayoutWithCallback = false;
   Constraints _constraints;
+
   /// The layout constraints most recently supplied by the parent
   Constraints get constraints => _constraints;
+
   /// Override this function in a subclass to verify that your state matches the constraints object
   bool debugDoesMeetConstraints();
   bool debugAncestorsAlreadyMarkedNeedsLayout() {
-    if (_relayoutSubtreeRoot == null)
-      return true; // we haven't yet done layout even once, so there's nothing for us to do
+    if (_relayoutSubtreeRoot ==
+        null) return true; // we haven't yet done layout even once, so there's nothing for us to do
     RenderObject node = this;
     while (node != _relayoutSubtreeRoot) {
       assert(node._relayoutSubtreeRoot == _relayoutSubtreeRoot);
       assert(node.parent != null);
       node = node.parent;
-      if ((!node._needsLayout) && (!node._debugDoingThisLayout))
-        return false;
+      if ((!node._needsLayout) && (!node._debugDoingThisLayout)) return false;
     }
     assert(node._relayoutSubtreeRoot == node);
     return true;
@@ -596,16 +614,18 @@ abstract class RenderObject extends AbstractNode implements HitTestTarget {
       while (_nodesNeedingLayout.isNotEmpty) {
         List<RenderObject> dirtyNodes = _nodesNeedingLayout;
         _nodesNeedingLayout = new List<RenderObject>();
-        dirtyNodes..sort((RenderObject a, RenderObject b) => a.depth - b.depth)..forEach((RenderObject node) {
-          if (node._needsLayout && node.attached)
-            node._layoutWithoutResize();
-        });
+        dirtyNodes
+          ..sort((RenderObject a, RenderObject b) => a.depth - b.depth)
+          ..forEach((RenderObject node) {
+            if (node._needsLayout && node.attached) node._layoutWithoutResize();
+          });
       }
     } finally {
       _debugDoingLayout = false;
       Timeline.finishSync();
     }
   }
+
   void _layoutWithoutResize() {
     assert(_relayoutSubtreeRoot == this);
     RenderObject debugPreviousActiveLayout;
@@ -656,21 +676,24 @@ abstract class RenderObject extends AbstractNode implements HitTestTarget {
   /// children unconditionally. It is the layout functions's responsibility (as
   /// implemented here) to return early if the child does not need to do any
   /// work to update its layout information.
-  void layout(Constraints constraints, { bool parentUsesSize: false }) {
+  void layout(Constraints constraints, {bool parentUsesSize: false}) {
     assert(!_debugDoingThisResize);
     assert(!_debugDoingThisLayout);
     final RenderObject parent = this.parent;
     RenderObject relayoutSubtreeRoot;
-    if (!parentUsesSize || sizedByParent || constraints.isTight || parent is! RenderObject)
-      relayoutSubtreeRoot = this;
-    else
-      relayoutSubtreeRoot = parent._relayoutSubtreeRoot;
+    if (!parentUsesSize ||
+        sizedByParent ||
+        constraints.isTight ||
+        parent is! RenderObject) relayoutSubtreeRoot = this;
+    else relayoutSubtreeRoot = parent._relayoutSubtreeRoot;
     assert(parent == this.parent);
     assert(() {
       _debugCanParentUseSize = parentUsesSize;
       return true;
     });
-    if (!needsLayout && constraints == _constraints && relayoutSubtreeRoot == _relayoutSubtreeRoot) {
+    if (!needsLayout &&
+        constraints == _constraints &&
+        relayoutSubtreeRoot == _relayoutSubtreeRoot) {
       assert(() {
         // in case parentUsesSize changed since the last invocation, set size
         // to itself, so it has the right internal debug values.
@@ -695,14 +718,20 @@ abstract class RenderObject extends AbstractNode implements HitTestTarget {
       return true;
     });
     if (sizedByParent) {
-      assert(() { _debugDoingThisResize = true; return true; });
+      assert(() {
+        _debugDoingThisResize = true;
+        return true;
+      });
       try {
         performResize();
         assert(debugDoesMeetConstraints());
       } catch (e, stack) {
         _debugReportException('performResize', e, stack);
       }
-      assert(() { _debugDoingThisResize = false; return true; });
+      assert(() {
+        _debugDoingThisResize = false;
+        return true;
+      });
     }
     RenderObject debugPreviousActiveLayout;
     assert(() {
@@ -734,7 +763,7 @@ abstract class RenderObject extends AbstractNode implements HitTestTarget {
   /// property isn't used when debugCanParentUseSize isn't set, then that
   /// subclass should override debugResetSize() to reapply the current values of
   /// debugCanParentUseSize to that state.
-  void debugResetSize() { }
+  void debugResetSize() {}
 
   /// Whether the constraints are the only input to the sizing algorithm (in
   /// particular, child nodes have no impact)
@@ -793,11 +822,10 @@ abstract class RenderObject extends AbstractNode implements HitTestTarget {
   }
 
   /// Rotate this render object (not yet implemented)
-  void rotate({
-    int oldAngle, // 0..3
-    int newAngle, // 0..3
-    Duration time
-  }) { }
+  void rotate(
+      {int oldAngle, // 0..3
+      int newAngle, // 0..3
+      Duration time}) {}
 
   // when the parent has rotated (e.g. when the screen has been turned
   // 90 degrees), immediately prior to layout() being called for the
@@ -809,7 +837,6 @@ abstract class RenderObject extends AbstractNode implements HitTestTarget {
   // pixel, on the output device. Then, the layout() method or
   // equivalent will be invoked.
 
-
   // PAINTING
 
   static bool _debugDoingPaint = false;
@@ -817,6 +844,7 @@ abstract class RenderObject extends AbstractNode implements HitTestTarget {
   static void set debugDoingPaint(bool value) {
     _debugDoingPaint = value;
   }
+
   bool _debugDoingThisPaint = false;
   bool get debugDoingThisPaint => _debugDoingThisPaint;
   static RenderObject _debugActivePaint = null;
@@ -834,6 +862,7 @@ abstract class RenderObject extends AbstractNode implements HitTestTarget {
   bool get hasLayer => false;
 
   ContainerLayer _layer;
+
   /// The compositing layer that this render object uses to paint
   ///
   /// Call only when [hasLayer] is true.
@@ -844,6 +873,7 @@ abstract class RenderObject extends AbstractNode implements HitTestTarget {
   }
 
   bool _needsCompositingBitsUpdate = true;
+
   /// Mark the compositing state for this render object as dirty
   ///
   /// When the subtree is mutated, we need to recompute our [needsCompositing]
@@ -851,21 +881,22 @@ abstract class RenderObject extends AbstractNode implements HitTestTarget {
   /// Therefore, [adoptChild] and [dropChild] call
   /// [markNeedsCompositingBitsUpdate].
   void _markNeedsCompositingBitsUpdate() {
-    if (_needsCompositingBitsUpdate)
-      return;
+    if (_needsCompositingBitsUpdate) return;
     _needsCompositingBitsUpdate = true;
     final AbstractNode parent = this.parent;
-    if (parent is RenderObject)
-      parent._markNeedsCompositingBitsUpdate();
+    if (parent is RenderObject) parent._markNeedsCompositingBitsUpdate();
     assert(parent == this.parent);
   }
+
   bool _needsCompositing = false;
+
   /// Whether we or one of our descendants has a compositing layer
   ///
   /// Only legal to call after [flushLayout] and [updateCompositingBits] have
   /// been called.
   bool get needsCompositing {
-    assert(!_needsCompositingBitsUpdate); // make sure we don't use this bit when it is dirty
+    assert(
+        !_needsCompositingBitsUpdate); // make sure we don't use this bit when it is dirty
     return _needsCompositing;
   }
 
@@ -874,22 +905,19 @@ abstract class RenderObject extends AbstractNode implements HitTestTarget {
   /// Called as part of the rendering pipeline after [flushLayout] and before
   /// [flushPaint].
   void updateCompositingBits() {
-    if (!_needsCompositingBitsUpdate)
-      return;
+    if (!_needsCompositingBitsUpdate) return;
     bool didHaveCompositedDescendant = _needsCompositing;
     visitChildren((RenderObject child) {
       child.updateCompositingBits();
-      if (child.needsCompositing)
-        _needsCompositing = true;
+      if (child.needsCompositing) _needsCompositing = true;
     });
-    if (hasLayer)
-      _needsCompositing = true;
-    if (didHaveCompositedDescendant != _needsCompositing)
-      markNeedsPaint();
+    if (hasLayer) _needsCompositing = true;
+    if (didHaveCompositedDescendant != _needsCompositing) markNeedsPaint();
     _needsCompositingBitsUpdate = false;
   }
 
   bool _needsPaint = true;
+
   /// The visual appearance of this render object has changed since it last painted
   bool get needsPaint => _needsPaint;
 
@@ -905,10 +933,8 @@ abstract class RenderObject extends AbstractNode implements HitTestTarget {
   /// writes are coalesced, removing redundant computation.
   void markNeedsPaint() {
     assert(!debugDoingPaint);
-    if (!attached)
-      return; // Don't try painting things that aren't in the hierarchy
-    if (_needsPaint)
-      return;
+    if (!attached) return; // Don't try painting things that aren't in the hierarchy
+    if (_needsPaint) return;
     _needsPaint = true;
     if (hasLayer) {
       // If we always have our own layer, then we can just repaint
@@ -947,11 +973,12 @@ abstract class RenderObject extends AbstractNode implements HitTestTarget {
       List<RenderObject> dirtyNodes = _nodesNeedingPaint;
       _nodesNeedingPaint = new List<RenderObject>();
       // Sort the dirty nodes in reverse order (deepest first).
-      for (RenderObject node in dirtyNodes..sort((RenderObject a, RenderObject b) => b.depth - a.depth)) {
+      for (RenderObject node in dirtyNodes
+        ..sort((RenderObject a, RenderObject b) => b.depth - a.depth)) {
         assert(node._needsPaint);
-        if (node.attached)
-          PaintingContext.repaintCompositedChild(node);
-      };
+        if (node.attached) PaintingContext.repaintCompositedChild(node);
+      }
+      ;
       assert(_nodesNeedingPaint.length == 0);
     } finally {
       _debugDoingPaint = false;
@@ -975,6 +1002,7 @@ abstract class RenderObject extends AbstractNode implements HitTestTarget {
     assert(_needsPaint);
     _nodesNeedingPaint.add(this);
   }
+
   void _paintWithContext(PaintingContext context, Offset offset) {
     assert(!_debugDoingThisPaint);
     assert(!_needsLayout);
@@ -990,8 +1018,10 @@ abstract class RenderObject extends AbstractNode implements HitTestTarget {
     _needsPaint = false;
     try {
       paint(context, offset);
-      assert(!_needsLayout); // check that the paint() method didn't mark us dirty again
-      assert(!_needsPaint); // check that the paint() method didn't mark us dirty again
+      assert(
+          !_needsLayout); // check that the paint() method didn't mark us dirty again
+      assert(
+          !_needsPaint); // check that the paint() method didn't mark us dirty again
     } catch (e, stack) {
       _debugReportException('paint', e, stack);
     }
@@ -1014,7 +1044,7 @@ abstract class RenderObject extends AbstractNode implements HitTestTarget {
   Rect get paintBounds;
 
   /// Override this function to paint debugging information
-  void debugPaint(PaintingContext context, Offset offset) { }
+  void debugPaint(PaintingContext context, Offset offset) {}
 
   /// Paint this render object into the given context at the given offset
   ///
@@ -1033,21 +1063,19 @@ abstract class RenderObject extends AbstractNode implements HitTestTarget {
   /// given context), the current canvas held by the context might change
   /// because draw operations before and after painting children might need to
   /// be recorded on separate compositing layers.
-  void paint(PaintingContext context, Offset offset) { }
+  void paint(PaintingContext context, Offset offset) {}
 
   /// If this render object applies a transform before painting, apply that
   /// transform to the given matrix
   ///
   /// Used by coordinate conversion functions to translate coordiantes local to
   /// one render object into coordinates local to another render object.
-  void applyPaintTransform(Matrix4 transform) { }
-
+  void applyPaintTransform(Matrix4 transform) {}
 
   // EVENTS
 
   /// Override this function to handle pointer events that hit this render object.
-  void handleEvent(PointerEvent event, HitTestEntry entry) { }
-
+  void handleEvent(PointerEvent event, HitTestEntry entry) {}
 
   // HIT TESTING
 
@@ -1068,7 +1096,6 @@ abstract class RenderObject extends AbstractNode implements HitTestTarget {
   // }
   // You must not add yourself to /result/ if you return false.
 
-
   /// Returns a human understandable name
   String toString() {
     String header = '$runtimeType';
@@ -1081,27 +1108,28 @@ abstract class RenderObject extends AbstractNode implements HitTestTarget {
       }
       header += ' relayoutSubtreeRoot=up$count';
     }
-    if (_needsLayout)
-      header += ' NEEDS-LAYOUT';
-    if (!attached)
-      header += ' DETACHED';
+    if (_needsLayout) header += ' NEEDS-LAYOUT';
+    if (!attached) header += ' DETACHED';
     return header;
   }
 
   /// Returns a description of the tree rooted at this node.
   /// If the prefix argument is provided, then every line in the output
   /// will be prefixed by that string.
-  String toStringDeep([String prefixLineOne = '', String prefixOtherLines = '']) {
+  String toStringDeep(
+      [String prefixLineOne = '', String prefixOtherLines = '']) {
     RenderObject debugPreviousActiveLayout = _debugActiveLayout;
     _debugActiveLayout = null;
     String result = '$prefixLineOne$this\n';
     final String childrenDescription = debugDescribeChildren(prefixOtherLines);
-    final String settingsPrefix = childrenDescription != '' ? '$prefixOtherLines \u2502 ' : '$prefixOtherLines   ';
+    final String settingsPrefix = childrenDescription != ''
+        ? '$prefixOtherLines \u2502 '
+        : '$prefixOtherLines   ';
     List<String> settings = <String>[];
     debugDescribeSettings(settings);
-    result += settings.map((String setting) => "$settingsPrefix$setting\n").join();
-    if (childrenDescription == '')
-      result += '$prefixOtherLines\n';
+    result +=
+        settings.map((String setting) => "$settingsPrefix$setting\n").join();
+    if (childrenDescription == '') result += '$prefixOtherLines\n';
     result += childrenDescription;
     _debugActiveLayout = debugPreviousActiveLayout;
     return result;
@@ -1111,8 +1139,7 @@ abstract class RenderObject extends AbstractNode implements HitTestTarget {
   /// per string. Subclasses should override this to have their information
   /// included in toStringDeep().
   void debugDescribeSettings(List<String> settings) {
-    if (debugOwner != null)
-      settings.add('owner: $debugOwner');
+    if (debugOwner != null) settings.add('owner: $debugOwner');
     settings.add('parentData: $parentData');
     settings.add('constraints: $constraints');
   }
@@ -1120,57 +1147,59 @@ abstract class RenderObject extends AbstractNode implements HitTestTarget {
   /// Returns a string describing the current node's descendants. Each line of
   /// the subtree in the output should be indented by the prefix argument.
   String debugDescribeChildren(String prefix) => '';
-
 }
 
 /// Obsolete function that will be removed eventually
-double clamp({ double min: 0.0, double value: 0.0, double max: double.INFINITY }) {
+double clamp(
+    {double min: 0.0, double value: 0.0, double max: double.INFINITY}) {
   assert(min != null);
   assert(value != null);
   assert(max != null);
   return math.max(min, math.min(max, value));
 }
 
-
 /// Generic mixin for render objects with one child
 ///
 /// Provides a child model for a render object subclass that has a unique child
-abstract class RenderObjectWithChildMixin<ChildType extends RenderObject> implements RenderObject {
+abstract class RenderObjectWithChildMixin<ChildType extends RenderObject>
+    implements RenderObject {
   ChildType _child;
+
   /// The render object's unique child
   ChildType get child => _child;
-  void set child (ChildType value) {
-    if (_child != null)
-      dropChild(_child);
+  void set child(ChildType value) {
+    if (_child != null) dropChild(_child);
     _child = value;
-    if (_child != null)
-      adoptChild(_child);
+    if (_child != null) adoptChild(_child);
   }
+
   void attach() {
     super.attach();
-    if (_child != null)
-      _child.attach();
+    if (_child != null) _child.attach();
   }
+
   void detach() {
     super.detach();
-    if (_child != null)
-      _child.detach();
+    if (_child != null) _child.detach();
   }
+
   void visitChildren(RenderObjectVisitor visitor) {
-    if (_child != null)
-      visitor(_child);
+    if (_child != null) visitor(_child);
   }
+
   String debugDescribeChildren(String prefix) {
-    if (child != null)
-      return '$prefix \u2502\n${child.toStringDeep('$prefix \u2514\u2500child: ', '$prefix  ')}';
+    if (child !=
+        null) return '$prefix \u2502\n${child.toStringDeep('$prefix \u2514\u2500child: ', '$prefix  ')}';
     return '';
   }
 }
 
 /// Parent data to support a doubly-linked list of children
-abstract class ContainerParentDataMixin<ChildType extends RenderObject> implements ParentData {
+abstract class ContainerParentDataMixin<ChildType extends RenderObject>
+    implements ParentData {
   /// The previous sibling in the parent's child list
   ChildType previousSibling;
+
   /// The next sibling in the parent's child list
   ChildType nextSibling;
 
@@ -1178,13 +1207,15 @@ abstract class ContainerParentDataMixin<ChildType extends RenderObject> implemen
   void detach() {
     super.detach();
     if (previousSibling != null) {
-      final ContainerParentDataMixin<ChildType> previousSiblingParentData = previousSibling.parentData;
+      final ContainerParentDataMixin<ChildType> previousSiblingParentData =
+          previousSibling.parentData;
       assert(previousSibling != this);
       assert(previousSiblingParentData.nextSibling == this);
       previousSiblingParentData.nextSibling = nextSibling;
     }
     if (nextSibling != null) {
-      final ContainerParentDataMixin<ChildType> nextSiblingParentData = nextSibling.parentData;
+      final ContainerParentDataMixin<ChildType> nextSiblingParentData =
+          nextSibling.parentData;
       assert(nextSibling != this);
       assert(nextSiblingParentData.previousSibling == this);
       nextSiblingParentData.previousSibling = previousSibling;
@@ -1198,9 +1229,10 @@ abstract class ContainerParentDataMixin<ChildType extends RenderObject> implemen
 ///
 /// Provides a child model for a render object subclass that has a doubly-linked
 /// list of children.
-abstract class ContainerRenderObjectMixin<ChildType extends RenderObject, ParentDataType extends ContainerParentDataMixin<ChildType>> implements RenderObject {
-
-  bool _debugUltimatePreviousSiblingOf(ChildType child, { ChildType equals }) {
+abstract class ContainerRenderObjectMixin<ChildType extends RenderObject,
+        ParentDataType extends ContainerParentDataMixin<ChildType>>
+    implements RenderObject {
+  bool _debugUltimatePreviousSiblingOf(ChildType child, {ChildType equals}) {
     ParentDataType childParentData = child.parentData;
     while (childParentData.previousSibling != null) {
       assert(childParentData.previousSibling != child);
@@ -1209,7 +1241,8 @@ abstract class ContainerRenderObjectMixin<ChildType extends RenderObject, Parent
     }
     return child == equals;
   }
-  bool _debugUltimateNextSiblingOf(ChildType child, { ChildType equals }) {
+
+  bool _debugUltimateNextSiblingOf(ChildType child, {ChildType equals}) {
     ParentDataType childParentData = child.parentData;
     while (childParentData.nextSibling != null) {
       assert(childParentData.nextSibling != child);
@@ -1220,12 +1253,13 @@ abstract class ContainerRenderObjectMixin<ChildType extends RenderObject, Parent
   }
 
   int _childCount = 0;
+
   /// The number of children
   int get childCount => _childCount;
 
   ChildType _firstChild;
   ChildType _lastChild;
-  void _addToChildList(ChildType child, { ChildType before }) {
+  void _addToChildList(ChildType child, {ChildType before}) {
     final ParentDataType childParentData = child.parentData;
     assert(childParentData.nextSibling == null);
     assert(childParentData.previousSibling == null);
@@ -1239,8 +1273,7 @@ abstract class ContainerRenderObjectMixin<ChildType extends RenderObject, Parent
         _lastChildParentData.nextSibling = child;
       }
       _lastChild = child;
-      if (_firstChild == null)
-        _firstChild = child;
+      if (_firstChild == null) _firstChild = child;
     } else {
       assert(_firstChild != null);
       assert(_lastChild != null);
@@ -1259,18 +1292,21 @@ abstract class ContainerRenderObjectMixin<ChildType extends RenderObject, Parent
         childParentData.previousSibling = beforeParentData.previousSibling;
         childParentData.nextSibling = before;
         // set up links from siblings to child
-        final ParentDataType childPreviousSiblingParentData = childParentData.previousSibling.parentData;
-        final ParentDataType childNextSiblingParentData = childParentData.nextSibling.parentData;
+        final ParentDataType childPreviousSiblingParentData =
+            childParentData.previousSibling.parentData;
+        final ParentDataType childNextSiblingParentData =
+            childParentData.nextSibling.parentData;
         childPreviousSiblingParentData.nextSibling = child;
         childNextSiblingParentData.previousSibling = child;
         assert(beforeParentData.previousSibling == child);
       }
     }
   }
+
   /// Insert child into this render object's child list before the given child
   ///
   /// To insert a child at the end of the child list, omit the before parameter.
-  void add(ChildType child, { ChildType before }) {
+  void add(ChildType child, {ChildType before}) {
     assert(child != this);
     assert(before != this);
     assert(child != before);
@@ -1282,9 +1318,7 @@ abstract class ContainerRenderObjectMixin<ChildType extends RenderObject, Parent
 
   /// Add all the children to the end of this render object's child list
   void addAll(List<ChildType> children) {
-    if (children != null)
-      for (ChildType child in children)
-        add(child);
+    if (children != null) for (ChildType child in children) add(child);
   }
 
   void _removeFromChildList(ChildType child) {
@@ -1296,15 +1330,18 @@ abstract class ContainerRenderObjectMixin<ChildType extends RenderObject, Parent
       assert(_firstChild == child);
       _firstChild = childParentData.nextSibling;
     } else {
-      final ParentDataType childPreviousSiblingParentData = childParentData.previousSibling.parentData;
+      final ParentDataType childPreviousSiblingParentData =
+          childParentData.previousSibling.parentData;
       childPreviousSiblingParentData.nextSibling = childParentData.nextSibling;
     }
     if (childParentData.nextSibling == null) {
       assert(_lastChild == child);
       _lastChild = childParentData.previousSibling;
     } else {
-      final ParentDataType childNextSiblingParentData = childParentData.nextSibling.parentData;
-      childNextSiblingParentData.previousSibling = childParentData.previousSibling;
+      final ParentDataType childNextSiblingParentData =
+          childParentData.nextSibling.parentData;
+      childNextSiblingParentData.previousSibling =
+          childParentData.previousSibling;
     }
     childParentData.previousSibling = null;
     childParentData.nextSibling = null;
@@ -1342,14 +1379,13 @@ abstract class ContainerRenderObjectMixin<ChildType extends RenderObject, Parent
   /// More efficient than removing and re-adding the child. Requires the child
   /// to already be in the child list at some position. Pass null for before to
   /// move the child to the end of the child list.
-  void move(ChildType child, { ChildType before }) {
+  void move(ChildType child, {ChildType before}) {
     assert(child != this);
     assert(before != this);
     assert(child != before);
     assert(child.parent == this);
     final ParentDataType childParentData = child.parentData;
-    if (childParentData.nextSibling == before)
-      return;
+    if (childParentData.nextSibling == before) return;
     _removeFromChildList(child);
     _addToChildList(child, before: before);
   }
@@ -1410,14 +1446,16 @@ abstract class ContainerRenderObjectMixin<ChildType extends RenderObject, Parent
       ChildType child = _firstChild;
       int count = 1;
       while (child != _lastChild) {
-        result += '${child.toStringDeep("$prefix \u251C\u2500child $count: ", "$prefix \u2502")}';
+        result +=
+            '${child.toStringDeep("$prefix \u251C\u2500child $count: ", "$prefix \u2502")}';
         count += 1;
         final ParentDataType childParentData = child.parentData;
         child = childParentData.nextSibling;
       }
       if (child != null) {
         assert(child == _lastChild);
-        result += '${child.toStringDeep("$prefix \u2514\u2500child $count: ", "$prefix  ")}';
+        result +=
+            '${child.toStringDeep("$prefix \u2514\u2500child $count: ", "$prefix  ")}';
       }
     }
     return result;

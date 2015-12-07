@@ -11,7 +11,6 @@ const double _kMaxHeight = 100000.0;
 
 /// A render object used as a placeholder when an error occurs
 class RenderErrorBox extends RenderBox {
-
   double getMinIntrinsicWidth(BoxConstraints constraints) {
     return constraints.constrainWidth(0.0);
   }
@@ -37,7 +36,7 @@ class RenderErrorBox extends RenderBox {
   }
 
   void paint(PaintingContext context, Offset offset) {
-    context.canvas.drawRect(offset & size, new Paint() .. color = debugErrorBoxColor);
+    context.canvas
+        .drawRect(offset & size, new Paint()..color = debugErrorBoxColor);
   }
-
 }

@@ -11,21 +11,25 @@ class Colors {
 
   static const transparent = const Color(0x00000000);
 
-  static const black   = const Color(0xFF000000);
+  static const black = const Color(0xFF000000);
   static const black87 = const Color(0xDD000000);
   static const black54 = const Color(0x8A000000);
   static const black45 = const Color(0x73000000); // mask color
-  static const black26 = const Color(0x42000000); // disabled radio buttons and text of disabled flat buttons in light theme
-  static const black12 = const Color(0x1F000000); // background of disabled raised buttons in light theme
+  static const black26 = const Color(
+      0x42000000); // disabled radio buttons and text of disabled flat buttons in light theme
+  static const black12 = const Color(
+      0x1F000000); // background of disabled raised buttons in light theme
 
-  static const white   = const Color(0xFFFFFFFF);
+  static const white = const Color(0xFFFFFFFF);
   static const white70 = const Color(0xB3FFFFFF);
-  static const white30 = const Color(0x4DFFFFFF); // disabled radio buttons and text of disabled flat buttons in dark theme
-  static const white12 = const Color(0x1FFFFFFF); // background of disabled raised buttons in dark theme
+  static const white30 = const Color(
+      0x4DFFFFFF); // disabled radio buttons and text of disabled flat buttons in dark theme
+  static const white12 = const Color(
+      0x1FFFFFFF); // background of disabled raised buttons in dark theme
   static const white10 = const Color(0x1AFFFFFF);
 
   static const Map<int, Color> red = const <int, Color>{
-     50: const Color(0xFFFFEBEE),
+    50: const Color(0xFFFFEBEE),
     100: const Color(0xFFFFCDD2),
     200: const Color(0xFFEF9A9A),
     300: const Color(0xFFE57373),
@@ -45,7 +49,7 @@ class Colors {
   };
 
   static const Map<int, Color> pink = const <int, Color>{
-     50: const Color(0xFFFCE4EC),
+    50: const Color(0xFFFCE4EC),
     100: const Color(0xFFF8BBD0),
     200: const Color(0xFFF48FB1),
     300: const Color(0xFFF06292),
@@ -65,7 +69,7 @@ class Colors {
   };
 
   static const Map<int, Color> purple = const <int, Color>{
-     50: const Color(0xFFF3E5F5),
+    50: const Color(0xFFF3E5F5),
     100: const Color(0xFFE1BEE7),
     200: const Color(0xFFCE93D8),
     300: const Color(0xFFBA68C8),
@@ -85,7 +89,7 @@ class Colors {
   };
 
   static const Map<int, Color> deepPurple = const <int, Color>{
-     50: const Color(0xFFEDE7F6),
+    50: const Color(0xFFEDE7F6),
     100: const Color(0xFFD1C4E9),
     200: const Color(0xFFB39DDB),
     300: const Color(0xFF9575CD),
@@ -105,7 +109,7 @@ class Colors {
   };
 
   static const Map<int, Color> indigo = const <int, Color>{
-     50: const Color(0xFFE8EAF6),
+    50: const Color(0xFFE8EAF6),
     100: const Color(0xFFC5CAE9),
     200: const Color(0xFF9FA8DA),
     300: const Color(0xFF7986CB),
@@ -125,7 +129,7 @@ class Colors {
   };
 
   static const Map<int, Color> blue = const <int, Color>{
-     50: const Color(0xFFE3F2FD),
+    50: const Color(0xFFE3F2FD),
     100: const Color(0xFFBBDEFB),
     200: const Color(0xFF90CAF9),
     300: const Color(0xFF64B5F6),
@@ -145,7 +149,7 @@ class Colors {
   };
 
   static const Map<int, Color> lightBlue = const <int, Color>{
-     50: const Color(0xFFE1F5FE),
+    50: const Color(0xFFE1F5FE),
     100: const Color(0xFFB3E5FC),
     200: const Color(0xFF81D4FA),
     300: const Color(0xFF4FC3F7),
@@ -165,7 +169,7 @@ class Colors {
   };
 
   static const Map<int, Color> cyan = const <int, Color>{
-     50: const Color(0xFFE0F7FA),
+    50: const Color(0xFFE0F7FA),
     100: const Color(0xFFB2EBF2),
     200: const Color(0xFF80DEEA),
     300: const Color(0xFF4DD0E1),
@@ -185,7 +189,7 @@ class Colors {
   };
 
   static const Map<int, Color> teal = const <int, Color>{
-     50: const Color(0xFFE0F2F1),
+    50: const Color(0xFFE0F2F1),
     100: const Color(0xFFB2DFDB),
     200: const Color(0xFF80CBC4),
     300: const Color(0xFF4DB6AC),
@@ -205,7 +209,7 @@ class Colors {
   };
 
   static const Map<int, Color> green = const <int, Color>{
-     50: const Color(0xFFE8F5E9),
+    50: const Color(0xFFE8F5E9),
     100: const Color(0xFFC8E6C9),
     200: const Color(0xFFA5D6A7),
     300: const Color(0xFF81C784),
@@ -225,7 +229,7 @@ class Colors {
   };
 
   static const Map<int, Color> lightGreen = const <int, Color>{
-     50: const Color(0xFFF1F8E9),
+    50: const Color(0xFFF1F8E9),
     100: const Color(0xFFDCEDC8),
     200: const Color(0xFFC5E1A5),
     300: const Color(0xFFAED581),
@@ -245,7 +249,7 @@ class Colors {
   };
 
   static const Map<int, Color> lime = const <int, Color>{
-     50: const Color(0xFFF9FBE7),
+    50: const Color(0xFFF9FBE7),
     100: const Color(0xFFF0F4C3),
     200: const Color(0xFFE6EE9C),
     300: const Color(0xFFDCE775),
@@ -265,7 +269,7 @@ class Colors {
   };
 
   static const Map<int, Color> yellow = const <int, Color>{
-     50: const Color(0xFFFFFDE7),
+    50: const Color(0xFFFFFDE7),
     100: const Color(0xFFFFF9C4),
     200: const Color(0xFFFFF59D),
     300: const Color(0xFFFFF176),
@@ -285,7 +289,7 @@ class Colors {
   };
 
   static const Map<int, Color> amber = const <int, Color>{
-     50: const Color(0xFFFFF8E1),
+    50: const Color(0xFFFFF8E1),
     100: const Color(0xFFFFECB3),
     200: const Color(0xFFFFE082),
     300: const Color(0xFFFFD54F),
@@ -305,7 +309,7 @@ class Colors {
   };
 
   static const Map<int, Color> orange = const <int, Color>{
-     50: const Color(0xFFFFF3E0),
+    50: const Color(0xFFFFF3E0),
     100: const Color(0xFFFFE0B2),
     200: const Color(0xFFFFCC80),
     300: const Color(0xFFFFB74D),
@@ -325,7 +329,7 @@ class Colors {
   };
 
   static const Map<int, Color> deepOrange = const <int, Color>{
-     50: const Color(0xFFFBE9E7),
+    50: const Color(0xFFFBE9E7),
     100: const Color(0xFFFFCCBC),
     200: const Color(0xFFFFAB91),
     300: const Color(0xFFFF8A65),
@@ -345,7 +349,7 @@ class Colors {
   };
 
   static const Map<int, Color> brown = const <int, Color>{
-     50: const Color(0xFFEFEBE9),
+    50: const Color(0xFFEFEBE9),
     100: const Color(0xFFD7CCC8),
     200: const Color(0xFFBCAAA4),
     300: const Color(0xFFA1887F),
@@ -358,11 +362,12 @@ class Colors {
   };
 
   static const Map<int, Color> grey = const <int, Color>{
-     50: const Color(0xFFFAFAFA),
+    50: const Color(0xFFFAFAFA),
     100: const Color(0xFFF5F5F5),
     200: const Color(0xFFEEEEEE),
     300: const Color(0xFFE0E0E0),
-    350: const Color(0xFFD6D6D6), // only for raised button while pressed in Light theme
+    350: const Color(
+        0xFFD6D6D6), // only for raised button while pressed in Light theme
     400: const Color(0xFFBDBDBD),
     500: const Color(0xFF9E9E9E),
     600: const Color(0xFF757575),
@@ -373,7 +378,7 @@ class Colors {
   };
 
   static const Map<int, Color> blueGrey = const <int, Color>{
-     50: const Color(0xFFECEFF1),
+    50: const Color(0xFFECEFF1),
     100: const Color(0xFFCFD8DC),
     200: const Color(0xFFB0BEC5),
     300: const Color(0xFF90A4AE),

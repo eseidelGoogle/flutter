@@ -11,7 +11,6 @@ import 'shell.dart';
 export 'package:mojo_services/keyboard/keyboard.mojom.dart';
 
 class _KeyboardConnection {
-
   _KeyboardConnection() {
     proxy = new KeyboardServiceProxy.unbound();
     shell.connectToService(null, proxy);
@@ -24,7 +23,6 @@ class _KeyboardConnection {
 }
 
 class Keyboard {
-
   Keyboard(this.service);
 
   // The service is exposed in case you need direct access.
@@ -39,8 +37,7 @@ class Keyboard {
   KeyboardHandle show(KeyboardClientStub stub, KeyboardType keyboardType) {
     assert(stub != null);
     if (_currentHandle != null) {
-      if (_currentHandle.stub == stub)
-        return _currentHandle;
+      if (_currentHandle.stub == stub) return _currentHandle;
       _currentHandle.release();
     }
     _currentHandle = new KeyboardHandle._show(this, stub, keyboardType);
@@ -60,17 +57,19 @@ class Keyboard {
       }
     });
   }
-
 }
 
 class KeyboardHandle {
-
-  KeyboardHandle._show(Keyboard keyboard, this.stub, KeyboardType keyboardType) : _keyboard = keyboard {
+  KeyboardHandle._show(Keyboard keyboard, this.stub, KeyboardType keyboardType)
+      : _keyboard = keyboard {
     _keyboard.service.show(stub, keyboardType);
     _attached = true;
   }
 
-  KeyboardHandle._unattached(Keyboard keyboard) : _keyboard = keyboard, stub = null, _attached = false;
+  KeyboardHandle._unattached(Keyboard keyboard)
+      : _keyboard = keyboard,
+        stub = null,
+        _attached = false;
   static final unattached = new KeyboardHandle._unattached(keyboard);
 
   final Keyboard _keyboard;
@@ -106,7 +105,7 @@ class KeyboardHandle {
     assert(_keyboard._currentHandle == this);
     _keyboard.service.setSelection(start, end);
   }
-
 }
 
-final Keyboard keyboard = new Keyboard(_KeyboardConnection.instance.keyboardService);
+final Keyboard keyboard =
+    new Keyboard(_KeyboardConnection.instance.keyboardService);

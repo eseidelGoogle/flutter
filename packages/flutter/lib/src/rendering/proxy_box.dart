@@ -14,12 +14,13 @@ import 'debug.dart';
 import 'object.dart';
 
 export 'package:flutter/src/painting/box_painter.dart';
-export 'package:flutter/gestures.dart' show
-  PointerEvent,
-  PointerDownEvent,
-  PointerMoveEvent,
-  PointerUpEvent,
-  PointerCancelEvent;
+export 'package:flutter/gestures.dart'
+    show
+        PointerEvent,
+        PointerDownEvent,
+        PointerMoveEvent,
+        PointerUpEvent,
+        PointerCancelEvent;
 
 /// A base class for render objects that resemble their children.
 ///
@@ -32,39 +33,34 @@ export 'package:flutter/gestures.dart' show
 /// the proxy box with its child. However, RenderProxyBox is a useful base class
 /// for render objects that wish to mimic most, but not all, of the properties
 /// of their child.
-class RenderProxyBox extends RenderBox with RenderObjectWithChildMixin<RenderBox> {
-
+class RenderProxyBox extends RenderBox
+    with RenderObjectWithChildMixin<RenderBox> {
   RenderProxyBox([RenderBox child = null]) {
     this.child = child;
   }
 
   double getMinIntrinsicWidth(BoxConstraints constraints) {
-    if (child != null)
-      return child.getMinIntrinsicWidth(constraints);
+    if (child != null) return child.getMinIntrinsicWidth(constraints);
     return super.getMinIntrinsicWidth(constraints);
   }
 
   double getMaxIntrinsicWidth(BoxConstraints constraints) {
-    if (child != null)
-      return child.getMaxIntrinsicWidth(constraints);
+    if (child != null) return child.getMaxIntrinsicWidth(constraints);
     return super.getMaxIntrinsicWidth(constraints);
   }
 
   double getMinIntrinsicHeight(BoxConstraints constraints) {
-    if (child != null)
-      return child.getMinIntrinsicHeight(constraints);
+    if (child != null) return child.getMinIntrinsicHeight(constraints);
     return super.getMinIntrinsicHeight(constraints);
   }
 
   double getMaxIntrinsicHeight(BoxConstraints constraints) {
-    if (child != null)
-      return child.getMaxIntrinsicHeight(constraints);
+    if (child != null) return child.getMaxIntrinsicHeight(constraints);
     return super.getMaxIntrinsicHeight(constraints);
   }
 
   double computeDistanceToActualBaseline(TextBaseline baseline) {
-    if (child != null)
-      return child.getDistanceToActualBaseline(baseline);
+    if (child != null) return child.getDistanceToActualBaseline(baseline);
     return super.computeDistanceToActualBaseline(baseline);
   }
 
@@ -77,13 +73,12 @@ class RenderProxyBox extends RenderBox with RenderObjectWithChildMixin<RenderBox
     }
   }
 
-  bool hitTestChildren(HitTestResult result, { Point position }) {
+  bool hitTestChildren(HitTestResult result, {Point position}) {
     return child?.hitTest(result, position: position) ?? false;
   }
 
   void paint(PaintingContext context, Offset offset) {
-    if (child != null)
-      context.paintChild(child, offset);
+    if (child != null) context.paintChild(child, offset);
   }
 }
 
@@ -98,51 +93,50 @@ class RenderProxyBox extends RenderBox with RenderObjectWithChildMixin<RenderBox
 /// pixels, you could use `const BoxConstraints(minHeight: 50.0)`` as the
 /// [additionalConstraints].
 class RenderConstrainedBox extends RenderProxyBox {
-  RenderConstrainedBox({
-    RenderBox child,
-    BoxConstraints additionalConstraints
-  }) : _additionalConstraints = additionalConstraints, super(child) {
+  RenderConstrainedBox({RenderBox child, BoxConstraints additionalConstraints})
+      : _additionalConstraints = additionalConstraints,
+        super(child) {
     assert(additionalConstraints != null);
   }
 
   /// Additional constraints to apply to [child] during layout
   BoxConstraints get additionalConstraints => _additionalConstraints;
   BoxConstraints _additionalConstraints;
-  void set additionalConstraints (BoxConstraints newConstraints) {
+  void set additionalConstraints(BoxConstraints newConstraints) {
     assert(newConstraints != null);
-    if (_additionalConstraints == newConstraints)
-      return;
+    if (_additionalConstraints == newConstraints) return;
     _additionalConstraints = newConstraints;
     markNeedsLayout();
   }
 
   double getMinIntrinsicWidth(BoxConstraints constraints) {
-    if (child != null)
-      return child.getMinIntrinsicWidth(_additionalConstraints.enforce(constraints));
+    if (child != null) return child
+        .getMinIntrinsicWidth(_additionalConstraints.enforce(constraints));
     return _additionalConstraints.enforce(constraints).constrainWidth(0.0);
   }
 
   double getMaxIntrinsicWidth(BoxConstraints constraints) {
-    if (child != null)
-      return child.getMaxIntrinsicWidth(_additionalConstraints.enforce(constraints));
+    if (child != null) return child
+        .getMaxIntrinsicWidth(_additionalConstraints.enforce(constraints));
     return _additionalConstraints.enforce(constraints).constrainWidth(0.0);
   }
 
   double getMinIntrinsicHeight(BoxConstraints constraints) {
-    if (child != null)
-      return child.getMinIntrinsicHeight(_additionalConstraints.enforce(constraints));
+    if (child != null) return child
+        .getMinIntrinsicHeight(_additionalConstraints.enforce(constraints));
     return _additionalConstraints.enforce(constraints).constrainHeight(0.0);
   }
 
   double getMaxIntrinsicHeight(BoxConstraints constraints) {
-    if (child != null)
-      return child.getMaxIntrinsicHeight(_additionalConstraints.enforce(constraints));
+    if (child != null) return child
+        .getMaxIntrinsicHeight(_additionalConstraints.enforce(constraints));
     return _additionalConstraints.enforce(constraints).constrainHeight(0.0);
   }
 
   void performLayout() {
     if (child != null) {
-      child.layout(_additionalConstraints.enforce(constraints), parentUsesSize: true);
+      child.layout(_additionalConstraints.enforce(constraints),
+          parentUsesSize: true);
       size = child.size;
     } else {
       size = _additionalConstraints.enforce(constraints).constrain(Size.zero);
@@ -163,11 +157,11 @@ class RenderConstrainedBox extends RenderProxyBox {
 ///
 /// It then tries to size itself the size of its child.
 class RenderFractionallySizedBox extends RenderProxyBox {
-  RenderFractionallySizedBox({
-    RenderBox child,
-    double widthFactor,
-    double heightFactor
-  }) : _widthFactor = widthFactor, _heightFactor = heightFactor, super(child) {
+  RenderFractionallySizedBox(
+      {RenderBox child, double widthFactor, double heightFactor})
+      : _widthFactor = widthFactor,
+        _heightFactor = heightFactor,
+        super(child) {
     assert(_widthFactor == null || _widthFactor >= 0.0);
     assert(_heightFactor == null || _heightFactor >= 0.0);
   }
@@ -177,10 +171,9 @@ class RenderFractionallySizedBox extends RenderProxyBox {
   /// constraints given by the parent.
   double get widthFactor => _widthFactor;
   double _widthFactor;
-  void set widthFactor (double value) {
+  void set widthFactor(double value) {
     assert(value == null || value >= 0.0);
-    if (_widthFactor == value)
-      return;
+    if (_widthFactor == value) return;
     _widthFactor = value;
     markNeedsLayout();
   }
@@ -190,10 +183,9 @@ class RenderFractionallySizedBox extends RenderProxyBox {
   /// constraints given by the parent.
   double get heightFactor => _heightFactor;
   double _heightFactor;
-  void set heightFactor (double value) {
+  void set heightFactor(double value) {
     assert(value == null || value >= 0.0);
-    if (_heightFactor == value)
-      return;
+    if (_heightFactor == value) return;
     _heightFactor = value;
     markNeedsLayout();
   }
@@ -214,34 +206,33 @@ class RenderFractionallySizedBox extends RenderProxyBox {
       maxHeight = height;
     }
     return new BoxConstraints(
-      minWidth: minWidth,
-      maxWidth: maxWidth,
-      minHeight: minHeight,
-      maxHeight: maxHeight
-    );
+        minWidth: minWidth,
+        maxWidth: maxWidth,
+        minHeight: minHeight,
+        maxHeight: maxHeight);
   }
 
   double getMinIntrinsicWidth(BoxConstraints constraints) {
-    if (child != null)
-      return child.getMinIntrinsicWidth(_getInnerConstraints(constraints));
+    if (child != null) return child
+        .getMinIntrinsicWidth(_getInnerConstraints(constraints));
     return _getInnerConstraints(constraints).constrainWidth(0.0);
   }
 
   double getMaxIntrinsicWidth(BoxConstraints constraints) {
-    if (child != null)
-      return child.getMaxIntrinsicWidth(_getInnerConstraints(constraints));
+    if (child != null) return child
+        .getMaxIntrinsicWidth(_getInnerConstraints(constraints));
     return _getInnerConstraints(constraints).constrainWidth(0.0);
   }
 
   double getMinIntrinsicHeight(BoxConstraints constraints) {
-    if (child != null)
-      return child.getMinIntrinsicHeight(_getInnerConstraints(constraints));
+    if (child != null) return child
+        .getMinIntrinsicHeight(_getInnerConstraints(constraints));
     return _getInnerConstraints(constraints).constrainHeight(0.0);
   }
 
   double getMaxIntrinsicHeight(BoxConstraints constraints) {
-    if (child != null)
-      return child.getMaxIntrinsicHeight(_getInnerConstraints(constraints));
+    if (child != null) return child
+        .getMaxIntrinsicHeight(_getInnerConstraints(constraints));
     return _getInnerConstraints(constraints).constrainHeight(0.0);
   }
 
@@ -278,10 +269,9 @@ class RenderFractionallySizedBox extends RenderProxyBox {
 /// of 200.0. Unfortunately, that violates the constraints and we'll end up with
 /// a height of 100.0 instead.
 class RenderAspectRatio extends RenderProxyBox {
-  RenderAspectRatio({
-    RenderBox child,
-    double aspectRatio
-  }) : _aspectRatio = aspectRatio, super(child) {
+  RenderAspectRatio({RenderBox child, double aspectRatio})
+      : _aspectRatio = aspectRatio,
+        super(child) {
     assert(_aspectRatio != null);
   }
 
@@ -291,10 +281,9 @@ class RenderAspectRatio extends RenderProxyBox {
   /// a 16:9 width:height aspect ratio would have a value of 16.0/9.0.
   double get aspectRatio => _aspectRatio;
   double _aspectRatio;
-  void set aspectRatio (double newAspectRatio) {
+  void set aspectRatio(double newAspectRatio) {
     assert(newAspectRatio != null);
-    if (_aspectRatio == newAspectRatio)
-      return;
+    if (_aspectRatio == newAspectRatio) return;
     _aspectRatio = newAspectRatio;
     markNeedsLayout();
   }
@@ -320,8 +309,7 @@ class RenderAspectRatio extends RenderProxyBox {
   }
 
   void performLayout() {
-    if (child != null)
-      child.layout(new BoxConstraints.tight(size));
+    if (child != null) child.layout(new BoxConstraints.tight(size));
   }
 
   void debugDescribeSettings(List<String> settings) {
@@ -343,19 +331,16 @@ class RenderAspectRatio extends RenderProxyBox {
 ///
 /// This class is relatively expensive. Avoid using it where possible.
 class RenderIntrinsicWidth extends RenderProxyBox {
-
-  RenderIntrinsicWidth({
-    double stepWidth,
-    double stepHeight,
-    RenderBox child
-  }) : _stepWidth = stepWidth, _stepHeight = stepHeight, super(child);
+  RenderIntrinsicWidth({double stepWidth, double stepHeight, RenderBox child})
+      : _stepWidth = stepWidth,
+        _stepHeight = stepHeight,
+        super(child);
 
   /// If non-null, force the child's width to be a multiple of this value.
   double get stepWidth => _stepWidth;
   double _stepWidth;
   void set stepWidth(double newStepWidth) {
-    if (newStepWidth == _stepWidth)
-      return;
+    if (newStepWidth == _stepWidth) return;
     _stepWidth = newStepWidth;
     markNeedsLayout();
   }
@@ -364,22 +349,19 @@ class RenderIntrinsicWidth extends RenderProxyBox {
   double get stepHeight => _stepHeight;
   double _stepHeight;
   void set stepHeight(double newStepHeight) {
-    if (newStepHeight == _stepHeight)
-      return;
+    if (newStepHeight == _stepHeight) return;
     _stepHeight = newStepHeight;
     markNeedsLayout();
   }
 
   static double _applyStep(double input, double step) {
-    if (step == null)
-      return input;
+    if (step == null) return input;
     return (input / step).ceil() * step;
   }
 
   BoxConstraints _getInnerConstraints(BoxConstraints constraints) {
     assert(child != null);
-    if (constraints.hasTightWidth)
-      return constraints;
+    if (constraints.hasTightWidth) return constraints;
     double width = child.getMaxIntrinsicWidth(constraints);
     assert(width == constraints.constrainWidth(width));
     return constraints.tightenWidth(_applyStep(width, _stepWidth));
@@ -390,31 +372,30 @@ class RenderIntrinsicWidth extends RenderProxyBox {
   }
 
   double getMaxIntrinsicWidth(BoxConstraints constraints) {
-    if (child == null)
-      return constraints.constrainWidth(0.0);
+    if (child == null) return constraints.constrainWidth(0.0);
     double childResult = child.getMaxIntrinsicWidth(constraints);
     return constraints.constrainWidth(_applyStep(childResult, _stepWidth));
   }
 
   double getMinIntrinsicHeight(BoxConstraints constraints) {
-    if (child == null)
-      return constraints.constrainHeight(0.0);
-    double childResult = child.getMinIntrinsicHeight(_getInnerConstraints(constraints));
+    if (child == null) return constraints.constrainHeight(0.0);
+    double childResult =
+        child.getMinIntrinsicHeight(_getInnerConstraints(constraints));
     return constraints.constrainHeight(_applyStep(childResult, _stepHeight));
   }
 
   double getMaxIntrinsicHeight(BoxConstraints constraints) {
-    if (child == null)
-      return constraints.constrainHeight(0.0);
-    double childResult = child.getMaxIntrinsicHeight(_getInnerConstraints(constraints));
+    if (child == null) return constraints.constrainHeight(0.0);
+    double childResult =
+        child.getMaxIntrinsicHeight(_getInnerConstraints(constraints));
     return constraints.constrainHeight(_applyStep(childResult, _stepHeight));
   }
 
   void performLayout() {
     if (child != null) {
       BoxConstraints childConstraints = _getInnerConstraints(constraints);
-      if (_stepHeight != null)
-        childConstraints.tightenHeight(getMaxIntrinsicHeight(childConstraints));
+      if (_stepHeight != null) childConstraints
+          .tightenHeight(getMaxIntrinsicHeight(childConstraints));
       child.layout(childConstraints, parentUsesSize: true);
       size = child.size;
     } else {
@@ -437,29 +418,23 @@ class RenderIntrinsicWidth extends RenderProxyBox {
 ///
 /// This class is relatively expensive. Avoid using it where possible.
 class RenderIntrinsicHeight extends RenderProxyBox {
-
-  RenderIntrinsicHeight({
-    RenderBox child
-  }) : super(child);
+  RenderIntrinsicHeight({RenderBox child}) : super(child);
 
   BoxConstraints _getInnerConstraints(BoxConstraints constraints) {
     assert(child != null);
-    if (constraints.hasTightHeight)
-      return constraints;
+    if (constraints.hasTightHeight) return constraints;
     double height = child.getMaxIntrinsicHeight(constraints);
     assert(height == constraints.constrainHeight(height));
     return constraints.tightenHeight(height);
   }
 
   double getMinIntrinsicWidth(BoxConstraints constraints) {
-    if (child == null)
-      return constraints.constrainWidth(0.0);
+    if (child == null) return constraints.constrainWidth(0.0);
     return child.getMinIntrinsicWidth(_getInnerConstraints(constraints));
   }
 
   double getMaxIntrinsicWidth(BoxConstraints constraints) {
-    if (child == null)
-      return constraints.constrainWidth(0.0);
+    if (child == null) return constraints.constrainWidth(0.0);
     return child.getMaxIntrinsicWidth(_getInnerConstraints(constraints));
   }
 
@@ -468,8 +443,7 @@ class RenderIntrinsicHeight extends RenderProxyBox {
   }
 
   double getMaxIntrinsicHeight(BoxConstraints constraints) {
-    if (child == null)
-      return constraints.constrainHeight(0.0);
+    if (child == null) return constraints.constrainHeight(0.0);
     return child.getMaxIntrinsicHeight(constraints);
   }
 
@@ -481,7 +455,6 @@ class RenderIntrinsicHeight extends RenderProxyBox {
       performResize();
     }
   }
-
 }
 
 /// Makes its child partially transparent.
@@ -492,8 +465,9 @@ class RenderIntrinsicHeight extends RenderProxyBox {
 /// This class is relatively expensive because it requires painting the child
 /// into an intermediate buffer.
 class RenderOpacity extends RenderProxyBox {
-  RenderOpacity({ RenderBox child, double opacity })
-    : this._opacity = opacity, super(child) {
+  RenderOpacity({RenderBox child, double opacity})
+      : this._opacity = opacity,
+        super(child) {
     assert(opacity >= 0.0 && opacity <= 1.0);
   }
 
@@ -503,11 +477,10 @@ class RenderOpacity extends RenderProxyBox {
   /// (i.e., invisible).
   double get opacity => _opacity;
   double _opacity;
-  void set opacity (double newOpacity) {
+  void set opacity(double newOpacity) {
     assert(newOpacity != null);
     assert(newOpacity >= 0.0 && newOpacity <= 1.0);
-    if (_opacity == newOpacity)
-      return;
+    if (_opacity == newOpacity) return;
     _opacity = newOpacity;
     markNeedsPaint();
   }
@@ -517,8 +490,7 @@ class RenderOpacity extends RenderProxyBox {
   void paint(PaintingContext context, Offset offset) {
     if (child != null) {
       int a = _alpha;
-      if (a == 0)
-        return;
+      if (a == 0) return;
       if (a == 255) {
         context.paintChild(child, offset);
         return;
@@ -535,32 +507,35 @@ class RenderOpacity extends RenderProxyBox {
 }
 
 class RenderShaderMask extends RenderProxyBox {
-  RenderShaderMask({ RenderBox child, ShaderCallback shaderCallback, TransferMode transferMode })
-    : _shaderCallback = shaderCallback, _transferMode = transferMode, super(child);
+  RenderShaderMask(
+      {RenderBox child,
+      ShaderCallback shaderCallback,
+      TransferMode transferMode})
+      : _shaderCallback = shaderCallback,
+        _transferMode = transferMode,
+        super(child);
 
   ShaderCallback get shaderCallback => _shaderCallback;
   ShaderCallback _shaderCallback;
-  void set shaderCallback (ShaderCallback newShaderCallback) {
+  void set shaderCallback(ShaderCallback newShaderCallback) {
     assert(newShaderCallback != null);
-    if (_shaderCallback == newShaderCallback)
-      return;
+    if (_shaderCallback == newShaderCallback) return;
     _shaderCallback = newShaderCallback;
     markNeedsPaint();
   }
 
   TransferMode get transferMode => _transferMode;
   TransferMode _transferMode;
-  void set transferMode (TransferMode newTransferMode) {
+  void set transferMode(TransferMode newTransferMode) {
     assert(newTransferMode != null);
-    if (_transferMode == newTransferMode)
-      return;
+    if (_transferMode == newTransferMode) return;
     _transferMode = newTransferMode;
     markNeedsPaint();
   }
 
   void paint(PaintingContext context, Offset offset) {
-    if (child != null)
-      context.pushShaderMask(needsCompositing, offset, Point.origin & size, _shaderCallback, _transferMode, super.paint);
+    if (child != null) context.pushShaderMask(needsCompositing, offset,
+        Point.origin & size, _shaderCallback, _transferMode, super.paint);
   }
 }
 
@@ -573,17 +548,15 @@ abstract class CustomClipper<T> {
 }
 
 abstract class _RenderCustomClip<T> extends RenderProxyBox {
-  _RenderCustomClip({
-    RenderBox child,
-    CustomClipper<T> clipper
-  }) : _clipper = clipper, super(child);
+  _RenderCustomClip({RenderBox child, CustomClipper<T> clipper})
+      : _clipper = clipper,
+        super(child);
 
   /// If non-null, determines which clip to use on the child.
   CustomClipper<T> get clipper => _clipper;
   CustomClipper<T> _clipper;
-  void set clipper (CustomClipper<T> newClipper) {
-    if (_clipper == newClipper)
-      return;
+  void set clipper(CustomClipper<T> newClipper) {
+    if (_clipper == newClipper) return;
     CustomClipper<T> oldClipper = _clipper;
     _clipper = newClipper;
     if (newClipper == null) {
@@ -604,25 +577,22 @@ abstract class _RenderCustomClip<T> extends RenderProxyBox {
 ///
 /// Prevents its child from painting outside its bounds.
 class RenderClipRect extends _RenderCustomClip<Rect> {
-  RenderClipRect({
-    RenderBox child,
-    CustomClipper<Rect> clipper
-  }) : super(child: child, clipper: clipper);
+  RenderClipRect({RenderBox child, CustomClipper<Rect> clipper})
+      : super(child: child, clipper: clipper);
 
   Rect get _defaultClip => Point.origin & size;
 
-  bool hitTest(HitTestResult result, { Point position }) {
+  bool hitTest(HitTestResult result, {Point position}) {
     if (_clipper != null) {
       Rect clipRect = _clip;
-      if (!clipRect.contains(position))
-        return false;
+      if (!clipRect.contains(position)) return false;
     }
     return super.hitTest(result, position: position);
   }
 
   void paint(PaintingContext context, Offset offset) {
-    if (child != null)
-      context.pushClipRect(needsCompositing, offset, _clip, super.paint);
+    if (child != null) context.pushClipRect(
+        needsCompositing, offset, _clip, super.paint);
   }
 }
 
@@ -632,11 +602,10 @@ class RenderClipRect extends _RenderCustomClip<Rect> {
 /// y radius values and prevents its child from painting outside that rounded
 /// rectangle.
 class RenderClipRRect extends RenderProxyBox {
-  RenderClipRRect({
-    RenderBox child,
-    double xRadius,
-    double yRadius
-  }) : _xRadius = xRadius, _yRadius = yRadius, super(child) {
+  RenderClipRRect({RenderBox child, double xRadius, double yRadius})
+      : _xRadius = xRadius,
+        _yRadius = yRadius,
+        super(child) {
     assert(_xRadius != null);
     assert(_yRadius != null);
   }
@@ -647,10 +616,9 @@ class RenderClipRRect extends RenderProxyBox {
   /// object.
   double get xRadius => _xRadius;
   double _xRadius;
-  void set xRadius (double newXRadius) {
+  void set xRadius(double newXRadius) {
     assert(newXRadius != null);
-    if (_xRadius == newXRadius)
-      return;
+    if (_xRadius == newXRadius) return;
     _xRadius = newXRadius;
     markNeedsPaint();
   }
@@ -661,10 +629,9 @@ class RenderClipRRect extends RenderProxyBox {
   /// object.
   double get yRadius => _yRadius;
   double _yRadius;
-  void set yRadius (double newYRadius) {
+  void set yRadius(double newYRadius) {
     assert(newYRadius != null);
-    if (_yRadius == newYRadius)
-      return;
+    if (_yRadius == newYRadius) return;
     _yRadius = newYRadius;
     markNeedsPaint();
   }
@@ -683,10 +650,8 @@ class RenderClipRRect extends RenderProxyBox {
 /// Inscribes an oval into its layout dimensions and prevents its child from
 /// painting outside that oval.
 class RenderClipOval extends _RenderCustomClip<Rect> {
-  RenderClipOval({
-    RenderBox child,
-    CustomClipper<Rect> clipper
-  }) : super(child: child, clipper: clipper);
+  RenderClipOval({RenderBox child, CustomClipper<Rect> clipper})
+      : super(child: child, clipper: clipper);
 
   Rect _cachedRect;
   Path _cachedPath;
@@ -701,20 +666,20 @@ class RenderClipOval extends _RenderCustomClip<Rect> {
 
   Rect get _defaultClip => Point.origin & size;
 
-  bool hitTest(HitTestResult result, { Point position }) {
+  bool hitTest(HitTestResult result, {Point position}) {
     Rect clipBounds = _clip;
     Point center = clipBounds.center;
     Offset offset = new Offset((position.x - center.x) / clipBounds.width,
-                               (position.y - center.y) / clipBounds.height);
-    if (offset.distance > 0.5)
-      return false;
+        (position.y - center.y) / clipBounds.height);
+    if (offset.distance > 0.5) return false;
     return super.hitTest(result, position: position);
   }
 
   void paint(PaintingContext context, Offset offset) {
     if (child != null) {
       Rect clipBounds = _clip;
-      context.pushClipPath(needsCompositing, offset, clipBounds, _getClipPath(clipBounds), super.paint);
+      context.pushClipPath(needsCompositing, offset, clipBounds,
+          _getClipPath(clipBounds), super.paint);
     }
   }
 }
@@ -730,14 +695,13 @@ enum BoxDecorationPosition {
 
 /// Paints a [BoxDecoration] either before or after its child paints.
 class RenderDecoratedBox extends RenderProxyBox {
-
-  RenderDecoratedBox({
-    BoxDecoration decoration,
-    RenderBox child,
-    BoxDecorationPosition position: BoxDecorationPosition.background
-  }) : _painter = new BoxPainter(decoration),
-       _position = position,
-       super(child) {
+  RenderDecoratedBox(
+      {BoxDecoration decoration,
+      RenderBox child,
+      BoxDecorationPosition position: BoxDecorationPosition.background})
+      : _painter = new BoxPainter(decoration),
+        _position = position,
+        super(child) {
     assert(decoration != null);
     assert(position != null);
   }
@@ -745,19 +709,17 @@ class RenderDecoratedBox extends RenderProxyBox {
   /// Where to paint the box decoration.
   BoxDecorationPosition get position => _position;
   BoxDecorationPosition _position;
-  void set position (BoxDecorationPosition newPosition) {
+  void set position(BoxDecorationPosition newPosition) {
     assert(newPosition != null);
-    if (newPosition == _position)
-      return;
+    if (newPosition == _position) return;
     markNeedsPaint();
   }
 
   /// What decoration to paint.
   BoxDecoration get decoration => _painter.decoration;
-  void set decoration (BoxDecoration newDecoration) {
+  void set decoration(BoxDecoration newDecoration) {
     assert(newDecoration != null);
-    if (newDecoration == _painter.decoration)
-      return;
+    if (newDecoration == _painter.decoration) return;
     _removeBackgroundImageListenerIfNeeded();
     _painter.decoration = newDecoration;
     _addBackgroundImageListenerIfNeeded();
@@ -773,13 +735,13 @@ class RenderDecoratedBox extends RenderProxyBox {
   }
 
   void _addBackgroundImageListenerIfNeeded() {
-    if (_needsBackgroundImageListener)
-      _painter.decoration.backgroundImage.addChangeListener(markNeedsPaint);
+    if (_needsBackgroundImageListener) _painter.decoration.backgroundImage
+        .addChangeListener(markNeedsPaint);
   }
 
   void _removeBackgroundImageListenerIfNeeded() {
-    if (_needsBackgroundImageListener)
-      _painter.decoration.backgroundImage.removeChangeListener(markNeedsPaint);
+    if (_needsBackgroundImageListener) _painter.decoration.backgroundImage
+        .removeChangeListener(markNeedsPaint);
   }
 
   void attach() {
@@ -808,11 +770,11 @@ class RenderDecoratedBox extends RenderProxyBox {
   void paint(PaintingContext context, Offset offset) {
     assert(size.width != null);
     assert(size.height != null);
-    if (position == BoxDecorationPosition.background)
-      _painter.paint(context.canvas, offset & size);
+    if (position == BoxDecorationPosition.background) _painter.paint(
+        context.canvas, offset & size);
     super.paint(context, offset);
-    if (position == BoxDecorationPosition.foreground)
-      _painter.paint(context.canvas, offset & size);
+    if (position == BoxDecorationPosition.foreground) _painter.paint(
+        context.canvas, offset & size);
   }
 
   void debugDescribeSettings(List<String> settings) {
@@ -824,12 +786,12 @@ class RenderDecoratedBox extends RenderProxyBox {
 
 /// Applies a transformation before painting its child.
 class RenderTransform extends RenderProxyBox {
-  RenderTransform({
-    Matrix4 transform,
-    Offset origin,
-    FractionalOffset alignment,
-    RenderBox child
-  }) : super(child) {
+  RenderTransform(
+      {Matrix4 transform,
+      Offset origin,
+      FractionalOffset alignment,
+      RenderBox child})
+      : super(child) {
     assert(transform != null);
     assert(alignment == null || (alignment.x != null && alignment.y != null));
     this.transform = transform;
@@ -844,9 +806,8 @@ class RenderTransform extends RenderProxyBox {
   /// translation. This property is provided just for convenience.
   Offset get origin => _origin;
   Offset _origin;
-  void set origin (Offset newOrigin) {
-    if (_origin == newOrigin)
-      return;
+  void set origin(Offset newOrigin) {
+    if (_origin == newOrigin) return;
     _origin = newOrigin;
     markNeedsPaint();
   }
@@ -857,10 +818,10 @@ class RenderTransform extends RenderProxyBox {
   /// If it is specificed at the same time as an offset, both are applied.
   FractionalOffset get alignment => _alignment;
   FractionalOffset _alignment;
-  void set alignment (FractionalOffset newAlignment) {
-    assert(newAlignment == null || (newAlignment.x != null && newAlignment.y != null));
-    if (_alignment == newAlignment)
-      return;
+  void set alignment(FractionalOffset newAlignment) {
+    assert(newAlignment == null ||
+        (newAlignment.x != null && newAlignment.y != null));
+    if (_alignment == newAlignment) return;
     _alignment = newAlignment;
     markNeedsPaint();
   }
@@ -871,8 +832,7 @@ class RenderTransform extends RenderProxyBox {
   /// The matrix to transform the child by during painting.
   void set transform(Matrix4 newTransform) {
     assert(newTransform != null);
-    if (_transform == newTransform)
-      return;
+    if (_transform == newTransform) return;
     _transform = new Matrix4.copy(newTransform);
     markNeedsPaint();
   }
@@ -914,22 +874,19 @@ class RenderTransform extends RenderProxyBox {
   }
 
   Matrix4 get _effectiveTransform {
-    if (_origin == null && _alignment == null)
-      return _transform;
+    if (_origin == null && _alignment == null) return _transform;
     Matrix4 result = new Matrix4.identity();
-    if (_origin != null)
-      result.translate(_origin.dx, _origin.dy);
-    if (_alignment != null)
-      result.translate(_alignment.x * size.width, _alignment.y * size.height);
+    if (_origin != null) result.translate(_origin.dx, _origin.dy);
+    if (_alignment != null) result.translate(
+        _alignment.x * size.width, _alignment.y * size.height);
     result.multiply(_transform);
-    if (_alignment != null)
-      result.translate(-_alignment.x * size.width, -_alignment.y * size.height);
-    if (_origin != null)
-      result.translate(-_origin.dx, -_origin.dy);
+    if (_alignment != null) result.translate(
+        -_alignment.x * size.width, -_alignment.y * size.height);
+    if (_origin != null) result.translate(-_origin.dx, -_origin.dy);
     return result;
   }
 
-  bool hitTest(HitTestResult result, { Point position }) {
+  bool hitTest(HitTestResult result, {Point position}) {
     Matrix4 inverse = new Matrix4.zero();
     // TODO(abarth): Check the determinant for degeneracy.
     inverse.copyInverse(_effectiveTransform);
@@ -944,10 +901,9 @@ class RenderTransform extends RenderProxyBox {
     if (child != null) {
       Matrix4 transform = _effectiveTransform;
       Offset childOffset = MatrixUtils.getAsTranslation(transform);
-      if (childOffset == null)
-        context.pushTransform(needsCompositing, offset, transform, super.paint);
-      else
-        super.paint(context, offset + childOffset);
+      if (childOffset == null) context.pushTransform(
+          needsCompositing, offset, transform, super.paint);
+      else super.paint(context, offset + childOffset);
     }
   }
 
@@ -973,10 +929,7 @@ typedef void SizeChangedCallback(Size newSize);
 /// Because size observer calls its callback during layout, you cannot modify
 /// layout information during the callback.
 class RenderSizeObserver extends RenderProxyBox {
-  RenderSizeObserver({
-    this.onSizeChanged,
-    RenderBox child
-  }) : super(child) {
+  RenderSizeObserver({this.onSizeChanged, RenderBox child}) : super(child) {
     assert(onSizeChanged != null);
   }
 
@@ -1017,17 +970,16 @@ abstract class CustomPainter {
 /// Because custom paint calls its painters during paint, you cannot dirty
 /// layout or paint information during the callback.
 class RenderCustomPaint extends RenderProxyBox {
-  RenderCustomPaint({
-    CustomPainter painter,
-    CustomPainter foregroundPainter,
-    RenderBox child
-  }) : _painter = painter, _foregroundPainter = foregroundPainter, super(child);
+  RenderCustomPaint(
+      {CustomPainter painter, CustomPainter foregroundPainter, RenderBox child})
+      : _painter = painter,
+        _foregroundPainter = foregroundPainter,
+        super(child);
 
   CustomPainter get painter => _painter;
   CustomPainter _painter;
-  void set painter (CustomPainter newPainter) {
-    if (_painter == newPainter)
-      return;
+  void set painter(CustomPainter newPainter) {
+    if (_painter == newPainter) return;
     CustomPainter oldPainter = _painter;
     _painter = newPainter;
     _checkForRepaint(_painter, oldPainter);
@@ -1035,9 +987,8 @@ class RenderCustomPaint extends RenderProxyBox {
 
   CustomPainter get foregroundPainter => _foregroundPainter;
   CustomPainter _foregroundPainter;
-  void set foregroundPainter (CustomPainter newPainter) {
-    if (_foregroundPainter == newPainter)
-      return;
+  void set foregroundPainter(CustomPainter newPainter) {
+    if (_foregroundPainter == newPainter) return;
     CustomPainter oldPainter = _foregroundPainter;
     _foregroundPainter = newPainter;
     _checkForRepaint(_foregroundPainter, oldPainter);
@@ -1054,9 +1005,9 @@ class RenderCustomPaint extends RenderProxyBox {
     }
   }
 
-  bool hitTestChildren(HitTestResult result, { Point position }) {
-    if (_foregroundPainter != null && (_foregroundPainter.hitTest(position) ?? false))
-      return true;
+  bool hitTestChildren(HitTestResult result, {Point position}) {
+    if (_foregroundPainter != null &&
+        (_foregroundPainter.hitTest(position) ?? false)) return true;
     return super.hitTestChildren(result, position: position);
   }
 
@@ -1071,11 +1022,10 @@ class RenderCustomPaint extends RenderProxyBox {
   }
 
   void paint(PaintingContext context, Offset offset) {
-    if (_painter != null)
-      _paintWithPainter(context.canvas, offset, _painter);
+    if (_painter != null) _paintWithPainter(context.canvas, offset, _painter);
     super.paint(context, offset);
-    if (_foregroundPainter != null)
-      _paintWithPainter(context.canvas, offset, _foregroundPainter);
+    if (_foregroundPainter !=
+        null) _paintWithPainter(context.canvas, offset, _foregroundPainter);
   }
 }
 
@@ -1084,22 +1034,18 @@ typedef void PointerMoveEventListener(PointerMoveEvent event);
 typedef void PointerUpEventListener(PointerUpEvent event);
 typedef void PointerCancelEventListener(PointerCancelEvent event);
 
-enum HitTestBehavior {
-  deferToChild,
-  opaque,
-  translucent,
-}
+enum HitTestBehavior { deferToChild, opaque, translucent, }
 
 /// Invokes the callbacks in response to pointer events.
 class RenderPointerListener extends RenderProxyBox {
-  RenderPointerListener({
-    this.onPointerDown,
-    this.onPointerMove,
-    this.onPointerUp,
-    this.onPointerCancel,
-    this.behavior: HitTestBehavior.deferToChild,
-    RenderBox child
-  }) : super(child);
+  RenderPointerListener(
+      {this.onPointerDown,
+      this.onPointerMove,
+      this.onPointerUp,
+      this.onPointerCancel,
+      this.behavior: HitTestBehavior.deferToChild,
+      RenderBox child})
+      : super(child);
 
   PointerDownEventListener onPointerDown;
   PointerMoveEventListener onPointerMove;
@@ -1107,13 +1053,16 @@ class RenderPointerListener extends RenderProxyBox {
   PointerCancelEventListener onPointerCancel;
   HitTestBehavior behavior;
 
-  bool hitTest(HitTestResult result, { Point position }) {
+  bool hitTest(HitTestResult result, {Point position}) {
     bool hitTarget = false;
-    if (position.x >= 0.0 && position.x < size.width &&
-        position.y >= 0.0 && position.y < size.height) {
-      hitTarget = hitTestChildren(result, position: position) || hitTestSelf(position);
-      if (hitTarget || behavior == HitTestBehavior.translucent)
-        result.add(new BoxHitTestEntry(this, position));
+    if (position.x >= 0.0 &&
+        position.x < size.width &&
+        position.y >= 0.0 &&
+        position.y < size.height) {
+      hitTarget =
+          hitTestChildren(result, position: position) || hitTestSelf(position);
+      if (hitTarget || behavior == HitTestBehavior.translucent) result
+          .add(new BoxHitTestEntry(this, position));
     }
     return hitTarget;
   }
@@ -1121,29 +1070,24 @@ class RenderPointerListener extends RenderProxyBox {
   bool hitTestSelf(Point position) => behavior == HitTestBehavior.opaque;
 
   void handleEvent(PointerEvent event, HitTestEntry entry) {
-    if (onPointerDown != null && event is PointerDownEvent)
-      return onPointerDown(event);
-    if (onPointerMove != null && event == PointerMoveEvent)
-      return onPointerMove(event);
-    if (onPointerUp != null && event == PointerUpEvent)
-      return onPointerUp(event);
-    if (onPointerCancel != null && event == PointerCancelEvent)
-      return onPointerCancel(event);
+    if (onPointerDown != null &&
+        event is PointerDownEvent) return onPointerDown(event);
+    if (onPointerMove != null &&
+        event == PointerMoveEvent) return onPointerMove(event);
+    if (onPointerUp != null &&
+        event == PointerUpEvent) return onPointerUp(event);
+    if (onPointerCancel != null &&
+        event == PointerCancelEvent) return onPointerCancel(event);
   }
 
   void debugDescribeSettings(List<String> settings) {
     super.debugDescribeSettings(settings);
     List<String> listeners = <String>[];
-    if (onPointerDown != null)
-      listeners.add('down');
-    if (onPointerMove != null)
-      listeners.add('move');
-    if (onPointerUp != null)
-      listeners.add('up');
-    if (onPointerCancel != null)
-      listeners.add('cancel');
-    if (listeners.isEmpty)
-      listeners.add('<none>');
+    if (onPointerDown != null) listeners.add('down');
+    if (onPointerMove != null) listeners.add('move');
+    if (onPointerUp != null) listeners.add('up');
+    if (onPointerCancel != null) listeners.add('cancel');
+    if (listeners.isEmpty) listeners.add('<none>');
     settings.add('listeners: ${listeners.join(", ")}');
     switch (behavior) {
       case HitTestBehavior.translucent:
@@ -1179,11 +1123,11 @@ class RenderRepaintBoundary extends RenderProxyBox {
 /// as usual. It just cannot be the target of located events because it returns
 /// false from [hitTest].
 class RenderIgnorePointer extends RenderProxyBox {
-  RenderIgnorePointer({ RenderBox child, this.ignoring: true }) : super(child);
+  RenderIgnorePointer({RenderBox child, this.ignoring: true}) : super(child);
 
   bool ignoring;
 
-  bool hitTest(HitTestResult result, { Point position }) {
+  bool hitTest(HitTestResult result, {Point position}) {
     return ignoring ? false : super.hitTest(result, position: position);
   }
 
@@ -1195,7 +1139,7 @@ class RenderIgnorePointer extends RenderProxyBox {
 
 /// Holds opaque meta data in the render tree
 class RenderMetaData extends RenderProxyBox {
-  RenderMetaData({ RenderBox child, this.metaData }) : super(child);
+  RenderMetaData({RenderBox child, this.metaData}) : super(child);
 
   /// Opaque meta data ignored by the render tree
   dynamic metaData;

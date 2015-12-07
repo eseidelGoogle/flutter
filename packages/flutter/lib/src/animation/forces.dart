@@ -13,7 +13,7 @@ abstract class Force {
 
 /// A factory for spring-based physics simulations
 class SpringForce extends Force {
-  const SpringForce(this.spring, { this.left: 0.0, this.right: 1.0 });
+  const SpringForce(this.spring, {this.left: 0.0, this.right: 1.0});
 
   /// The description of the spring to be used in the created simulations
   final SpringDescription spring;
@@ -29,24 +29,21 @@ class SpringForce extends Force {
   /// We overshoot the target by this distance, but stop the simulation when
   /// the spring gets within this distance (regardless of how fast it's moving).
   /// This causes the spring to settle a bit faster than it otherwise would.
-  static const Tolerance tolerance = const Tolerance(
-    velocity: double.INFINITY,
-    distance: 0.01
-  );
+  static const Tolerance tolerance =
+      const Tolerance(velocity: double.INFINITY, distance: 0.01);
 
   Simulation release(double position, double velocity) {
-    double target = velocity < 0.0 ? this.left - tolerance.distance
-                                   : this.right + tolerance.distance;
+    double target = velocity < 0.0
+        ? this.left - tolerance.distance
+        : this.right + tolerance.distance;
     return new SpringSimulation(spring, position, target, velocity)
       ..tolerance = tolerance;
   }
 }
 
-final SpringDescription _kDefaultSpringDesc = new SpringDescription.withDampingRatio(
-  mass: 1.0,
-  springConstant: 500.0,
-  ratio: 1.0
-);
+final SpringDescription _kDefaultSpringDesc =
+    new SpringDescription.withDampingRatio(
+        mass: 1.0, springConstant: 500.0, ratio: 1.0);
 
 /// A spring force with reasonable default values
 final SpringForce kDefaultSpringForce = new SpringForce(_kDefaultSpringDesc);

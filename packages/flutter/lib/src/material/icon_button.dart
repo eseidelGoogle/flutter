@@ -9,13 +9,9 @@ import 'icon_theme_data.dart';
 import 'ink_well.dart';
 
 class IconButton extends StatelessComponent {
-  const IconButton({
-    Key key,
-    this.icon,
-    this.color,
-    this.colorFilter,
-    this.onPressed
-  }) : super(key: key);
+  const IconButton(
+      {Key key, this.icon, this.color, this.colorFilter, this.onPressed})
+      : super(key: key);
 
   final String icon;
   final IconThemeColor color;
@@ -24,16 +20,11 @@ class IconButton extends StatelessComponent {
 
   Widget build(BuildContext context) {
     return new InkResponse(
-      onTap: onPressed,
-      child: new Padding(
-        padding: const EdgeDims.all(8.0),
-        child: new Icon(
-          icon: icon,
-          color: color,
-          colorFilter: colorFilter
-        )
-      )
-    );
+        onTap: onPressed,
+        child: new Padding(
+            padding: const EdgeDims.all(8.0),
+            child:
+                new Icon(icon: icon, color: color, colorFilter: colorFilter)));
   }
 
   void debugFillDescription(List<String> description) {

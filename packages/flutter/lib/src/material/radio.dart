@@ -16,12 +16,8 @@ const double _kOuterRadius = _kDiameter / 2.0;
 const double _kInnerRadius = 5.0;
 
 class Radio<T> extends StatelessComponent {
-  Radio({
-    Key key,
-    this.value,
-    this.groupValue,
-    this.onChanged
-  }) : super(key: key);
+  Radio({Key key, this.value, this.groupValue, this.onChanged})
+      : super(key: key);
 
   final T value;
   final T groupValue;
@@ -34,29 +30,27 @@ class Radio<T> extends StatelessComponent {
   }
 
   void _handleChanged(bool selected) {
-    if (selected)
-      onChanged(value);
+    if (selected) onChanged(value);
   }
 
   Widget build(BuildContext context) {
     ThemeData themeData = Theme.of(context);
     return new _RadioRenderObjectWidget(
-      selected: value == groupValue,
-      activeColor: themeData.accentColor,
-      inactiveColor: _getInactiveColor(themeData),
-      onChanged: _enabled ? _handleChanged : null
-    );
+        selected: value == groupValue,
+        activeColor: themeData.accentColor,
+        inactiveColor: _getInactiveColor(themeData),
+        onChanged: _enabled ? _handleChanged : null);
   }
 }
 
 class _RadioRenderObjectWidget extends LeafRenderObjectWidget {
-  _RadioRenderObjectWidget({
-    Key key,
-    this.selected,
-    this.activeColor,
-    this.inactiveColor,
-    this.onChanged
-  }) : super(key: key) {
+  _RadioRenderObjectWidget(
+      {Key key,
+      this.selected,
+      this.activeColor,
+      this.inactiveColor,
+      this.onChanged})
+      : super(key: key) {
     assert(selected != null);
     assert(activeColor != null);
     assert(inactiveColor != null);
@@ -68,13 +62,13 @@ class _RadioRenderObjectWidget extends LeafRenderObjectWidget {
   final ValueChanged<bool> onChanged;
 
   _RenderRadio createRenderObject() => new _RenderRadio(
-    value: selected,
-    activeColor: activeColor,
-    inactiveColor: inactiveColor,
-    onChanged: onChanged
-  );
+      value: selected,
+      activeColor: activeColor,
+      inactiveColor: inactiveColor,
+      onChanged: onChanged);
 
-  void updateRenderObject(_RenderRadio renderObject, _RadioRenderObjectWidget oldWidget) {
+  void updateRenderObject(
+      _RenderRadio renderObject, _RadioRenderObjectWidget oldWidget) {
     renderObject.value = selected;
     renderObject.activeColor = activeColor;
     renderObject.inactiveColor = inactiveColor;
@@ -83,25 +77,26 @@ class _RadioRenderObjectWidget extends LeafRenderObjectWidget {
 }
 
 class _RenderRadio extends RenderToggleable {
-  _RenderRadio({
-    bool value,
-    Color activeColor,
-    Color inactiveColor,
-    ValueChanged<bool> onChanged
-  }): super(
-    value: value,
-    activeColor: activeColor,
-    inactiveColor: inactiveColor,
-    onChanged: onChanged,
-    size: const Size(2 * kRadialReactionRadius, 2 * kRadialReactionRadius)
-  );
+  _RenderRadio(
+      {bool value,
+      Color activeColor,
+      Color inactiveColor,
+      ValueChanged<bool> onChanged})
+      : super(
+            value: value,
+            activeColor: activeColor,
+            inactiveColor: inactiveColor,
+            onChanged: onChanged,
+            size: const Size(
+                2 * kRadialReactionRadius, 2 * kRadialReactionRadius));
 
   bool get isInteractive => super.isInteractive && !value;
 
   void paint(PaintingContext context, Offset offset) {
     final Canvas canvas = context.canvas;
 
-    paintRadialReaction(canvas, offset + const Offset(kRadialReactionRadius, kRadialReactionRadius));
+    paintRadialReaction(canvas,
+        offset + const Offset(kRadialReactionRadius, kRadialReactionRadius));
 
     Point center = (offset & size).center;
     Color radioColor = onChanged != null ? activeColor : inactiveColor;

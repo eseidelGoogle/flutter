@@ -25,8 +25,7 @@ class HitTestEntry {
 
 /// The result of performing a hit test.
 class HitTestResult {
-  HitTestResult({ List<HitTestEntry> path })
-    : path = path ?? <HitTestEntry>[];
+  HitTestResult({List<HitTestEntry> path}) : path = path ?? <HitTestEntry>[];
 
   /// The list of [HitTestEntry] objects recorded during the hit test.
   ///
@@ -44,5 +43,6 @@ class HitTestResult {
     path.add(entry);
   }
 
-  String toString() => 'HitTestResult(${path.isEmpty ? "<empty path>" : path.join(", ")})';
+  String toString() =>
+      'HitTestResult(${path.isEmpty ? "<empty path>" : path.join(", ")})';
 }

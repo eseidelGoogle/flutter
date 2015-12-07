@@ -6,14 +6,13 @@ import 'box.dart';
 import 'object.dart';
 
 class RenderStatisticsBox extends RenderBox {
-
   RenderStatisticsBox({int optionsMask: 0, int rasterizerThreshold: 0})
-    : _optionsMask = optionsMask,
-      _rasterizerThreshold = rasterizerThreshold;
+      : _optionsMask = optionsMask,
+        _rasterizerThreshold = rasterizerThreshold;
 
   int _optionsMask;
   int get optionsMask => _optionsMask;
-  void set optionsMask (int mask) {
+  void set optionsMask(int mask) {
     if (mask == _optionsMask) {
       return;
     }
@@ -23,8 +22,8 @@ class RenderStatisticsBox extends RenderBox {
 
   int _rasterizerThreshold;
   int get rasterizerThreshold => _rasterizerThreshold;
-  void set rasterizerThreshold (int threshold) {
-    if  (threshold == _rasterizerThreshold) {
+  void set rasterizerThreshold(int threshold) {
+    if (threshold == _rasterizerThreshold) {
       return;
     }
     _rasterizerThreshold = threshold;

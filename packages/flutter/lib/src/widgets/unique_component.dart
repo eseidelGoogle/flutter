@@ -5,7 +5,7 @@
 import 'framework.dart';
 
 abstract class UniqueComponent<T extends State> extends StatefulComponent {
-  UniqueComponent({ GlobalKey key }) : super(key: key) {
+  UniqueComponent({GlobalKey key}) : super(key: key) {
     assert(key != null);
   }
 

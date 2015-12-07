@@ -17,10 +17,10 @@ class _Estimator {
 
   String toString() {
     return 'Estimator(degree: $degree, '
-                     'time: $time, '
-                     'confidence: $confidence, '
-                     'xCoefficients: $xCoefficients, '
-                     'yCoefficients: $yCoefficients)';
+        'time: $time, '
+        'confidence: $confidence, '
+        'xCoefficients: $xCoefficients, '
+        'yCoefficients: $yCoefficients)';
   }
 }
 
@@ -49,7 +49,8 @@ class _LeastSquaresVelocityTrackerStrategy extends _VelocityTrackerStrategy {
   static const int kHorizonMilliseconds = 100;
 
   _LeastSquaresVelocityTrackerStrategy(this.degree, _Weighting weighting)
-    : _index = 0, _movements = new List<_Movement>(kHistorySize) {
+      : _index = 0,
+        _movements = new List<_Movement>(kHistorySize) {
     switch (weighting) {
       case _Weighting.weightingNone:
         _chooseWeight = null;
@@ -73,8 +74,7 @@ class _LeastSquaresVelocityTrackerStrategy extends _VelocityTrackerStrategy {
 
   void addMovement(Duration timeStamp, Point position) {
     _index += 1;
-    if (_index == kHistorySize)
-      _index = 0;
+    if (_index == kHistorySize) _index = 0;
     _Movement movement = _getMovement(_index);
     movement.eventTime = timeStamp;
     movement.position = position;
@@ -92,9 +92,10 @@ class _LeastSquaresVelocityTrackerStrategy extends _VelocityTrackerStrategy {
     do {
       _Movement movement = _getMovement(index);
 
-      double age = (newestMovement.eventTime - movement.eventTime).inMilliseconds.toDouble();
-      if (age > kHorizonMilliseconds)
-        break;
+      double age = (newestMovement.eventTime - movement.eventTime)
+          .inMilliseconds
+          .toDouble();
+      if (age > kHorizonMilliseconds) break;
 
       Point position = movement.position;
       x.add(position.x);
@@ -106,13 +107,13 @@ class _LeastSquaresVelocityTrackerStrategy extends _VelocityTrackerStrategy {
       m += 1;
     } while (m < kHistorySize);
 
-    if (m == 0) // because we broke out of the loop above after age > kHorizonMilliseconds
-      return false; // no data
+    if (m ==
+            0) // because we broke out of the loop above after age > kHorizonMilliseconds
+        return false; // no data
 
     // Calculate a least squares polynomial fit.
     int n = degree;
-    if (n > m - 1)
-      n = m - 1;
+    if (n > m - 1) n = m - 1;
 
     if (n >= 1) {
       LeastSquaresSolver xSolver = new LeastSquaresSolver(time, x, w);
@@ -133,8 +134,8 @@ class _LeastSquaresVelocityTrackerStrategy extends _VelocityTrackerStrategy {
 
     // No velocity data available for this pointer, but we do have its current
     // position.
-    estimator.xCoefficients = <double>[ x[0] ];
-    estimator.yCoefficients = <double>[ y[0] ];
+    estimator.xCoefficients = <double>[x[0]];
+    estimator.yCoefficients = <double>[y[0]];
     estimator.time = newestMovement.eventTime;
     estimator.degree = 0;
     estimator.confidence = 1.0;
@@ -150,14 +151,12 @@ class _LeastSquaresVelocityTrackerStrategy extends _VelocityTrackerStrategy {
     // point so that points that "cover" a shorter time span are weighed less.
     //   delta  0ms: 0.5
     //   delta 10ms: 1.0
-    if (index == _index)
-      return 1.0;
+    if (index == _index) return 1.0;
     int nextIndex = (index + 1) % kHistorySize;
-    int deltaMilliseconds = (_movements[nextIndex].eventTime - _movements[index].eventTime).inMilliseconds;
-    if (deltaMilliseconds < 0)
-      return 0.5;
-    if (deltaMilliseconds < 10)
-      return 0.5 + deltaMilliseconds * 0.05;
+    int deltaMilliseconds = (_movements[nextIndex].eventTime -
+        _movements[index].eventTime).inMilliseconds;
+    if (deltaMilliseconds < 0) return 0.5;
+    if (deltaMilliseconds < 10) return 0.5 + deltaMilliseconds * 0.05;
     return 1.0;
   }
 
@@ -168,15 +167,12 @@ class _LeastSquaresVelocityTrackerStrategy extends _VelocityTrackerStrategy {
     //   age 10ms: 1.0
     //   age 50ms: 1.0
     //   age 60ms: 0.5
-    int ageMilliseconds = (_movements[_index].eventTime - _movements[index].eventTime).inMilliseconds;
-    if (ageMilliseconds < 0)
-      return 0.5;
-    if (ageMilliseconds < 10)
-      return 0.5 + ageMilliseconds * 0.05;
-    if (ageMilliseconds < 50)
-      return 1.0;
-    if (ageMilliseconds < 60)
-      return 0.5 + (60 - ageMilliseconds) * 0.05;
+    int ageMilliseconds = (_movements[_index].eventTime -
+        _movements[index].eventTime).inMilliseconds;
+    if (ageMilliseconds < 0) return 0.5;
+    if (ageMilliseconds < 10) return 0.5 + ageMilliseconds * 0.05;
+    if (ageMilliseconds < 50) return 1.0;
+    if (ageMilliseconds < 60) return 0.5 + (60 - ageMilliseconds) * 0.05;
     return 0.5;
   }
 
@@ -185,11 +181,10 @@ class _LeastSquaresVelocityTrackerStrategy extends _VelocityTrackerStrategy {
     //   age   0ms: 1.0
     //   age  50ms: 1.0
     //   age 100ms: 0.5
-    int ageMilliseconds = (_movements[_index].eventTime - _movements[index].eventTime).inMilliseconds;
-    if (ageMilliseconds < 50)
-      return 1.0;
-    if (ageMilliseconds < 100)
-      return 0.5 + (100 - ageMilliseconds) * 0.01;
+    int ageMilliseconds = (_movements[_index].eventTime -
+        _movements[index].eventTime).inMilliseconds;
+    if (ageMilliseconds < 50) return 1.0;
+    if (ageMilliseconds < 100) return 0.5 + (100 - ageMilliseconds) * 0.01;
     return 0.5;
   }
 
@@ -201,7 +196,6 @@ class _LeastSquaresVelocityTrackerStrategy extends _VelocityTrackerStrategy {
     }
     return result;
   }
-
 }
 
 class VelocityTracker {
@@ -213,8 +207,8 @@ class VelocityTracker {
   _VelocityTrackerStrategy _strategy;
 
   void addPosition(Duration timeStamp, Point position) {
-    if ((timeStamp - _lastTimeStamp).inMilliseconds >= kAssumePointerMoveStoppedTimeMs)
-      _strategy.clear();
+    if ((timeStamp - _lastTimeStamp).inMilliseconds >=
+        kAssumePointerMoveStoppedTimeMs) _strategy.clear();
     _lastTimeStamp = timeStamp;
     _strategy.addMovement(timeStamp, position);
   }
@@ -222,15 +216,16 @@ class VelocityTracker {
   Offset getVelocity() {
     _Estimator estimator = new _Estimator();
     if (_strategy.getEstimator(estimator) && estimator.degree >= 1) {
-      return new Offset( // convert from pixels/ms to pixels/s
-        estimator.xCoefficients[1] * 1000,
-        estimator.yCoefficients[1] * 1000
-      );
+      return new Offset(
+          // convert from pixels/ms to pixels/s
+          estimator.xCoefficients[1] * 1000,
+          estimator.yCoefficients[1] * 1000);
     }
     return null;
   }
 
   static _VelocityTrackerStrategy _createStrategy() {
-    return new _LeastSquaresVelocityTrackerStrategy(2, _Weighting.weightingNone);
+    return new _LeastSquaresVelocityTrackerStrategy(
+        2, _Weighting.weightingNone);
   }
 }

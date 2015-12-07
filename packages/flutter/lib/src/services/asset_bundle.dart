@@ -30,7 +30,7 @@ class NetworkAssetBundle extends AssetBundle {
 
   final Uri _baseUrl;
 
-  void close() { }
+  void close() {}
 
   String _urlFromKey(String key) => _baseUrl.resolve(key).toString();
 
@@ -45,7 +45,8 @@ class NetworkAssetBundle extends AssetBundle {
   }
 }
 
-Future _fetchAndUnpackBundle(String relativeUrl, AssetBundleProxy bundle) async {
+Future _fetchAndUnpackBundle(
+    String relativeUrl, AssetBundleProxy bundle) async {
   core.MojoDataPipeConsumer bundleData = (await fetchUrl(relativeUrl)).body;
   AssetUnpackerProxy unpacker = new AssetUnpackerProxy.unbound();
   shell.connectToService("mojo:asset_bundle", unpacker);

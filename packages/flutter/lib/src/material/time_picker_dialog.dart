@@ -11,10 +11,7 @@ import 'time_picker.dart';
 import 'flat_button.dart';
 
 class _TimePickerDialog extends StatefulComponent {
-  _TimePickerDialog({
-    Key key,
-    this.initialTime
-  }) : super(key: key);
+  _TimePickerDialog({Key key, this.initialTime}) : super(key: key);
 
   final TimeOfDay initialTime;
 
@@ -45,31 +42,20 @@ class _TimePickerDialogState extends State<_TimePickerDialog> {
 
   Widget build(BuildContext context) {
     return new Dialog(
-      content: new TimePicker(
-        selectedTime: _selectedTime,
-        onChanged: _handleTimeChanged
-      ),
-      contentPadding: EdgeDims.zero,
-      actions: <Widget>[
-        new FlatButton(
-          child: new Text('CANCEL'),
-          onPressed: _handleCancel
-        ),
-        new FlatButton(
-          child: new Text('OK'),
-          onPressed: _handleOk
-        ),
-      ]
-    );
+        content: new TimePicker(
+            selectedTime: _selectedTime, onChanged: _handleTimeChanged),
+        contentPadding: EdgeDims.zero,
+        actions: <Widget>[
+          new FlatButton(child: new Text('CANCEL'), onPressed: _handleCancel),
+          new FlatButton(child: new Text('OK'), onPressed: _handleOk),
+        ]);
   }
 }
 
-Future<TimeOfDay> showTimePicker({
-  BuildContext context,
-  TimeOfDay initialTime
-}) async {
+Future<TimeOfDay> showTimePicker(
+    {BuildContext context, TimeOfDay initialTime}) async {
   return await showDialog(
-    context: context,
-    child: new _TimePickerDialog(initialTime: initialTime)
-  ) ?? initialTime;
+          context: context,
+          child: new _TimePickerDialog(initialTime: initialTime)) ??
+      initialTime;
 }

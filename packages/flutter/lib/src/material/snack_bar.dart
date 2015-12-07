@@ -26,12 +26,15 @@ const Color _kSnackBackground = const Color(0xFF323232);
 // TODO(ianh): Implement the Tablet version of snackbar if we're "on a tablet".
 
 const Duration _kSnackBarTransitionDuration = const Duration(milliseconds: 250);
-const Duration kSnackBarShortDisplayDuration = const Duration(milliseconds: 1500);
-const Duration kSnackBarMediumDisplayDuration = const Duration(milliseconds: 2750);
-const Curve _snackBarFadeCurve = const Interval(0.72, 1.0, curve: Curves.fastOutSlowIn);
+const Duration kSnackBarShortDisplayDuration =
+    const Duration(milliseconds: 1500);
+const Duration kSnackBarMediumDisplayDuration =
+    const Duration(milliseconds: 2750);
+const Curve _snackBarFadeCurve =
+    const Interval(0.72, 1.0, curve: Curves.fastOutSlowIn);
 
 class SnackBarAction extends StatelessComponent {
-  SnackBarAction({Key key, this.label, this.onPressed }) : super(key: key) {
+  SnackBarAction({Key key, this.label, this.onPressed}) : super(key: key) {
     assert(label != null);
   }
 
@@ -40,24 +43,22 @@ class SnackBarAction extends StatelessComponent {
 
   Widget build(BuildContext context) {
     return new Container(
-      margin: const EdgeDims.only(left: _kSideMargins),
-      child: new FlatButton(
-        onPressed: onPressed,
-        textTheme: ButtonColor.accent,
-        child: new Text(label)
-      )
-    );
+        margin: const EdgeDims.only(left: _kSideMargins),
+        child: new FlatButton(
+            onPressed: onPressed,
+            textTheme: ButtonColor.accent,
+            child: new Text(label)));
   }
 }
 
 class SnackBar extends StatelessComponent {
-  SnackBar({
-    Key key,
-    this.content,
-    this.actions,
-    this.duration: kSnackBarShortDisplayDuration,
-    this.performance
-  }) : super(key: key) {
+  SnackBar(
+      {Key key,
+      this.content,
+      this.actions,
+      this.duration: kSnackBarShortDisplayDuration,
+      this.performance})
+      : super(key: key) {
     assert(content != null);
   }
 
@@ -70,66 +71,53 @@ class SnackBar extends StatelessComponent {
     assert(performance != null);
     List<Widget> children = <Widget>[
       new Flexible(
-        child: new Container(
-          margin: const EdgeDims.symmetric(vertical: _kSingleLineVerticalPadding),
-          child: new DefaultTextStyle(
-            style: Typography.white.subhead,
-            child: content
-          )
-        )
-      )
+          child: new Container(
+              margin: const EdgeDims.symmetric(
+                  vertical: _kSingleLineVerticalPadding),
+              child: new DefaultTextStyle(
+                  style: Typography.white.subhead, child: content)))
     ];
-    if (actions != null)
-      children.addAll(actions);
+    if (actions != null) children.addAll(actions);
     ThemeData theme = Theme.of(context);
     return new ClipRect(
-      child: new AlignTransition(
-        performance: performance,
-        alignment: new AnimatedValue<FractionalOffset>(const FractionalOffset(0.0, 0.0)),
-        heightFactor: new AnimatedValue<double>(0.0, end: 1.0, curve: Curves.fastOutSlowIn),
-        child: new Material(
-          elevation: 6,
-          color: _kSnackBackground,
-          child: new Container(
-            margin: const EdgeDims.symmetric(horizontal: _kSideMargins),
-            child: new Theme(
-              data: new ThemeData(
-                brightness: ThemeBrightness.dark,
-                accentColor: theme.accentColor,
-                accentColorBrightness: theme.accentColorBrightness,
-                text: Typography.white
-              ),
-              child: new FadeTransition(
-                performance: performance,
-                opacity: new AnimatedValue<double>(0.0, end: 1.0, curve: _snackBarFadeCurve),
-                child: new Row(
-                  children,
-                  alignItems: FlexAlignItems.center
-                )
-              )
-            )
-          )
-        )
-      )
-    );
+        child: new AlignTransition(
+            performance: performance,
+            alignment: new AnimatedValue<FractionalOffset>(
+                const FractionalOffset(0.0, 0.0)),
+            heightFactor: new AnimatedValue<double>(0.0,
+                end: 1.0, curve: Curves.fastOutSlowIn),
+            child: new Material(
+                elevation: 6,
+                color: _kSnackBackground,
+                child: new Container(
+                    margin: const EdgeDims.symmetric(horizontal: _kSideMargins),
+                    child: new Theme(
+                        data: new ThemeData(
+                            brightness: ThemeBrightness.dark,
+                            accentColor: theme.accentColor,
+                            accentColorBrightness: theme.accentColorBrightness,
+                            text: Typography.white),
+                        child: new FadeTransition(
+                            performance: performance,
+                            opacity: new AnimatedValue<double>(0.0,
+                                end: 1.0, curve: _snackBarFadeCurve),
+                            child: new Row(children,
+                                alignItems: FlexAlignItems.center)))))));
   }
 
   // API for Scaffold.addSnackBar():
 
   static Performance createPerformanceController() {
     return new Performance(
-      duration: _kSnackBarTransitionDuration,
-      debugLabel: 'SnackBar'
-    );
+        duration: _kSnackBarTransitionDuration, debugLabel: 'SnackBar');
   }
 
-  SnackBar withPerformance(Performance newPerformance, { Key fallbackKey }) {
+  SnackBar withPerformance(Performance newPerformance, {Key fallbackKey}) {
     return new SnackBar(
-      key: key ?? fallbackKey,
-      content: content,
-      actions: actions,
-      duration: duration,
-      performance: newPerformance
-    );
+        key: key ?? fallbackKey,
+        content: content,
+        actions: actions,
+        duration: duration,
+        performance: newPerformance);
   }
 }

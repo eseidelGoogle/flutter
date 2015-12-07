@@ -70,12 +70,8 @@ class HSVColor {
       g = 0.0;
       b = x;
     }
-    return new Color.fromARGB(
-      (alpha   * 0xFF).round(),
-      ((r + m) * 0xFF).round(),
-      ((g + m) * 0xFF).round(),
-      ((b + m) * 0xFF).round()
-    );
+    return new Color.fromARGB((alpha * 0xFF).round(), ((r + m) * 0xFF).round(),
+        ((g + m) * 0xFF).round(), ((b + m) * 0xFF).round());
   }
 
   HSVColor _scaleAlpha(double factor) {
@@ -87,30 +83,24 @@ class HSVColor {
   /// If either color is null, this function linearly interpolates from a
   /// transparent instance of the other color.
   static HSVColor lerp(HSVColor a, HSVColor b, double t) {
-    if (a == null && b == null)
-      return null;
-    if (a == null)
-      return b._scaleAlpha(t);
-    if (b == null)
-      return a._scaleAlpha(1.0 - t);
+    if (a == null && b == null) return null;
+    if (a == null) return b._scaleAlpha(t);
+    if (b == null) return a._scaleAlpha(1.0 - t);
     return new HSVColor.fromAHSV(
-      lerpDouble(a.alpha, b.alpha, t),
-      lerpDouble(a.hue, b.hue, t),
-      lerpDouble(a.saturation, b.saturation, t),
-      lerpDouble(a.value, b.value, t)
-    );
+        lerpDouble(a.alpha, b.alpha, t),
+        lerpDouble(a.hue, b.hue, t),
+        lerpDouble(a.saturation, b.saturation, t),
+        lerpDouble(a.value, b.value, t));
   }
 
   bool operator ==(dynamic other) {
-    if (identical(this, other))
-      return true;
-    if (other is! HSVColor)
-      return false;
+    if (identical(this, other)) return true;
+    if (other is! HSVColor) return false;
     final HSVColor typedOther = other;
-    return typedOther.alpha == alpha
-        && typedOther.hue == hue
-        && typedOther.saturation == saturation
-        && typedOther.value == value;
+    return typedOther.alpha == alpha &&
+        typedOther.hue == hue &&
+        typedOther.saturation == saturation &&
+        typedOther.value == value;
   }
 
   int get hashCode {

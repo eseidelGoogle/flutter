@@ -8,7 +8,7 @@ import 'object.dart';
 class _GridMetrics {
   // Grid is width-in, height-out.  We fill the max width and adjust height
   // accordingly.
-  factory _GridMetrics({ double width, int childCount, double maxChildExtent }) {
+  factory _GridMetrics({double width, int childCount, double maxChildExtent}) {
     assert(width != null);
     assert(childCount != null);
     assert(maxChildExtent != null);
@@ -29,10 +29,12 @@ class _GridMetrics {
     double height = childPadding * (rowCount + 1) + (childExtent * rowCount);
     Size childSize = new Size(childExtent, childExtent);
     Size size = new Size(width, height);
-    return new _GridMetrics._(size, childSize, childrenPerRow, childPadding, rowCount);
+    return new _GridMetrics._(
+        size, childSize, childrenPerRow, childPadding, rowCount);
   }
 
-  const _GridMetrics._(this.size, this.childSize, this.childrenPerRow, this.childPadding, this.rowCount);
+  const _GridMetrics._(this.size, this.childSize, this.childrenPerRow,
+      this.childPadding, this.rowCount);
 
   final Size size;
   final Size childSize;
@@ -50,9 +52,11 @@ class GridParentData extends ContainerBoxParentDataMixin<RenderBox> {}
 /// dimensional grid. The grid determines how many children will be placed in
 /// each row by making the children as wide as possible while still respecting
 /// the given [maxChildExtent].
-class RenderGrid extends RenderBox with ContainerRenderObjectMixin<RenderBox, GridParentData>,
-                                        RenderBoxContainerDefaultsMixin<RenderBox, GridParentData> {
-  RenderGrid({ List<RenderBox> children, double maxChildExtent }) {
+class RenderGrid extends RenderBox
+    with
+        ContainerRenderObjectMixin<RenderBox, GridParentData>,
+        RenderBoxContainerDefaultsMixin<RenderBox, GridParentData> {
+  RenderGrid({List<RenderBox> children, double maxChildExtent}) {
     addAll(children);
     _maxChildExtent = maxChildExtent;
   }
@@ -61,7 +65,7 @@ class RenderGrid extends RenderBox with ContainerRenderObjectMixin<RenderBox, Gr
   bool _hasVisualOverflow = false;
 
   double get maxChildExtent => _maxChildExtent;
-  void set maxChildExtent (double value) {
+  void set maxChildExtent(double value) {
     if (_maxChildExtent != value) {
       _maxChildExtent = value;
       markNeedsLayout();
@@ -69,8 +73,8 @@ class RenderGrid extends RenderBox with ContainerRenderObjectMixin<RenderBox, Gr
   }
 
   void setupParentData(RenderBox child) {
-    if (child.parentData is! GridParentData)
-      child.parentData = new GridParentData();
+    if (child.parentData is! GridParentData) child.parentData =
+        new GridParentData();
   }
 
   double getMinIntrinsicWidth(BoxConstraints constraints) {
@@ -98,10 +102,9 @@ class RenderGrid extends RenderBox with ContainerRenderObjectMixin<RenderBox, Gr
 
   _GridMetrics _computeMetrics() {
     return new _GridMetrics(
-      width: constraints.maxWidth,
-      childCount: childCount,
-      maxChildExtent: _maxChildExtent
-    );
+        width: constraints.maxWidth,
+        childCount: childCount,
+        maxChildExtent: _maxChildExtent);
   }
 
   void performLayout() {
@@ -109,8 +112,7 @@ class RenderGrid extends RenderBox with ContainerRenderObjectMixin<RenderBox, Gr
     assert(constraints.maxWidth < double.INFINITY);
     _GridMetrics metrics = _computeMetrics();
     size = constraints.constrain(metrics.size);
-    if (constraints.maxHeight < size.height)
-      _hasVisualOverflow = true;
+    if (constraints.maxHeight < size.height) _hasVisualOverflow = true;
 
     int row = 0;
     int column = 0;
@@ -118,8 +120,10 @@ class RenderGrid extends RenderBox with ContainerRenderObjectMixin<RenderBox, Gr
     while (child != null) {
       child.layout(new BoxConstraints.tight(metrics.childSize));
 
-      double x = (column + 1) * metrics.childPadding + (column * metrics.childSize.width);
-      double y = (row + 1) * metrics.childPadding + (row * metrics.childSize.height);
+      double x = (column + 1) * metrics.childPadding +
+          (column * metrics.childSize.width);
+      double y =
+          (row + 1) * metrics.childPadding + (row * metrics.childSize.height);
       final GridParentData childParentData = child.parentData;
       childParentData.position = new Point(x, y);
 
@@ -134,14 +138,13 @@ class RenderGrid extends RenderBox with ContainerRenderObjectMixin<RenderBox, Gr
     }
   }
 
-  bool hitTestChildren(HitTestResult result, { Point position }) {
+  bool hitTestChildren(HitTestResult result, {Point position}) {
     return defaultHitTestChildren(result, position: position);
   }
 
   void paint(PaintingContext context, Offset offset) {
-    if (_hasVisualOverflow)
-      context.pushClipRect(needsCompositing, offset, Point.origin & size, defaultPaint);
-    else
-      defaultPaint(context, offset);
+    if (_hasVisualOverflow) context.pushClipRect(
+        needsCompositing, offset, Point.origin & size, defaultPaint);
+    else defaultPaint(context, offset);
   }
 }

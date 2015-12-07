@@ -52,8 +52,7 @@ String _cachedLabel;
 
 /// Sets the TaskDescription for the current Activity
 void updateTaskDescription(String label, Color color) {
-  if (_cachedPrimaryColor == color && _cachedLabel == label)
-    return;
+  if (_cachedPrimaryColor == color && _cachedLabel == label) return;
 
   _cachedPrimaryColor = color;
   _cachedLabel = label;
@@ -65,6 +64,9 @@ void updateTaskDescription(String label, Color color) {
   _activityProxy.ptr.setTaskDescription(description);
 }
 
-Future<String> getAppDataDir() async => (await _pathServiceProxy.ptr.getAppDataDir()).path;
-Future<String> getFilesDir() async => (await _pathServiceProxy.ptr.getFilesDir()).path;
-Future<String> getCacheDir() async => (await _pathServiceProxy.ptr.getCacheDir()).path;
+Future<String> getAppDataDir() async =>
+    (await _pathServiceProxy.ptr.getAppDataDir()).path;
+Future<String> getFilesDir() async =>
+    (await _pathServiceProxy.ptr.getFilesDir()).path;
+Future<String> getCacheDir() async =>
+    (await _pathServiceProxy.ptr.getCacheDir()).path;

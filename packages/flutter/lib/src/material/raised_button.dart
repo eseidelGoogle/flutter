@@ -9,19 +9,17 @@ import 'material_button.dart';
 import 'theme.dart';
 
 class RaisedButton extends MaterialButton {
-  RaisedButton({
-    Key key,
-    Widget child,
-    this.color,
-    this.colorBrightness,
-    this.disabledColor,
-    this.elevation: 2,
-    this.highlightElevation: 8,
-    this.disabledElevation: 0,
-    VoidCallback onPressed
-  }) : super(key: key,
-             child: child,
-             onPressed: onPressed);
+  RaisedButton(
+      {Key key,
+      Widget child,
+      this.color,
+      this.colorBrightness,
+      this.disabledColor,
+      this.elevation: 2,
+      this.highlightElevation: 8,
+      this.disabledElevation: 0,
+      VoidCallback onPressed})
+      : super(key: key, child: child, onPressed: onPressed);
 
   final Color color;
   final Color disabledColor;
@@ -37,11 +35,9 @@ class RaisedButton extends MaterialButton {
 }
 
 class _RaisedButtonState extends MaterialButtonState<RaisedButton> {
-
   int get elevation {
     if (config.enabled) {
-      if (highlight)
-        return config.highlightElevation;
+      if (highlight) return config.highlightElevation;
       return config.elevation;
     } else {
       return config.disabledElevation;
@@ -50,18 +46,17 @@ class _RaisedButtonState extends MaterialButtonState<RaisedButton> {
 
   Color getColor(BuildContext context) {
     if (config.enabled) {
-      if (config.color != null)
-        return config.color;
+      if (config.color != null) return config.color;
       switch (Theme.of(context).brightness) {
         case ThemeBrightness.light:
           return Colors.grey[300];
         case ThemeBrightness.dark:
-          Map<int, Color> swatch = Theme.of(context).primarySwatch ?? Colors.blue;
+          Map<int, Color> swatch =
+              Theme.of(context).primarySwatch ?? Colors.blue;
           return swatch[600];
       }
     } else {
-      if (config.disabledColor != null)
-        return config.disabledColor;
+      if (config.disabledColor != null) return config.disabledColor;
       switch (Theme.of(context).brightness) {
         case ThemeBrightness.light:
           return Colors.black12;
@@ -74,5 +69,4 @@ class _RaisedButtonState extends MaterialButtonState<RaisedButton> {
   ThemeBrightness getColorBrightness(BuildContext context) {
     return config.colorBrightness ?? Theme.of(context).brightness;
   }
-
 }

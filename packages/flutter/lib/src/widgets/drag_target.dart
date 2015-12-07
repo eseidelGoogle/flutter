@@ -15,7 +15,8 @@ import 'overlay.dart';
 
 typedef bool DragTargetWillAccept<T>(T data);
 typedef void DragTargetAccept<T>(T data);
-typedef Widget DragTargetBuilder<T>(BuildContext context, List<T> candidateData, List<dynamic> rejectedData);
+typedef Widget DragTargetBuilder<T>(
+    BuildContext context, List<T> candidateData, List<dynamic> rejectedData);
 typedef void DragStartCallback(Point position, int pointer);
 
 enum DragAnchor {
@@ -38,14 +39,14 @@ enum DragAnchor {
 }
 
 abstract class DraggableBase<T> extends StatefulComponent {
-  DraggableBase({
-    Key key,
-    this.data,
-    this.child,
-    this.feedback,
-    this.feedbackOffset: Offset.zero,
-    this.dragAnchor: DragAnchor.child
-  }) : super(key: key) {
+  DraggableBase(
+      {Key key,
+      this.data,
+      this.child,
+      this.feedback,
+      this.feedbackOffset: Offset.zero,
+      this.dragAnchor: DragAnchor.child})
+      : super(key: key) {
     assert(child != null);
     assert(feedback != null);
   }
@@ -64,67 +65,63 @@ abstract class DraggableBase<T> extends StatefulComponent {
   /// argument when the drag is to begin. The arena for the pointer must not yet have
   /// resolved at the time that the callback is invoked, because the draggable itself
   /// is going to attempt to win the pointer's arena in that case.
-  GestureRecognizer createRecognizer(PointerRouter router, DragStartCallback starter);
+  GestureRecognizer createRecognizer(
+      PointerRouter router, DragStartCallback starter);
 
   _DraggableState<T> createState() => new _DraggableState<T>();
 }
 
 class Draggable<T> extends DraggableBase<T> {
-  Draggable({
-    Key key,
-    T data,
-    Widget child,
-    Widget feedback,
-    Offset feedbackOffset: Offset.zero,
-    DragAnchor dragAnchor: DragAnchor.child
-  }) : super(
-    key: key,
-    data: data,
-    child: child,
-    feedback: feedback,
-    feedbackOffset: feedbackOffset,
-    dragAnchor: dragAnchor
-  );
+  Draggable(
+      {Key key,
+      T data,
+      Widget child,
+      Widget feedback,
+      Offset feedbackOffset: Offset.zero,
+      DragAnchor dragAnchor: DragAnchor.child})
+      : super(
+            key: key,
+            data: data,
+            child: child,
+            feedback: feedback,
+            feedbackOffset: feedbackOffset,
+            dragAnchor: dragAnchor);
 
-  GestureRecognizer createRecognizer(PointerRouter router, DragStartCallback starter) {
-    return new MultiTapGestureRecognizer(
-      router: router,
-      onTapDown: starter
-    );
+  GestureRecognizer createRecognizer(
+      PointerRouter router, DragStartCallback starter) {
+    return new MultiTapGestureRecognizer(router: router, onTapDown: starter);
   }
 }
 
 class LongPressDraggable<T> extends DraggableBase<T> {
-  LongPressDraggable({
-    Key key,
-    T data,
-    Widget child,
-    Widget feedback,
-    Offset feedbackOffset: Offset.zero,
-    DragAnchor dragAnchor: DragAnchor.child
-  }) : super(
-    key: key,
-    data: data,
-    child: child,
-    feedback: feedback,
-    feedbackOffset: feedbackOffset,
-    dragAnchor: dragAnchor
-  );
+  LongPressDraggable(
+      {Key key,
+      T data,
+      Widget child,
+      Widget feedback,
+      Offset feedbackOffset: Offset.zero,
+      DragAnchor dragAnchor: DragAnchor.child})
+      : super(
+            key: key,
+            data: data,
+            child: child,
+            feedback: feedback,
+            feedbackOffset: feedbackOffset,
+            dragAnchor: dragAnchor);
 
-  GestureRecognizer createRecognizer(PointerRouter router, DragStartCallback starter) {
+  GestureRecognizer createRecognizer(
+      PointerRouter router, DragStartCallback starter) {
     return new MultiTapGestureRecognizer(
-      router: router,
-      longTapDelay: kLongPressTimeout,
-      onLongTapDown: (Point position, int pointer) {
-        userFeedback.performHapticFeedback(HapticFeedbackType.VIRTUAL_KEY);
-        starter(position, pointer);
-      }
-    );
+        router: router, longTapDelay: kLongPressTimeout,
+        onLongTapDown: (Point position, int pointer) {
+      userFeedback.performHapticFeedback(HapticFeedbackType.VIRTUAL_KEY);
+      starter(position, pointer);
+    });
   }
 }
 
-class _DraggableState<T> extends State<DraggableBase<T>> implements GestureArenaMember {
-
+class _DraggableState<T> extends State<DraggableBase<T>>
+    implements GestureArenaMember {
   PointerRouter get router => FlutterBinding.instance.pointerRouter;
 
   void initState() {
@@ -136,7 +133,8 @@ class _DraggableState<T> extends State<DraggableBase<T>> implements GestureArena
   Map<int, GestureArenaEntry> _activePointers = <int, GestureArenaEntry>{};
 
   void _routePointer(PointerEvent event) {
-    _activePointers[event.pointer] = GestureArena.instance.add(event.pointer, this);
+    _activePointers[event.pointer] =
+        GestureArena.instance.add(event.pointer, this);
     _recognizer.addPointer(event);
   }
 
@@ -159,36 +157,27 @@ class _DraggableState<T> extends State<DraggableBase<T>> implements GestureArena
         break;
       case DragAnchor.pointer:
         dragStartPoint = Point.origin;
-      break;
+        break;
     }
     new _DragAvatar<T>(
-      pointer: pointer,
-      router: router,
-      overlay: Overlay.of(context),
-      data: config.data,
-      initialPosition: position,
-      dragStartPoint: dragStartPoint,
-      feedback: config.feedback,
-      feedbackOffset: config.feedbackOffset
-    );
+        pointer: pointer,
+        router: router,
+        overlay: Overlay.of(context),
+        data: config.data,
+        initialPosition: position,
+        dragStartPoint: dragStartPoint,
+        feedback: config.feedback,
+        feedbackOffset: config.feedbackOffset);
   }
 
   Widget build(BuildContext context) {
-    return new Listener(
-      onPointerDown: _routePointer,
-      child: config.child
-    );
+    return new Listener(onPointerDown: _routePointer, child: config.child);
   }
 }
 
-
 class DragTarget<T> extends StatefulComponent {
-  const DragTarget({
-    Key key,
-    this.builder,
-    this.onWillAccept,
-    this.onAccept
-  }) : super(key: key);
+  const DragTarget({Key key, this.builder, this.onWillAccept, this.onAccept})
+      : super(key: key);
 
   final DragTargetBuilder<T> builder;
   final DragTargetWillAccept<T> onWillAccept;
@@ -204,7 +193,8 @@ class DragTargetState<T> extends State<DragTarget<T>> {
   bool didEnter(dynamic data) {
     assert(!_candidateData.contains(data));
     assert(!_rejectedData.contains(data));
-    if (data is T && (config.onWillAccept == null || config.onWillAccept(data))) {
+    if (data is T &&
+        (config.onWillAccept == null || config.onWillAccept(data))) {
       setState(() {
         _candidateData.add(data);
       });
@@ -227,21 +217,18 @@ class DragTargetState<T> extends State<DragTarget<T>> {
     setState(() {
       _candidateData.remove(data);
     });
-    if (config.onAccept != null)
-      config.onAccept(data);
+    if (config.onAccept != null) config.onAccept(data);
   }
 
   Widget build(BuildContext context) {
     return new MetaData(
-      metaData: this,
-      child: config.builder(context,
-                            new UnmodifiableListView<T>(_candidateData),
-                            new UnmodifiableListView<dynamic>(_rejectedData)
-      )
-    );
+        metaData: this,
+        child: config.builder(
+            context,
+            new UnmodifiableListView<T>(_candidateData),
+            new UnmodifiableListView<dynamic>(_rejectedData)));
   }
 }
-
 
 enum _DragEndKind { dropped, canceled }
 
@@ -251,16 +238,15 @@ enum _DragEndKind { dropped, canceled }
 // This will probably need to be changed once we have more experience with using
 // this widget.
 class _DragAvatar<T> {
-  _DragAvatar({
-    this.pointer,
-    this.router,
-    OverlayState overlay,
-    this.data,
-    Point initialPosition,
-    this.dragStartPoint: Point.origin,
-    this.feedback,
-    this.feedbackOffset: Offset.zero
-  }) {
+  _DragAvatar(
+      {this.pointer,
+      this.router,
+      OverlayState overlay,
+      this.data,
+      Point initialPosition,
+      this.dragStartPoint: Point.origin,
+      this.feedback,
+      this.feedbackOffset: Offset.zero}) {
     assert(pointer != null);
     assert(router != null);
     assert(overlay != null);
@@ -298,14 +284,14 @@ class _DragAvatar<T> {
   void update(Point globalPosition) {
     _lastOffset = globalPosition - dragStartPoint;
     _entry.markNeedsBuild();
-    HitTestResult result = WidgetFlutterBinding.instance.hitTest(globalPosition + feedbackOffset);
+    HitTestResult result =
+        WidgetFlutterBinding.instance.hitTest(globalPosition + feedbackOffset);
     DragTargetState target = _getDragTarget(result.path);
-    if (target == _activeTarget)
-      return;
-    if (_activeTarget != null)
-      _activeTarget.didLeave(data);
+    if (target == _activeTarget) return;
+    if (_activeTarget != null) _activeTarget.didLeave(data);
     _activeTarget = target;
-    _activeTargetWillAcceptDrop = _activeTarget != null && _activeTarget.didEnter(data);
+    _activeTargetWillAcceptDrop =
+        _activeTarget != null && _activeTarget.didEnter(data);
   }
 
   DragTargetState _getDragTarget(List<HitTestEntry> path) {
@@ -314,8 +300,8 @@ class _DragAvatar<T> {
     for (HitTestEntry entry in path) {
       if (entry.target is RenderMetaData) {
         RenderMetaData renderMetaData = entry.target;
-        if (renderMetaData.metaData is DragTargetState)
-          return renderMetaData.metaData;
+        if (renderMetaData.metaData
+            is DragTargetState) return renderMetaData.metaData;
       }
     }
     return null;
@@ -323,10 +309,9 @@ class _DragAvatar<T> {
 
   void finish(_DragEndKind endKind) {
     if (_activeTarget != null) {
-      if (endKind == _DragEndKind.dropped && _activeTargetWillAcceptDrop)
-        _activeTarget.didDrop(data);
-      else
-        _activeTarget.didLeave(data);
+      if (endKind == _DragEndKind.dropped &&
+          _activeTargetWillAcceptDrop) _activeTarget.didDrop(data);
+      else _activeTarget.didLeave(data);
     }
     _activeTarget = null;
     _activeTargetWillAcceptDrop = false;
@@ -337,11 +322,8 @@ class _DragAvatar<T> {
 
   Widget _build(BuildContext context) {
     return new Positioned(
-      left: _lastOffset.dx,
-      top: _lastOffset.dy,
-      child: new IgnorePointer(
-        child: feedback
-      )
-    );
+        left: _lastOffset.dx,
+        top: _lastOffset.dy,
+        child: new IgnorePointer(child: feedback));
   }
 }

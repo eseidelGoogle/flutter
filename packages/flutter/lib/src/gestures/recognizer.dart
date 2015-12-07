@@ -13,7 +13,6 @@ import 'pointer_router.dart';
 export 'pointer_router.dart' show PointerRouter;
 
 abstract class GestureRecognizer extends GestureArenaMember {
-
   /// Call this with the pointerdown event of each pointer that should be
   /// considered for this gesture. (It's the GestureRecognizer's responsibility
   /// to then add itself to the global pointer router to receive subsequent
@@ -23,12 +22,11 @@ abstract class GestureRecognizer extends GestureArenaMember {
   /// Release any resources used by the object. Called when the object is no
   /// longer needed (e.g. a gesture recogniser is being unregistered from a
   /// [GestureDetector]).
-  void dispose() { }
-
+  void dispose() {}
 }
 
 abstract class OneSequenceGestureRecognizer extends GestureRecognizer {
-  OneSequenceGestureRecognizer({ PointerRouter router }) : _router = router {
+  OneSequenceGestureRecognizer({PointerRouter router}) : _router = router {
     assert(_router != null);
   }
 
@@ -38,21 +36,21 @@ abstract class OneSequenceGestureRecognizer extends GestureRecognizer {
   final Set<int> _trackedPointers = new Set<int>();
 
   void handleEvent(PointerEvent event);
-  void acceptGesture(int pointer) { }
-  void rejectGesture(int pointer) { }
+  void acceptGesture(int pointer) {}
+  void rejectGesture(int pointer) {}
   void didStopTrackingLastPointer(int pointer);
 
   void resolve(GestureDisposition disposition) {
-    List<GestureArenaEntry> localEntries = new List<GestureArenaEntry>.from(_entries);
+    List<GestureArenaEntry> localEntries =
+        new List<GestureArenaEntry>.from(_entries);
     _entries.clear();
-    for (GestureArenaEntry entry in localEntries)
-      entry.resolve(disposition);
+    for (GestureArenaEntry entry in localEntries) entry.resolve(disposition);
   }
 
   void dispose() {
     resolve(GestureDisposition.rejected);
-    for (int pointer in _trackedPointers)
-      _router.removeRoute(pointer, handleEvent);
+    for (int pointer
+        in _trackedPointers) _router.removeRoute(pointer, handleEvent);
     _trackedPointers.clear();
     assert(_entries.isEmpty);
     _router = null;
@@ -67,26 +65,21 @@ abstract class OneSequenceGestureRecognizer extends GestureRecognizer {
   void stopTrackingPointer(int pointer) {
     _router.removeRoute(pointer, handleEvent);
     _trackedPointers.remove(pointer);
-    if (_trackedPointers.isEmpty)
-      didStopTrackingLastPointer(pointer);
+    if (_trackedPointers.isEmpty) didStopTrackingLastPointer(pointer);
   }
 
   void stopTrackingIfPointerNoLongerDown(PointerEvent event) {
-    if (event is PointerUpEvent || event is PointerCancelEvent)
-      stopTrackingPointer(event.pointer);
+    if (event is PointerUpEvent ||
+        event is PointerCancelEvent) stopTrackingPointer(event.pointer);
   }
-
 }
 
-enum GestureRecognizerState {
-  ready,
-  possible,
-  defunct
-}
+enum GestureRecognizerState { ready, possible, defunct }
 
-abstract class PrimaryPointerGestureRecognizer extends OneSequenceGestureRecognizer {
-  PrimaryPointerGestureRecognizer({ PointerRouter router, this.deadline })
-    : super(router: router);
+abstract class PrimaryPointerGestureRecognizer
+    extends OneSequenceGestureRecognizer {
+  PrimaryPointerGestureRecognizer({PointerRouter router, this.deadline})
+      : super(router: router);
 
   final Duration deadline;
 
@@ -101,14 +94,14 @@ abstract class PrimaryPointerGestureRecognizer extends OneSequenceGestureRecogni
       state = GestureRecognizerState.possible;
       primaryPointer = event.pointer;
       initialPosition = event.position;
-      if (deadline != null)
-        _timer = new Timer(deadline, didExceedDeadline);
+      if (deadline != null) _timer = new Timer(deadline, didExceedDeadline);
     }
   }
 
   void handleEvent(PointerEvent event) {
     assert(state != GestureRecognizerState.ready);
-    if (state == GestureRecognizerState.possible && event.pointer == primaryPointer) {
+    if (state == GestureRecognizerState.possible &&
+        event.pointer == primaryPointer) {
       // TODO(abarth): Maybe factor the slop handling out into a separate class?
       if (event is PointerMoveEvent && _getDistance(event) > kTouchSlop) {
         resolve(GestureDisposition.rejected);
@@ -158,5 +151,4 @@ abstract class PrimaryPointerGestureRecognizer extends OneSequenceGestureRecogni
     Offset offset = event.position - initialPosition;
     return offset.distance;
   }
-
 }

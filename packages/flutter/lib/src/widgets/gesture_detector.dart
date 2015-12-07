@@ -8,49 +8,50 @@ import 'package:flutter/rendering.dart';
 import 'basic.dart';
 import 'framework.dart';
 
-export 'package:flutter/gestures.dart' show
-  GestureTapDownCallback,
-  GestureTapUpCallback,
-  GestureTapCallback,
-  GestureTapCancelCallback,
-  GestureLongPressCallback,
-  GestureDragStartCallback,
-  GestureDragUpdateCallback,
-  GestureDragEndCallback,
-  GestureDragStartCallback,
-  GestureDragUpdateCallback,
-  GestureDragEndCallback,
-  GesturePanStartCallback,
-  GesturePanUpdateCallback,
-  GesturePanEndCallback,
-  GestureScaleStartCallback,
-  GestureScaleUpdateCallback,
-  GestureScaleEndCallback;
+export 'package:flutter/gestures.dart'
+    show
+        GestureTapDownCallback,
+        GestureTapUpCallback,
+        GestureTapCallback,
+        GestureTapCancelCallback,
+        GestureLongPressCallback,
+        GestureDragStartCallback,
+        GestureDragUpdateCallback,
+        GestureDragEndCallback,
+        GestureDragStartCallback,
+        GestureDragUpdateCallback,
+        GestureDragEndCallback,
+        GesturePanStartCallback,
+        GesturePanUpdateCallback,
+        GesturePanEndCallback,
+        GestureScaleStartCallback,
+        GestureScaleUpdateCallback,
+        GestureScaleEndCallback;
 
 class GestureDetector extends StatefulComponent {
-  const GestureDetector({
-    Key key,
-    this.child,
-    this.onTapDown,
-    this.onTapUp,
-    this.onTap,
-    this.onTapCancel,
-    this.onDoubleTap,
-    this.onLongPress,
-    this.onVerticalDragStart,
-    this.onVerticalDragUpdate,
-    this.onVerticalDragEnd,
-    this.onHorizontalDragStart,
-    this.onHorizontalDragUpdate,
-    this.onHorizontalDragEnd,
-    this.onPanStart,
-    this.onPanUpdate,
-    this.onPanEnd,
-    this.onScaleStart,
-    this.onScaleUpdate,
-    this.onScaleEnd,
-    this.behavior
-  }) : super(key: key);
+  const GestureDetector(
+      {Key key,
+      this.child,
+      this.onTapDown,
+      this.onTapUp,
+      this.onTap,
+      this.onTapCancel,
+      this.onDoubleTap,
+      this.onLongPress,
+      this.onVerticalDragStart,
+      this.onVerticalDragUpdate,
+      this.onVerticalDragEnd,
+      this.onHorizontalDragStart,
+      this.onHorizontalDragUpdate,
+      this.onHorizontalDragEnd,
+      this.onPanStart,
+      this.onPanUpdate,
+      this.onPanEnd,
+      this.onScaleStart,
+      this.onScaleUpdate,
+      this.onScaleEnd,
+      this.behavior})
+      : super(key: key);
 
   final Widget child;
 
@@ -125,7 +126,10 @@ class _GestureDetectorState extends State<GestureDetector> {
   }
 
   void _syncTap() {
-    if (config.onTapDown == null && config.onTapUp == null && config.onTap == null && config.onTapCancel == null) {
+    if (config.onTapDown == null &&
+        config.onTapUp == null &&
+        config.onTap == null &&
+        config.onTapCancel == null) {
       _tap = _ensureDisposed(_tap);
     } else {
       _tap ??= new TapGestureRecognizer(router: _router);
@@ -156,7 +160,9 @@ class _GestureDetectorState extends State<GestureDetector> {
   }
 
   void _syncVerticalDrag() {
-    if (config.onVerticalDragStart == null && config.onVerticalDragUpdate == null && config.onVerticalDragEnd == null) {
+    if (config.onVerticalDragStart == null &&
+        config.onVerticalDragUpdate == null &&
+        config.onVerticalDragEnd == null) {
       _verticalDrag = _ensureDisposed(_verticalDrag);
     } else {
       _verticalDrag ??= new VerticalDragGestureRecognizer(router: _router);
@@ -168,7 +174,9 @@ class _GestureDetectorState extends State<GestureDetector> {
   }
 
   void _syncHorizontalDrag() {
-    if (config.onHorizontalDragStart == null && config.onHorizontalDragUpdate == null && config.onHorizontalDragEnd == null) {
+    if (config.onHorizontalDragStart == null &&
+        config.onHorizontalDragUpdate == null &&
+        config.onHorizontalDragEnd == null) {
       _horizontalDrag = _ensureDisposed(_horizontalDrag);
     } else {
       _horizontalDrag ??= new HorizontalDragGestureRecognizer(router: _router);
@@ -180,10 +188,12 @@ class _GestureDetectorState extends State<GestureDetector> {
   }
 
   void _syncPan() {
-    if (config.onPanStart == null && config.onPanUpdate == null && config.onPanEnd == null) {
+    if (config.onPanStart == null &&
+        config.onPanUpdate == null &&
+        config.onPanEnd == null) {
       _pan = _ensureDisposed(_pan);
     } else {
-      assert(_scale == null);  // Scale is a superset of pan; just use scale
+      assert(_scale == null); // Scale is a superset of pan; just use scale
       _pan ??= new PanGestureRecognizer(router: _router);
       _pan
         ..onStart = config.onPanStart
@@ -193,10 +203,12 @@ class _GestureDetectorState extends State<GestureDetector> {
   }
 
   void _syncScale() {
-    if (config.onScaleStart == null && config.onScaleUpdate == null && config.onScaleEnd == null) {
+    if (config.onScaleStart == null &&
+        config.onScaleUpdate == null &&
+        config.onScaleEnd == null) {
       _scale = _ensureDisposed(_scale);
     } else {
-      assert(_pan == null);  // Scale is a superset of pan; just use scale
+      assert(_pan == null); // Scale is a superset of pan; just use scale
       _scale ??= new ScaleGestureRecognizer(router: _router);
       _scale
         ..onStart = config.onScaleStart
@@ -211,53 +223,39 @@ class _GestureDetectorState extends State<GestureDetector> {
   }
 
   void _handlePointerDown(PointerDownEvent event) {
-    if (_tap != null)
-      _tap.addPointer(event);
-    if (_doubleTap != null)
-      _doubleTap.addPointer(event);
-    if (_longPress != null)
-      _longPress.addPointer(event);
-    if (_verticalDrag != null)
-      _verticalDrag.addPointer(event);
-    if (_horizontalDrag != null)
-      _horizontalDrag.addPointer(event);
-    if (_pan != null)
-      _pan.addPointer(event);
-    if (_scale != null)
-      _scale.addPointer(event);
+    if (_tap != null) _tap.addPointer(event);
+    if (_doubleTap != null) _doubleTap.addPointer(event);
+    if (_longPress != null) _longPress.addPointer(event);
+    if (_verticalDrag != null) _verticalDrag.addPointer(event);
+    if (_horizontalDrag != null) _horizontalDrag.addPointer(event);
+    if (_pan != null) _pan.addPointer(event);
+    if (_scale != null) _scale.addPointer(event);
   }
 
   HitTestBehavior get _defaultBehavior {
-    return config.child == null ? HitTestBehavior.translucent : HitTestBehavior.deferToChild;
+    return config.child == null
+        ? HitTestBehavior.translucent
+        : HitTestBehavior.deferToChild;
   }
 
   Widget build(BuildContext context) {
     return new Listener(
-      onPointerDown: _handlePointerDown,
-      behavior: config.behavior ?? _defaultBehavior,
-      child: config.child
-    );
+        onPointerDown: _handlePointerDown,
+        behavior: config.behavior ?? _defaultBehavior,
+        child: config.child);
   }
 
   void debugFillDescription(List<String> description) {
     super.debugFillDescription(description);
     List<String> gestures = <String>[];
-    if (_tap != null)
-      gestures.add('tap');
-    if (_doubleTap != null)
-      gestures.add('double tap');
-    if (_longPress != null)
-      gestures.add('long press');
-    if (_verticalDrag != null)
-      gestures.add('vertical drag');
-    if (_horizontalDrag != null)
-      gestures.add('horizontal drag');
-    if (_pan != null)
-      gestures.add('pan');
-    if (_scale != null)
-      gestures.add('scale');
-    if (gestures.isEmpty)
-      gestures.add('<none>');
+    if (_tap != null) gestures.add('tap');
+    if (_doubleTap != null) gestures.add('double tap');
+    if (_longPress != null) gestures.add('long press');
+    if (_verticalDrag != null) gestures.add('vertical drag');
+    if (_horizontalDrag != null) gestures.add('horizontal drag');
+    if (_pan != null) gestures.add('pan');
+    if (_scale != null) gestures.add('scale');
+    if (gestures.isEmpty) gestures.add('<none>');
     description.add('gestures: ${gestures.join(", ")}');
     switch (config.behavior) {
       case HitTestBehavior.translucent:

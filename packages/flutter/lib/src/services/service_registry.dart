@@ -8,9 +8,9 @@ import 'package:mojo_services/mojo/service_registry.mojom.dart';
 import 'package:mojo/core.dart' as core;
 
 ServiceRegistryProxy _initServiceRegistryProxy() {
-  core.MojoHandle serviceRegistryHandle = new core.MojoHandle(internals.takeServiceRegistry());
-  if (!serviceRegistryHandle.isValid)
-    return null;
+  core.MojoHandle serviceRegistryHandle =
+      new core.MojoHandle(internals.takeServiceRegistry());
+  if (!serviceRegistryHandle.isValid) return null;
   return new ServiceRegistryProxy.fromHandle(serviceRegistryHandle);
 }
 

@@ -5,12 +5,11 @@
 import 'package:newton/newton.dart';
 
 class ClampedSimulation extends Simulation {
-  ClampedSimulation(this.simulation, {
-    this.xMin: double.NEGATIVE_INFINITY,
-    this.xMax: double.INFINITY,
-    this.dxMin: double.NEGATIVE_INFINITY,
-    this.dxMax: double.INFINITY
-  }) {
+  ClampedSimulation(this.simulation,
+      {this.xMin: double.NEGATIVE_INFINITY,
+      this.xMax: double.INFINITY,
+      this.dxMin: double.NEGATIVE_INFINITY,
+      this.dxMax: double.INFINITY}) {
     assert(simulation != null);
     assert(xMax >= xMin);
     assert(dxMax >= dxMin);

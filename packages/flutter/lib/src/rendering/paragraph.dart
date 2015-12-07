@@ -7,29 +7,27 @@ import 'package:flutter/painting.dart';
 import 'box.dart';
 import 'object.dart';
 
-export 'package:flutter/painting.dart' show
-  FontStyle,
-  FontWeight,
-  PlainTextSpan,
-  StyledTextSpan,
-  TextAlign,
-  TextBaseline,
-  TextDecoration,
-  TextDecorationStyle,
-  TextSpan,
-  TextStyle,
-  normal,
-  bold,
-  underline,
-  overline,
-  lineThrough;
+export 'package:flutter/painting.dart'
+    show
+        FontStyle,
+        FontWeight,
+        PlainTextSpan,
+        StyledTextSpan,
+        TextAlign,
+        TextBaseline,
+        TextDecoration,
+        TextDecorationStyle,
+        TextSpan,
+        TextStyle,
+        normal,
+        bold,
+        underline,
+        overline,
+        lineThrough;
 
 /// A render object that displays a paragraph of text
 class RenderParagraph extends RenderBox {
-
-  RenderParagraph(
-    TextSpan text
-  ) : textPainter = new TextPainter(text) {
+  RenderParagraph(TextSpan text) : textPainter = new TextPainter(text) {
     assert(text != null);
   }
 
@@ -40,8 +38,7 @@ class RenderParagraph extends RenderBox {
   /// The text to display
   TextSpan get text => textPainter.text;
   void set text(TextSpan value) {
-    if (textPainter.text == value)
-      return;
+    if (textPainter.text == value) return;
     textPainter.text = value;
     _constraintsForCurrentLayout = null;
     markNeedsLayout();
@@ -49,8 +46,8 @@ class RenderParagraph extends RenderBox {
 
   void layoutText(BoxConstraints constraints) {
     assert(constraints != null);
-    if (_constraintsForCurrentLayout == constraints)
-      return; // already cached this layout
+    if (_constraintsForCurrentLayout ==
+        constraints) return; // already cached this layout
     textPainter.maxWidth = constraints.maxWidth;
     textPainter.minWidth = constraints.minWidth;
     textPainter.minHeight = constraints.minHeight;
@@ -116,8 +113,8 @@ class RenderParagraph extends RenderBox {
 
   String debugDescribeChildren(String prefix) {
     return '$prefix \u2558\u2550\u2566\u2550\u2550 text \u2550\u2550\u2550\n'
-           '${text.toString("$prefix   \u2551 ")}\n'
-           '$prefix   \u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n'
-           '$prefix\n';
+        '${text.toString("$prefix   \u2551 ")}\n'
+        '$prefix   \u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n'
+        '$prefix\n';
   }
 }

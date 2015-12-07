@@ -12,19 +12,17 @@ import 'page.dart';
 import 'theme.dart';
 
 const TextStyle _errorTextStyle = const TextStyle(
-  color: const Color(0xD0FF0000),
-  fontFamily: 'monospace',
-  fontSize: 48.0,
-  fontWeight: FontWeight.w900,
-  textAlign: TextAlign.right,
-  decoration: underline,
-  decorationColor: const Color(0xFFFF00),
-  decorationStyle: TextDecorationStyle.double
-);
+    color: const Color(0xD0FF0000),
+    fontFamily: 'monospace',
+    fontSize: 48.0,
+    fontWeight: FontWeight.w900,
+    textAlign: TextAlign.right,
+    decoration: underline,
+    decorationColor: const Color(0xFFFF00),
+    decorationStyle: TextDecorationStyle.double);
 
 AssetBundle _initDefaultBundle() {
-  if (rootBundle != null)
-    return rootBundle;
+  if (rootBundle != null) return rootBundle;
   const String _kAssetBase = '/packages/material_design_icons/icons/';
   return new NetworkAssetBundle(Uri.base.resolve(_kAssetBase));
 }
@@ -32,21 +30,23 @@ AssetBundle _initDefaultBundle() {
 final AssetBundle _defaultBundle = _initDefaultBundle();
 
 class RouteArguments {
-  const RouteArguments({ this.context });
+  const RouteArguments({this.context});
   final BuildContext context;
 }
+
 typedef Widget RouteBuilder(RouteArguments args);
 
 class MaterialApp extends StatefulComponent {
-  MaterialApp({
-    Key key,
-    this.title,
-    this.theme,
-    this.routes: const <String, RouteBuilder>{},
-    this.onGenerateRoute
-  }) : super(key: key) {
+  MaterialApp(
+      {Key key,
+      this.title,
+      this.theme,
+      this.routes: const <String, RouteBuilder>{},
+      this.onGenerateRoute})
+      : super(key: key) {
     assert(routes != null);
-    assert(routes.containsKey(Navigator.defaultRouteName) || onGenerateRoute != null);
+    assert(routes.containsKey(Navigator.defaultRouteName) ||
+        onGenerateRoute != null);
   }
 
   final String title;
@@ -58,7 +58,6 @@ class MaterialApp extends StatefulComponent {
 }
 
 class _MaterialAppState extends State<MaterialApp> implements BindingObserver {
-
   GlobalObjectKey _navigator;
 
   Size _size;
@@ -80,55 +79,45 @@ class _MaterialAppState extends State<MaterialApp> implements BindingObserver {
     NavigatorState navigator = _navigator.currentState;
     assert(navigator != null);
     navigator.openTransaction((NavigatorTransaction transaction) {
-      if (!transaction.pop())
-        activity.finishCurrentActivity();
+      if (!transaction.pop()) activity.finishCurrentActivity();
     });
     return true;
   }
 
-  void didChangeSize(Size size) => setState(() { _size = size; });
+  void didChangeSize(Size size) => setState(() {
+        _size = size;
+      });
 
   final HeroController _heroController = new HeroController();
 
   Route _generateRoute(NamedRouteSettings settings) {
     RouteBuilder builder = config.routes[settings.name];
     if (builder != null) {
-      return new MaterialPageRoute(
-        builder: (BuildContext context) {
-          return builder(new RouteArguments(context: context));
-        },
-        settings: settings
-      );
+      return new MaterialPageRoute(builder: (BuildContext context) {
+        return builder(new RouteArguments(context: context));
+      }, settings: settings);
     }
-    if (config.onGenerateRoute != null)
-      return config.onGenerateRoute(settings);
+    if (config.onGenerateRoute != null) return config.onGenerateRoute(settings);
     return null;
   }
 
   Widget build(BuildContext context) {
     ThemeData theme = config.theme ?? new ThemeData.fallback();
     return new MediaQuery(
-      data: new MediaQueryData(size: _size),
-      child: new Theme(
-        data: theme,
-        child: new DefaultTextStyle(
-          style: _errorTextStyle,
-          child: new DefaultAssetBundle(
-            bundle: _defaultBundle,
-            child: new Title(
-              title: config.title,
-              color: theme.primaryColor,
-              child: new Navigator(
-                key: _navigator,
-                initialRoute: ui.window.defaultRouteName,
-                onGenerateRoute: _generateRoute,
-                observer: _heroController
-              )
-            )
-          )
-        )
-      )
-    );
+        data: new MediaQueryData(size: _size),
+        child: new Theme(
+            data: theme,
+            child: new DefaultTextStyle(
+                style: _errorTextStyle,
+                child: new DefaultAssetBundle(
+                    bundle: _defaultBundle,
+                    child: new Title(
+                        title: config.title,
+                        color: theme.primaryColor,
+                        child: new Navigator(
+                            key: _navigator,
+                            initialRoute: ui.window.defaultRouteName,
+                            onGenerateRoute: _generateRoute,
+                            observer: _heroController))))));
   }
-
 }

@@ -27,7 +27,7 @@ abstract class Animatable {
 
 /// An animated variable with a concrete type.
 class AnimatedValue<T extends dynamic> implements Animatable {
-  AnimatedValue(this.begin, { this.end, this.curve, this.reverseCurve }) {
+  AnimatedValue(this.begin, {this.end, this.curve, this.reverseCurve}) {
     value = begin;
   }
 
@@ -52,16 +52,15 @@ class AnimatedValue<T extends dynamic> implements Animatable {
   Curve reverseCurve;
 
   Curve _getActiveCurve(AnimationDirection direction) {
-    if (direction == AnimationDirection.forward || reverseCurve == null)
-      return curve;
+    if (direction == AnimationDirection.forward ||
+        reverseCurve == null) return curve;
     return reverseCurve;
   }
 
   /// Applies this timing to the given animation clock value in the given direction
   double transform(double t, AnimationDirection direction) {
     Curve activeCurve = _getActiveCurve(direction);
-    if (activeCurve == null)
-      return t;
+    if (activeCurve == null) return t;
     if (t == 0.0 || t == 1.0) {
       assert(activeCurve.transform(t).round() == t);
       return t;
@@ -74,12 +73,9 @@ class AnimatedValue<T extends dynamic> implements Animatable {
   void setProgress(double t, AnimationDirection direction) {
     if (end != null) {
       t = transform(t, direction);
-      if (t == 0.0)
-        value = begin;
-      else if (t == 1.0)
-        value = end;
-      else
-        value = lerp(t);
+      if (t == 0.0) value = begin;
+      else if (t == 1.0) value = end;
+      else value = lerp(t);
     }
   }
 
@@ -91,8 +87,8 @@ class AnimatedValue<T extends dynamic> implements Animatable {
 /// This class specializes the interpolation of AnimatedValue<Color> to be
 /// appropriate for colors.
 class AnimatedColorValue extends AnimatedValue<Color> {
-  AnimatedColorValue(Color begin, { Color end, Curve curve, Curve reverseCurve })
-    : super(begin, end: end, curve: curve, reverseCurve: reverseCurve);
+  AnimatedColorValue(Color begin, {Color end, Curve curve, Curve reverseCurve})
+      : super(begin, end: end, curve: curve, reverseCurve: reverseCurve);
 
   Color lerp(double t) => Color.lerp(begin, end, t);
 }
@@ -102,8 +98,8 @@ class AnimatedColorValue extends AnimatedValue<Color> {
 /// This class specializes the interpolation of AnimatedValue<Size> to be
 /// appropriate for rectangles.
 class AnimatedSizeValue extends AnimatedValue<Size> {
-  AnimatedSizeValue(Size begin, { Size end, Curve curve, Curve reverseCurve })
-    : super(begin, end: end, curve: curve, reverseCurve: reverseCurve);
+  AnimatedSizeValue(Size begin, {Size end, Curve curve, Curve reverseCurve})
+      : super(begin, end: end, curve: curve, reverseCurve: reverseCurve);
 
   Size lerp(double t) => Size.lerp(begin, end, t);
 }
@@ -113,8 +109,8 @@ class AnimatedSizeValue extends AnimatedValue<Size> {
 /// This class specializes the interpolation of AnimatedValue<Rect> to be
 /// appropriate for rectangles.
 class AnimatedRectValue extends AnimatedValue<Rect> {
-  AnimatedRectValue(Rect begin, { Rect end, Curve curve, Curve reverseCurve })
-    : super(begin, end: end, curve: curve, reverseCurve: reverseCurve);
+  AnimatedRectValue(Rect begin, {Rect end, Curve curve, Curve reverseCurve})
+      : super(begin, end: end, curve: curve, reverseCurve: reverseCurve);
 
   Rect lerp(double t) => Rect.lerp(begin, end, t);
 }
@@ -125,8 +121,8 @@ class AnimatedRectValue extends AnimatedValue<Rect> {
 /// the begin and end types by a double, and int * double returns a double.
 /// This class overrides the lerp() function to round off the result to an int.
 class AnimatedIntValue extends AnimatedValue<int> {
-  AnimatedIntValue(int begin, { int end, Curve curve, Curve reverseCurve })
-    : super(begin, end: end, curve: curve, reverseCurve: reverseCurve);
+  AnimatedIntValue(int begin, {int end, Curve curve, Curve reverseCurve})
+      : super(begin, end: end, curve: curve, reverseCurve: reverseCurve);
 
   int lerp(double t) => (begin + (end - begin) * t).round();
 }

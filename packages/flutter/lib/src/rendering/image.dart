@@ -9,51 +9,46 @@ import 'package:flutter/painting.dart';
 import 'box.dart';
 import 'object.dart';
 
-export 'package:flutter/painting.dart' show
-  ImageFit,
-  ImageRepeat;
+export 'package:flutter/painting.dart' show ImageFit, ImageRepeat;
 
 /// An image in the render tree.
 ///
 /// The render image attempts to find a size for itself that fits in the given
 /// constraints and preserves the image's intrinisc aspect ratio.
 class RenderImage extends RenderBox {
-  RenderImage({
-    ui.Image image,
-    double width,
-    double height,
-    ColorFilter colorFilter,
-    ImageFit fit,
-    FractionalOffset alignment,
-    ImageRepeat repeat: ImageRepeat.noRepeat,
-    Rect centerSlice
-  }) : _image = image,
-      _width = width,
-      _height = height,
-      _colorFilter = colorFilter,
-      _fit = fit,
-      _alignment = alignment,
-      _repeat = repeat,
-      _centerSlice = centerSlice;
+  RenderImage(
+      {ui.Image image,
+      double width,
+      double height,
+      ColorFilter colorFilter,
+      ImageFit fit,
+      FractionalOffset alignment,
+      ImageRepeat repeat: ImageRepeat.noRepeat,
+      Rect centerSlice})
+      : _image = image,
+        _width = width,
+        _height = height,
+        _colorFilter = colorFilter,
+        _fit = fit,
+        _alignment = alignment,
+        _repeat = repeat,
+        _centerSlice = centerSlice;
 
   /// The image to display.
   ui.Image get image => _image;
   ui.Image _image;
-  void set image (ui.Image value) {
-    if (value == _image)
-      return;
+  void set image(ui.Image value) {
+    if (value == _image) return;
     _image = value;
     markNeedsPaint();
-    if (_width == null || _height == null)
-      markNeedsLayout();
+    if (_width == null || _height == null) markNeedsLayout();
   }
 
   /// If non-null, requires the image to have this width.
   double get width => _width;
   double _width;
-  void set width (double value) {
-    if (value == _width)
-      return;
+  void set width(double value) {
+    if (value == _width) return;
     _width = value;
     markNeedsLayout();
   }
@@ -61,9 +56,8 @@ class RenderImage extends RenderBox {
   /// If non-null, requires the image to have this height.
   double get height => _height;
   double _height;
-  void set height (double value) {
-    if (value == _height)
-      return;
+  void set height(double value) {
+    if (value == _height) return;
     _height = value;
     markNeedsLayout();
   }
@@ -71,9 +65,8 @@ class RenderImage extends RenderBox {
   /// If non-null, apply this color filter to the image before painint.
   ColorFilter get colorFilter => _colorFilter;
   ColorFilter _colorFilter;
-  void set colorFilter (ColorFilter value) {
-    if (value == _colorFilter)
-      return;
+  void set colorFilter(ColorFilter value) {
+    if (value == _colorFilter) return;
     _colorFilter = value;
     markNeedsPaint();
   }
@@ -81,9 +74,8 @@ class RenderImage extends RenderBox {
   /// How to inscribe the image into the place allocated during layout.
   ImageFit get fit => _fit;
   ImageFit _fit;
-  void set fit (ImageFit value) {
-    if (value == _fit)
-      return;
+  void set fit(ImageFit value) {
+    if (value == _fit) return;
     _fit = value;
     markNeedsPaint();
   }
@@ -91,9 +83,8 @@ class RenderImage extends RenderBox {
   /// How to align the image within its bounds.
   FractionalOffset get alignment => _alignment;
   FractionalOffset _alignment;
-  void set alignment (FractionalOffset value) {
-    if (value == _alignment)
-      return;
+  void set alignment(FractionalOffset value) {
+    if (value == _alignment) return;
     _alignment = value;
     markNeedsPaint();
   }
@@ -101,9 +92,8 @@ class RenderImage extends RenderBox {
   /// Not yet implemented.
   ImageRepeat get repeat => _repeat;
   ImageRepeat _repeat;
-  void set repeat (ImageRepeat value) {
-    if (value == _repeat)
-      return;
+  void set repeat(ImageRepeat value) {
+    if (value == _repeat) return;
     _repeat = value;
     markNeedsPaint();
   }
@@ -117,9 +107,8 @@ class RenderImage extends RenderBox {
   /// the center slice will be stretched only vertically.
   Rect get centerSlice => _centerSlice;
   Rect _centerSlice;
-  void set centerSlice (Rect value) {
-    if (value == _centerSlice)
-      return;
+  void set centerSlice(Rect value) {
+    if (value == _centerSlice) return;
     _centerSlice = value;
     markNeedsPaint();
   }
@@ -134,13 +123,10 @@ class RenderImage extends RenderBox {
   Size _sizeForConstraints(BoxConstraints constraints) {
     // Folds the given |width| and |height| into |cosntraints| so they can all
     // be treated uniformly.
-    constraints = new BoxConstraints.tightFor(
-      width: _width,
-      height: _height
-    ).enforce(constraints);
+    constraints = new BoxConstraints.tightFor(width: _width, height: _height)
+        .enforce(constraints);
 
-    if (constraints.isTight || _image == null)
-      return constraints.smallest;
+    if (constraints.isTight || _image == null) return constraints.smallest;
 
     double width = _image.width.toDouble();
     double height = _image.height.toDouble();
@@ -172,8 +158,8 @@ class RenderImage extends RenderBox {
   }
 
   double getMinIntrinsicWidth(BoxConstraints constraints) {
-    if (_width == null && _height == null)
-      return constraints.constrainWidth(0.0);
+    if (_width == null && _height == null) return constraints
+        .constrainWidth(0.0);
     return _sizeForConstraints(constraints).width;
   }
 
@@ -182,8 +168,8 @@ class RenderImage extends RenderBox {
   }
 
   double getMinIntrinsicHeight(BoxConstraints constraints) {
-    if (_width == null && _height == null)
-      return constraints.constrainHeight(0.0);
+    if (_width == null && _height == null) return constraints
+        .constrainHeight(0.0);
     return _sizeForConstraints(constraints).height;
   }
 
@@ -198,19 +184,17 @@ class RenderImage extends RenderBox {
   }
 
   void paint(PaintingContext context, Offset offset) {
-    if (_image == null)
-      return;
+    if (_image == null) return;
     paintImage(
-      canvas: context.canvas,
-      rect: offset & size,
-      image: _image,
-      colorFilter: _colorFilter,
-      fit: _fit,
-      alignX: _alignment?.x,
-      alignY: _alignment?.y,
-      centerSlice: _centerSlice,
-      repeat: _repeat
-    );
+        canvas: context.canvas,
+        rect: offset & size,
+        image: _image,
+        colorFilter: _colorFilter,
+        fit: _fit,
+        alignX: _alignment?.x,
+        alignY: _alignment?.y,
+        centerSlice: _centerSlice,
+        repeat: _repeat);
   }
 
   void debugDescribeSettings(List<String> settings) {

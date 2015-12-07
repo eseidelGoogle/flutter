@@ -11,12 +11,8 @@ import 'date_picker.dart';
 import 'flat_button.dart';
 
 class _DatePickerDialog extends StatefulComponent {
-  _DatePickerDialog({
-    Key key,
-    this.initialDate,
-    this.firstDate,
-    this.lastDate
-  }) : super(key: key);
+  _DatePickerDialog({Key key, this.initialDate, this.firstDate, this.lastDate})
+      : super(key: key);
 
   final DateTime initialDate;
   final DateTime firstDate;
@@ -49,40 +45,27 @@ class _DatePickerDialogState extends State<_DatePickerDialog> {
 
   Widget build(BuildContext context) {
     return new Dialog(
-      content: new DatePicker(
-        selectedDate: _selectedDate,
-        firstDate: config.firstDate,
-        lastDate: config.lastDate,
-        onChanged: _handleDateChanged
-      ),
-      contentPadding: EdgeDims.zero,
-      actions: <Widget>[
-        new FlatButton(
-          child: new Text('CANCEL'),
-          onPressed: _handleCancel
-        ),
-        new FlatButton(
-          child: new Text('OK'),
-          onPressed: _handleOk
-        ),
-      ]
-    );
+        content: new DatePicker(
+            selectedDate: _selectedDate,
+            firstDate: config.firstDate,
+            lastDate: config.lastDate,
+            onChanged: _handleDateChanged),
+        contentPadding: EdgeDims.zero,
+        actions: <Widget>[
+          new FlatButton(child: new Text('CANCEL'), onPressed: _handleCancel),
+          new FlatButton(child: new Text('OK'), onPressed: _handleOk),
+        ]);
   }
 }
 
-Future<DateTime> showDatePicker({
-  BuildContext context,
-  DateTime initialDate,
-  DateTime firstDate,
-  DateTime lastDate
-}) async {
+Future<DateTime> showDatePicker(
+    {BuildContext context,
+    DateTime initialDate,
+    DateTime firstDate,
+    DateTime lastDate}) async {
   DateTime picked = await showDialog(
-    context: context,
-    child: new _DatePickerDialog(
-      initialDate: initialDate,
-      firstDate: firstDate,
-      lastDate: lastDate
-    )
-  );
+      context: context,
+      child: new _DatePickerDialog(
+          initialDate: initialDate, firstDate: firstDate, lastDate: lastDate));
   return picked ?? initialDate;
 }

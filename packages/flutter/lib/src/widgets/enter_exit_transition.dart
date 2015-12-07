@@ -10,13 +10,13 @@ import 'basic.dart';
 import 'framework.dart';
 
 class SmoothlyResizingOverflowBox extends StatefulComponent {
-  SmoothlyResizingOverflowBox({
-    Key key,
-    this.child,
-    this.size,
-    this.duration,
-    this.curve: Curves.linear
-  }) : super(key: key) {
+  SmoothlyResizingOverflowBox(
+      {Key key,
+      this.child,
+      this.size,
+      this.duration,
+      this.curve: Curves.linear})
+      : super(key: key) {
     assert(duration != null);
     assert(curve != null);
   }
@@ -26,20 +26,22 @@ class SmoothlyResizingOverflowBox extends StatefulComponent {
   final Duration duration;
   final Curve curve;
 
-  _SmoothlyResizingOverflowBoxState createState() => new _SmoothlyResizingOverflowBoxState();
+  _SmoothlyResizingOverflowBoxState createState() =>
+      new _SmoothlyResizingOverflowBoxState();
 }
 
-class _SmoothlyResizingOverflowBoxState extends State<SmoothlyResizingOverflowBox> {
+class _SmoothlyResizingOverflowBoxState
+    extends State<SmoothlyResizingOverflowBox> {
   ValuePerformance<Size> _size;
 
   void initState() {
     super.initState();
     _size = new ValuePerformance(
-      variable: new AnimatedSizeValue(config.size, curve: config.curve),
-      duration: config.duration
-    )..addListener(() {
-      setState(() {});
-    });
+        variable: new AnimatedSizeValue(config.size, curve: config.curve),
+        duration: config.duration)
+      ..addListener(() {
+        setState(() {});
+      });
   }
 
   void didUpdateConfig(SmoothlyResizingOverflowBox oldConfig) {
@@ -60,19 +62,12 @@ class _SmoothlyResizingOverflowBoxState extends State<SmoothlyResizingOverflowBo
   }
 
   Widget build(BuildContext context) {
-    return new SizedOverflowBox(
-      size: _size.value,
-      child: config.child
-    );
+    return new SizedOverflowBox(size: _size.value, child: config.child);
   }
 }
 
 class _Entry {
-  _Entry({
-    this.child,
-    this.enterPerformance,
-    this.enterTransition
-  });
+  _Entry({this.child, this.enterPerformance, this.enterTransition});
 
   final Widget child;
   final Performance enterPerformance;
@@ -91,19 +86,20 @@ class _Entry {
   }
 }
 
-typedef Widget TransitionBuilderCallback(PerformanceView performance, Widget child);
+typedef Widget TransitionBuilderCallback(
+    PerformanceView performance, Widget child);
 
 Widget _identityTransition(PerformanceView performance, Widget child) => child;
 
 class EnterExitTransition extends StatefulComponent {
-  EnterExitTransition({
-    Key key,
-    this.child,
-    this.duration,
-    this.curve: Curves.linear,
-    this.onEnter: _identityTransition,
-    this.onExit: _identityTransition
-  }) : super(key: key) {
+  EnterExitTransition(
+      {Key key,
+      this.child,
+      this.duration,
+      this.curve: Curves.linear,
+      this.onEnter: _identityTransition,
+      this.onExit: _identityTransition})
+      : super(key: key) {
     assert(child != null);
     assert(duration != null);
     assert(curve != null);
@@ -129,15 +125,13 @@ class _EnterExitTransitionState extends State<EnterExitTransition> {
   }
 
   _Entry _createEnterTransition() {
-    Performance enterPerformance = new Performance(duration: config.duration)..play();
+    Performance enterPerformance = new Performance(duration: config.duration)
+      ..play();
     return new _Entry(
-      child: config.child,
-      enterPerformance: enterPerformance,
-      enterTransition: config.onEnter(enterPerformance, new KeyedSubtree(
-        key: new GlobalKey(),
-        child: config.child
-      ))
-    );
+        child: config.child,
+        enterPerformance: enterPerformance,
+        enterTransition: config.onEnter(enterPerformance,
+            new KeyedSubtree(key: new GlobalKey(), child: config.child)));
   }
 
   Future _createExitTransition(_Entry entry) async {
@@ -146,8 +140,7 @@ class _EnterExitTransitionState extends State<EnterExitTransition> {
       ..exitPerformance = exitPerformance
       ..exitTransition = config.onExit(exitPerformance, entry.enterTransition);
     await exitPerformance.play();
-    if (!mounted)
-      return;
+    if (!mounted) return;
     setState(() {
       _entries.remove(entry);
     });
@@ -161,27 +154,22 @@ class _EnterExitTransitionState extends State<EnterExitTransition> {
   }
 
   void dispose() {
-    for (_Entry entry in new List<_Entry>.from(_entries))
-      entry.dispose();
+    for (_Entry entry in new List<_Entry>.from(_entries)) entry.dispose();
     super.dispose();
   }
 
   Widget build(BuildContext context) {
     return new SmoothlyResizingOverflowBox(
-      size: _entries.last.childSize,
-      duration: config.duration,
-      curve: config.curve,
-      child: new Stack(_entries.map((_Entry entry) {
-        return new SizeObserver(
-          key: new ObjectKey(entry),
-          onSizeChanged: (Size newSize) {
+        size: _entries.last.childSize,
+        duration: config.duration,
+        curve: config.curve,
+        child: new Stack(_entries.map((_Entry entry) {
+          return new SizeObserver(key: new ObjectKey(entry),
+              onSizeChanged: (Size newSize) {
             setState(() {
               entry.childSize = newSize;
             });
-          },
-          child: entry.currentTransition
-        );
-      }).toList())
-    );
+          }, child: entry.currentTransition);
+        }).toList()));
   }
 }

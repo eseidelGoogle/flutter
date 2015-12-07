@@ -16,8 +16,7 @@ import 'theme.dart';
 import 'toggleable.dart';
 
 class Switch extends StatelessComponent {
-  Switch({ Key key, this.value, this.onChanged })
-      : super(key: key);
+  Switch({Key key, this.value, this.onChanged}) : super(key: key);
 
   final bool value;
   final ValueChanged<bool> onChanged;
@@ -40,26 +39,25 @@ class Switch extends StatelessComponent {
     }
 
     return new _SwitchRenderObjectWidget(
-      value: value,
-      activeColor: activeThumbColor,
-      inactiveColor: inactiveThumbColor,
-      activeTrackColor: activeTrackColor,
-      inactiveTrackColor: inactiveTrackColor,
-      onChanged: onChanged
-    );
+        value: value,
+        activeColor: activeThumbColor,
+        inactiveColor: inactiveThumbColor,
+        activeTrackColor: activeTrackColor,
+        inactiveTrackColor: inactiveTrackColor,
+        onChanged: onChanged);
   }
 }
 
 class _SwitchRenderObjectWidget extends LeafRenderObjectWidget {
-  _SwitchRenderObjectWidget({
-    Key key,
-    this.value,
-    this.activeColor,
-    this.inactiveColor,
-    this.activeTrackColor,
-    this.inactiveTrackColor,
-    this.onChanged
-  }) : super(key: key);
+  _SwitchRenderObjectWidget(
+      {Key key,
+      this.value,
+      this.activeColor,
+      this.inactiveColor,
+      this.activeTrackColor,
+      this.inactiveTrackColor,
+      this.onChanged})
+      : super(key: key);
 
   final bool value;
   final Color activeColor;
@@ -69,15 +67,15 @@ class _SwitchRenderObjectWidget extends LeafRenderObjectWidget {
   final ValueChanged<bool> onChanged;
 
   _RenderSwitch createRenderObject() => new _RenderSwitch(
-    value: value,
-    activeColor: activeColor,
-    inactiveColor: inactiveColor,
-    activeTrackColor: activeTrackColor,
-    inactiveTrackColor: inactiveTrackColor,
-    onChanged: onChanged
-  );
+      value: value,
+      activeColor: activeColor,
+      inactiveColor: inactiveColor,
+      activeTrackColor: activeTrackColor,
+      inactiveTrackColor: inactiveTrackColor,
+      onChanged: onChanged);
 
-  void updateRenderObject(_RenderSwitch renderObject, _SwitchRenderObjectWidget oldWidget) {
+  void updateRenderObject(
+      _RenderSwitch renderObject, _SwitchRenderObjectWidget oldWidget) {
     renderObject.value = value;
     renderObject.activeColor = activeColor;
     renderObject.inactiveColor = inactiveColor;
@@ -91,28 +89,29 @@ const double _kTrackHeight = 14.0;
 const double _kTrackWidth = 29.0;
 const double _kTrackRadius = _kTrackHeight / 2.0;
 const double _kThumbRadius = 10.0;
-const double _kSwitchWidth = _kTrackWidth - 2 * _kTrackRadius + 2 * kRadialReactionRadius;
+const double _kSwitchWidth =
+    _kTrackWidth - 2 * _kTrackRadius + 2 * kRadialReactionRadius;
 const double _kSwitchHeight = 2 * kRadialReactionRadius;
 
 class _RenderSwitch extends RenderToggleable {
-  _RenderSwitch({
-    bool value,
-    Color activeColor,
-    Color inactiveColor,
-    Color activeTrackColor,
-    Color inactiveTrackColor,
-    ValueChanged<bool> onChanged
-  }) : super(
-     value: value,
-     activeColor: activeColor,
-     inactiveColor: inactiveColor,
-     onChanged: onChanged,
-     minRadialReactionRadius: _kThumbRadius,
-     size: const Size(_kSwitchWidth, _kSwitchHeight)
-   ) {
+  _RenderSwitch(
+      {bool value,
+      Color activeColor,
+      Color inactiveColor,
+      Color activeTrackColor,
+      Color inactiveTrackColor,
+      ValueChanged<bool> onChanged})
+      : super(
+            value: value,
+            activeColor: activeColor,
+            inactiveColor: inactiveColor,
+            onChanged: onChanged,
+            minRadialReactionRadius: _kThumbRadius,
+            size: const Size(_kSwitchWidth, _kSwitchHeight)) {
     _activeTrackColor = activeTrackColor;
     _inactiveTrackColor = inactiveTrackColor;
-    _drag = new HorizontalDragGestureRecognizer(router: FlutterBinding.instance.pointerRouter)
+    _drag = new HorizontalDragGestureRecognizer(
+        router: FlutterBinding.instance.pointerRouter)
       ..onStart = _handleDragStart
       ..onUpdate = _handleDragUpdate
       ..onEnd = _handleDragEnd;
@@ -122,8 +121,7 @@ class _RenderSwitch extends RenderToggleable {
   Color _activeTrackColor;
   void set activeTrackColor(Color value) {
     assert(value != null);
-    if (value == _activeTrackColor)
-      return;
+    if (value == _activeTrackColor) return;
     _activeTrackColor = value;
     markNeedsPaint();
   }
@@ -132,8 +130,7 @@ class _RenderSwitch extends RenderToggleable {
   Color _inactiveTrackColor;
   void set inactiveTrackColor(Color value) {
     assert(value != null);
-    if (value == _inactiveTrackColor)
-      return;
+    if (value == _inactiveTrackColor) return;
     _inactiveTrackColor = value;
     markNeedsPaint();
   }
@@ -143,8 +140,7 @@ class _RenderSwitch extends RenderToggleable {
   HorizontalDragGestureRecognizer _drag;
 
   void _handleDragStart(Point globalPosition) {
-    if (onChanged != null)
-      reaction.forward();
+    if (onChanged != null) reaction.forward();
   }
 
   void _handleDragUpdate(double delta) {
@@ -157,16 +153,13 @@ class _RenderSwitch extends RenderToggleable {
   }
 
   void _handleDragEnd(Offset velocity) {
-    if (position.progress >= 0.5)
-      position.forward();
-    else
-      position.reverse();
+    if (position.progress >= 0.5) position.forward();
+    else position.reverse();
     reaction.reverse();
   }
 
   void handleEvent(PointerEvent event, BoxHitTestEntry entry) {
-    if (event is PointerDownEvent && onChanged != null)
-      _drag.addPointer(event);
+    if (event is PointerDownEvent && onChanged != null) _drag.addPointer(event);
     super.handleEvent(event, entry);
   }
 
@@ -177,42 +170,44 @@ class _RenderSwitch extends RenderToggleable {
 
     final bool isActive = onChanged != null;
 
-    Color thumbColor = isActive ? Color.lerp(inactiveColor, activeColor, position.progress) : inactiveColor;
-    Color trackColor = isActive ? Color.lerp(inactiveTrackColor, activeTrackColor, position.progress) : inactiveTrackColor;
+    Color thumbColor = isActive
+        ? Color.lerp(inactiveColor, activeColor, position.progress)
+        : inactiveColor;
+    Color trackColor = isActive
+        ? Color.lerp(inactiveTrackColor, activeTrackColor, position.progress)
+        : inactiveTrackColor;
 
     // Paint the track
-    Paint paint = new Paint()
-      ..color = trackColor;
+    Paint paint = new Paint()..color = trackColor;
     double trackHorizontalPadding = kRadialReactionRadius - _kTrackRadius;
     Rect trackRect = new Rect.fromLTWH(
-      offset.dx + trackHorizontalPadding,
-      offset.dy + (size.height - _kTrackHeight) / 2.0,
-      size.width - 2.0 * trackHorizontalPadding,
-      _kTrackHeight
-    );
-    ui.RRect trackRRect = new ui.RRect.fromRectXY(
-        trackRect, _kTrackRadius, _kTrackRadius);
+        offset.dx + trackHorizontalPadding,
+        offset.dy + (size.height - _kTrackHeight) / 2.0,
+        size.width - 2.0 * trackHorizontalPadding,
+        _kTrackHeight);
+    ui.RRect trackRRect =
+        new ui.RRect.fromRectXY(trackRect, _kTrackRadius, _kTrackRadius);
     canvas.drawRRect(trackRRect, paint);
 
     Offset thumbOffset = new Offset(
-      offset.dx + kRadialReactionRadius + position.value * _trackInnerLength,
-      offset.dy + size.height / 2.0);
+        offset.dx + kRadialReactionRadius + position.value * _trackInnerLength,
+        offset.dy + size.height / 2.0);
 
     paintRadialReaction(canvas, thumbOffset);
 
     _thumbPainter.decoration = new BoxDecoration(
-      backgroundColor: thumbColor,
-      shape: Shape.circle,
-      boxShadow: elevationToShadow[1]
-    );
+        backgroundColor: thumbColor,
+        shape: Shape.circle,
+        boxShadow: elevationToShadow[1]);
 
     // The thumb contracts slightly during the animation
     double inset = 2.0 - (position.value - 0.5).abs() * 2.0;
     double radius = _kThumbRadius - inset;
-    Rect thumbRect = new Rect.fromLTRB(thumbOffset.dx - radius,
-                                       thumbOffset.dy - radius,
-                                       thumbOffset.dx + radius,
-                                       thumbOffset.dy + radius);
+    Rect thumbRect = new Rect.fromLTRB(
+        thumbOffset.dx - radius,
+        thumbOffset.dy - radius,
+        thumbOffset.dx + radius,
+        thumbOffset.dy + radius);
     _thumbPainter.paint(canvas, thumbRect);
   }
 }

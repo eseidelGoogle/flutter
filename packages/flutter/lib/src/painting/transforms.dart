@@ -36,5 +36,4 @@ class MatrixUtils {
     }
     return null;
   }
-
 }

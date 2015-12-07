@@ -58,10 +58,19 @@ abstract class MaterialInkController {
   /// If containedInWell is true, then the splash will be sized to fit
   /// the referenceBox, then clipped to it when drawn.
   /// When the splash is removed, onRemoved will be invoked.
-  InkSplash splashAt({ RenderBox referenceBox, Point position, Color color, bool containedInWell, VoidCallback onRemoved });
+  InkSplash splashAt(
+      {RenderBox referenceBox,
+      Point position,
+      Color color,
+      bool containedInWell,
+      VoidCallback onRemoved});
 
   /// Begin a highlight, coincident with the referenceBox.
-  InkHighlight highlightAt({ RenderBox referenceBox, Color color, Shape shape: Shape.rectangle, VoidCallback onRemoved });
+  InkHighlight highlightAt(
+      {RenderBox referenceBox,
+      Color color,
+      Shape shape: Shape.rectangle,
+      VoidCallback onRemoved});
 
   /// Add an arbitrary InkFeature to this InkController.
   void addInkFeature(InkFeature feature);
@@ -72,14 +81,14 @@ abstract class MaterialInkController {
 /// be dispatched at the relevant subtree. (This in particular means that
 /// Transitions should not be placed inside Material.)
 class Material extends StatefulComponent {
-  Material({
-    Key key,
-    this.child,
-    this.type: MaterialType.canvas,
-    this.elevation: 0,
-    this.color,
-    this.textStyle
-  }) : super(key: key) {
+  Material(
+      {Key key,
+      this.child,
+      this.type: MaterialType.canvas,
+      this.elevation: 0,
+      this.color,
+      this.textStyle})
+      : super(key: key) {
     assert(elevation != null);
   }
 
@@ -90,7 +99,8 @@ class Material extends StatefulComponent {
   final TextStyle textStyle;
 
   static MaterialInkController of(BuildContext context) {
-    final RenderInkFeatures result = context.ancestorRenderObjectOfType(RenderInkFeatures);
+    final RenderInkFeatures result =
+        context.ancestorRenderObjectOfType(RenderInkFeatures);
     return result;
   }
 
@@ -98,11 +108,11 @@ class Material extends StatefulComponent {
 }
 
 class _MaterialState extends State<Material> {
-  final GlobalKey _inkFeatureRenderer = new GlobalKey(debugLabel: 'ink renderer');
+  final GlobalKey _inkFeatureRenderer =
+      new GlobalKey(debugLabel: 'ink renderer');
 
   Color _getBackgroundColor(BuildContext context) {
-    if (config.color != null)
-      return config.color;
+    if (config.color != null) return config.color;
     switch (config.type) {
       case MaterialType.canvas:
         return Theme.of(context).canvasColor;
@@ -118,40 +128,36 @@ class _MaterialState extends State<Material> {
     Widget contents = config.child;
     if (contents != null) {
       contents = new DefaultTextStyle(
-        style: config.textStyle ?? Theme.of(context).text.body1,
-        child: contents
-      );
+          style: config.textStyle ?? Theme.of(context).text.body1,
+          child: contents);
     }
     contents = new NotificationListener<LayoutChangedNotification>(
-      onNotification: (LayoutChangedNotification notification) {
-        _inkFeatureRenderer.currentContext.findRenderObject().markNeedsPaint();
-      },
-      child: new InkFeatures(
-        key: _inkFeatureRenderer,
-        color: backgroundColor,
-        child: contents
-      )
-    );
+        onNotification: (LayoutChangedNotification notification) {
+      _inkFeatureRenderer.currentContext.findRenderObject().markNeedsPaint();
+    },
+        child: new InkFeatures(
+            key: _inkFeatureRenderer, color: backgroundColor, child: contents));
     if (config.type == MaterialType.circle) {
       contents = new ClipOval(child: contents);
     } else if (kMaterialEdges[config.type] != null) {
       contents = new ClipRRect(
-        xRadius: kMaterialEdges[config.type],
-        yRadius: kMaterialEdges[config.type],
-        child: contents
-      );
+          xRadius: kMaterialEdges[config.type],
+          yRadius: kMaterialEdges[config.type],
+          child: contents);
     }
     contents = new AnimatedContainer(
-      curve: Curves.ease,
-      duration: kThemeChangeDuration,
-      decoration: new BoxDecoration(
-        backgroundColor: backgroundColor,
-        borderRadius: kMaterialEdges[config.type],
-        boxShadow: config.elevation == 0 ? null : elevationToShadow[config.elevation],
-        shape: config.type == MaterialType.circle ? Shape.circle : Shape.rectangle
-      ),
-      child: contents
-    );
+        curve: Curves.ease,
+        duration: kThemeChangeDuration,
+        decoration: new BoxDecoration(
+            backgroundColor: backgroundColor,
+            borderRadius: kMaterialEdges[config.type],
+            boxShadow: config.elevation == 0
+                ? null
+                : elevationToShadow[config.elevation],
+            shape: config.type == MaterialType.circle
+                ? Shape.circle
+                : Shape.rectangle),
+        child: contents);
     return contents;
   }
 }
@@ -163,8 +169,9 @@ const double _kDefaultSplashRadius = 35.0; // logical pixels
 const double _kSplashConfirmedVelocity = 1.0; // logical pixels per millisecond
 const double _kSplashInitialSize = 0.0; // logical pixels
 
-class RenderInkFeatures extends RenderProxyBox implements MaterialInkController {
-  RenderInkFeatures({ RenderBox child, this.color }) : super(child);
+class RenderInkFeatures extends RenderProxyBox
+    implements MaterialInkController {
+  RenderInkFeatures({RenderBox child, this.color}) : super(child);
 
   // This is here to satisfy the MaterialInkController contract.
   // The actual painting of this color is done by a Container in the
@@ -173,13 +180,12 @@ class RenderInkFeatures extends RenderProxyBox implements MaterialInkController 
 
   final List<InkFeature> _inkFeatures = <InkFeature>[];
 
-  InkSplash splashAt({
-    RenderBox referenceBox,
-    Point position,
-    Color color,
-    bool containedInWell,
-    VoidCallback onRemoved
-  }) {
+  InkSplash splashAt(
+      {RenderBox referenceBox,
+      Point position,
+      Color color,
+      bool containedInWell,
+      VoidCallback onRemoved}) {
     double radius;
     if (containedInWell) {
       radius = _getSplashTargetSize(referenceBox.size, position);
@@ -187,15 +193,14 @@ class RenderInkFeatures extends RenderProxyBox implements MaterialInkController 
       radius = _kDefaultSplashRadius;
     }
     _InkSplash splash = new _InkSplash(
-      renderer: this,
-      referenceBox: referenceBox,
-      position: position,
-      color: color,
-      targetRadius: radius,
-      clipToReferenceBox: containedInWell,
-      repositionToReferenceBox: !containedInWell,
-      onRemoved: onRemoved
-    );
+        renderer: this,
+        referenceBox: referenceBox,
+        position: position,
+        color: color,
+        targetRadius: radius,
+        clipToReferenceBox: containedInWell,
+        repositionToReferenceBox: !containedInWell,
+        onRemoved: onRemoved);
     addInkFeature(splash);
     return splash;
   }
@@ -208,19 +213,17 @@ class RenderInkFeatures extends RenderProxyBox implements MaterialInkController 
     return math.max(math.max(d1, d2), math.max(d3, d4)).ceilToDouble();
   }
 
-  InkHighlight highlightAt({
-    RenderBox referenceBox,
-    Color color,
-    Shape shape: Shape.rectangle,
-    VoidCallback onRemoved
-  }) {
+  InkHighlight highlightAt(
+      {RenderBox referenceBox,
+      Color color,
+      Shape shape: Shape.rectangle,
+      VoidCallback onRemoved}) {
     _InkHighlight highlight = new _InkHighlight(
-      renderer: this,
-      referenceBox: referenceBox,
-      color: color,
-      shape: shape,
-      onRemoved: onRemoved
-    );
+        renderer: this,
+        referenceBox: referenceBox,
+        color: color,
+        shape: shape,
+        onRemoved: onRemoved);
     addInkFeature(highlight);
     return highlight;
   }
@@ -246,8 +249,7 @@ class RenderInkFeatures extends RenderProxyBox implements MaterialInkController 
       canvas.save();
       canvas.translate(offset.dx, offset.dy);
       canvas.clipRect(Point.origin & size);
-      for (InkFeature inkFeature in _inkFeatures)
-        inkFeature._paint(canvas);
+      for (InkFeature inkFeature in _inkFeatures) inkFeature._paint(canvas);
       canvas.restore();
     }
     super.paint(context, offset);
@@ -255,23 +257,21 @@ class RenderInkFeatures extends RenderProxyBox implements MaterialInkController 
 }
 
 class InkFeatures extends OneChildRenderObjectWidget {
-  InkFeatures({ Key key, this.color, Widget child }) : super(key: key, child: child);
+  InkFeatures({Key key, this.color, Widget child})
+      : super(key: key, child: child);
 
   final Color color;
 
   RenderInkFeatures createRenderObject() => new RenderInkFeatures(color: color);
 
-  void updateRenderObject(RenderInkFeatures renderObject, InkFeatures oldWidget) {
+  void updateRenderObject(
+      RenderInkFeatures renderObject, InkFeatures oldWidget) {
     renderObject.color = color;
   }
 }
 
 abstract class InkFeature {
-  InkFeature({
-    this.renderer,
-    this.referenceBox,
-    this.onRemoved
-  });
+  InkFeature({this.renderer, this.referenceBox, this.onRemoved});
 
   final RenderInkFeatures renderer;
   final RenderBox referenceBox;
@@ -281,10 +281,12 @@ abstract class InkFeature {
 
   void dispose() {
     assert(!_debugDisposed);
-    assert(() { _debugDisposed = true; return true; });
+    assert(() {
+      _debugDisposed = true;
+      return true;
+    });
     renderer._removeFeature(this);
-    if (onRemoved != null)
-      onRemoved();
+    if (onRemoved != null) onRemoved();
   }
 
   void _paint(Canvas canvas) {
@@ -300,8 +302,8 @@ abstract class InkFeature {
     }
     // determine the transform that gets our coordinate system to be like theirs
     Matrix4 transform = new Matrix4.identity();
-    for (RenderBox descendant in descendants.reversed)
-      descendant.applyPaintTransform(transform);
+    for (RenderBox descendant
+        in descendants.reversed) descendant.applyPaintTransform(transform);
     paintFeature(canvas, transform);
   }
 
@@ -311,25 +313,28 @@ abstract class InkFeature {
 }
 
 class _InkSplash extends InkFeature implements InkSplash {
-  _InkSplash({
-    RenderInkFeatures renderer,
-    RenderBox referenceBox,
-    this.position,
-    this.color,
-    this.targetRadius,
-    this.clipToReferenceBox,
-    this.repositionToReferenceBox,
-    VoidCallback onRemoved
-  }) : super(renderer: renderer, referenceBox: referenceBox, onRemoved: onRemoved) {
+  _InkSplash(
+      {RenderInkFeatures renderer,
+      RenderBox referenceBox,
+      this.position,
+      this.color,
+      this.targetRadius,
+      this.clipToReferenceBox,
+      this.repositionToReferenceBox,
+      VoidCallback onRemoved})
+      : super(
+            renderer: renderer,
+            referenceBox: referenceBox,
+            onRemoved: onRemoved) {
     _radius = new ValuePerformance<double>(
-      variable: new AnimatedValue<double>(_kSplashInitialSize, end: targetRadius),
-      duration: _kUnconfirmedSplashDuration
-    )..addListener(renderer.markNeedsPaint)
-     ..play();
+        variable:
+            new AnimatedValue<double>(_kSplashInitialSize, end: targetRadius),
+        duration: _kUnconfirmedSplashDuration)
+      ..addListener(renderer.markNeedsPaint)
+      ..play();
     _alpha = new ValuePerformance<int>(
-      variable: new AnimatedIntValue(color.alpha, end: 0),
-      duration: _kHighlightFadeDuration
-    )..addListener(_handleAlphaChange);
+        variable: new AnimatedIntValue(color.alpha, end: 0),
+        duration: _kHighlightFadeDuration)..addListener(_handleAlphaChange);
   }
 
   final Point position;
@@ -353,10 +358,8 @@ class _InkSplash extends InkFeature implements InkSplash {
   }
 
   void _handleAlphaChange() {
-    if (_alpha.value == _alpha.variable.end)
-      dispose();
-    else
-      renderer.markNeedsPaint();
+    if (_alpha.value == _alpha.variable.end) dispose();
+    else renderer.markNeedsPaint();
   }
 
   void dispose() {
@@ -372,10 +375,9 @@ class _InkSplash extends InkFeature implements InkSplash {
     if (originOffset == null) {
       canvas.save();
       canvas.concat(transform.storage);
-      if (clipToReferenceBox)
-        canvas.clipRect(Point.origin & referenceBox.size);
-      if (repositionToReferenceBox)
-        center = Point.lerp(center, Point.origin, _radius.progress);
+      if (clipToReferenceBox) canvas.clipRect(Point.origin & referenceBox.size);
+      if (repositionToReferenceBox) center =
+          Point.lerp(center, Point.origin, _radius.progress);
       canvas.drawCircle(center, _radius.value, paint);
       canvas.restore();
     } else {
@@ -383,36 +385,37 @@ class _InkSplash extends InkFeature implements InkSplash {
         canvas.save();
         canvas.clipRect(originOffset.toPoint() & referenceBox.size);
       }
-      if (repositionToReferenceBox)
-        center = Point.lerp(center, referenceBox.size.center(Point.origin), _radius.progress);
+      if (repositionToReferenceBox) center = Point.lerp(
+          center, referenceBox.size.center(Point.origin), _radius.progress);
       canvas.drawCircle(center + originOffset, _radius.value, paint);
-      if (clipToReferenceBox)
-        canvas.restore();
+      if (clipToReferenceBox) canvas.restore();
     }
   }
 }
 
 class _InkHighlight extends InkFeature implements InkHighlight {
-  _InkHighlight({
-    RenderInkFeatures renderer,
-    RenderBox referenceBox,
-    Color color,
-    this.shape,
-    VoidCallback onRemoved
-  }) : _color = color,
-       super(renderer: renderer, referenceBox: referenceBox, onRemoved: onRemoved) {
+  _InkHighlight(
+      {RenderInkFeatures renderer,
+      RenderBox referenceBox,
+      Color color,
+      this.shape,
+      VoidCallback onRemoved})
+      : _color = color,
+        super(
+            renderer: renderer,
+            referenceBox: referenceBox,
+            onRemoved: onRemoved) {
     _alpha = new ValuePerformance<int>(
-      variable: new AnimatedIntValue(0, end: color.alpha),
-      duration: _kHighlightFadeDuration
-    )..addListener(_handleAlphaChange)
-     ..play();
+        variable: new AnimatedIntValue(0, end: color.alpha),
+        duration: _kHighlightFadeDuration)
+      ..addListener(_handleAlphaChange)
+      ..play();
   }
 
   Color get color => _color;
   Color _color;
   void set color(Color value) {
-    if (value == _color)
-      return;
+    if (value == _color) return;
     _color = value;
     renderer.markNeedsPaint();
   }
@@ -434,10 +437,8 @@ class _InkHighlight extends InkFeature implements InkHighlight {
   }
 
   void _handleAlphaChange() {
-    if (_alpha.value == 0.0 && !_active)
-      dispose();
-    else
-      renderer.markNeedsPaint();
+    if (_alpha.value == 0.0 && !_active) dispose();
+    else renderer.markNeedsPaint();
   }
 
   void dispose() {
@@ -446,10 +447,8 @@ class _InkHighlight extends InkFeature implements InkHighlight {
   }
 
   void _paintHighlight(Canvas canvas, Rect rect, paint) {
-    if (shape == Shape.rectangle)
-      canvas.drawRect(rect, paint);
-    else
-      canvas.drawCircle(rect.center, _kDefaultSplashRadius, paint);
+    if (shape == Shape.rectangle) canvas.drawRect(rect, paint);
+    else canvas.drawCircle(rect.center, _kDefaultSplashRadius, paint);
   }
 
   void paintFeature(Canvas canvas, Matrix4 transform) {
@@ -461,8 +460,8 @@ class _InkHighlight extends InkFeature implements InkHighlight {
       _paintHighlight(canvas, Point.origin & referenceBox.size, paint);
       canvas.restore();
     } else {
-      _paintHighlight(canvas, originOffset.toPoint() & referenceBox.size, paint);
+      _paintHighlight(
+          canvas, originOffset.toPoint() & referenceBox.size, paint);
     }
   }
-
 }

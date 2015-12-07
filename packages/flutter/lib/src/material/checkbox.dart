@@ -25,11 +25,7 @@ class Checkbox extends StatelessComponent {
   ///
   /// * `value` determines whether the checkbox is checked.
   /// * `onChanged` is called whenever the state of the checkbox should change.
-  const Checkbox({
-    Key key,
-    this.value,
-    this.onChanged
-  }) : super(key: key);
+  const Checkbox({Key key, this.value, this.onChanged}) : super(key: key);
 
   final bool value;
   final ValueChanged<bool> onChanged;
@@ -37,22 +33,23 @@ class Checkbox extends StatelessComponent {
   Widget build(BuildContext context) {
     ThemeData themeData = Theme.of(context);
     return new _CheckboxRenderObjectWidget(
-      value: value,
-      activeColor: themeData.accentColor,
-      inactiveColor: onChanged != null ? themeData.unselectedColor : themeData.disabledColor,
-      onChanged: onChanged
-    );
+        value: value,
+        activeColor: themeData.accentColor,
+        inactiveColor: onChanged != null
+            ? themeData.unselectedColor
+            : themeData.disabledColor,
+        onChanged: onChanged);
   }
 }
 
 class _CheckboxRenderObjectWidget extends LeafRenderObjectWidget {
-  _CheckboxRenderObjectWidget({
-    Key key,
-    this.value,
-    this.activeColor,
-    this.inactiveColor,
-    this.onChanged
-  }) : super(key: key) {
+  _CheckboxRenderObjectWidget(
+      {Key key,
+      this.value,
+      this.activeColor,
+      this.inactiveColor,
+      this.onChanged})
+      : super(key: key) {
     assert(value != null);
     assert(activeColor != null);
     assert(inactiveColor != null);
@@ -64,13 +61,13 @@ class _CheckboxRenderObjectWidget extends LeafRenderObjectWidget {
   final ValueChanged<bool> onChanged;
 
   _RenderCheckbox createRenderObject() => new _RenderCheckbox(
-    value: value,
-    activeColor: activeColor,
-    inactiveColor: inactiveColor,
-    onChanged: onChanged
-  );
+      value: value,
+      activeColor: activeColor,
+      inactiveColor: inactiveColor,
+      onChanged: onChanged);
 
-  void updateRenderObject(_RenderCheckbox renderObject, _CheckboxRenderObjectWidget oldWidget) {
+  void updateRenderObject(
+      _RenderCheckbox renderObject, _CheckboxRenderObjectWidget oldWidget) {
     renderObject.value = value;
     renderObject.activeColor = activeColor;
     renderObject.inactiveColor = inactiveColor;
@@ -85,25 +82,26 @@ const double _kStrokeWidth = 2.0;
 const double _kOffset = kRadialReactionRadius - _kEdgeSize / 2.0;
 
 class _RenderCheckbox extends RenderToggleable {
-  _RenderCheckbox({
-    bool value,
-    Color activeColor,
-    Color inactiveColor,
-    ValueChanged<bool> onChanged
-  }): super(
-    value: value,
-    activeColor: activeColor,
-    inactiveColor: inactiveColor,
-    onChanged: onChanged,
-    size: const Size(2 * kRadialReactionRadius, 2 * kRadialReactionRadius)
-  );
+  _RenderCheckbox(
+      {bool value,
+      Color activeColor,
+      Color inactiveColor,
+      ValueChanged<bool> onChanged})
+      : super(
+            value: value,
+            activeColor: activeColor,
+            inactiveColor: inactiveColor,
+            onChanged: onChanged,
+            size: const Size(
+                2 * kRadialReactionRadius, 2 * kRadialReactionRadius));
 
   void paint(PaintingContext context, Offset offset) {
     final Canvas canvas = context.canvas;
     final double offsetX = _kOffset + offset.dx;
     final double offsetY = _kOffset + offset.dy;
 
-    paintRadialReaction(canvas, offset + const Offset(kRadialReactionRadius, kRadialReactionRadius));
+    paintRadialReaction(canvas,
+        offset + const Offset(kRadialReactionRadius, kRadialReactionRadius));
 
     // Choose a color between grey and the theme color
     Paint paint = new Paint()
@@ -114,12 +112,12 @@ class _RenderCheckbox extends RenderToggleable {
     // Because we have a stroke size of 2, we should have a minimum 1.0 inset.
     double inset = 2.0 - (position.value - _kMidpoint).abs() * 2.0;
     double rectSize = _kEdgeSize - inset * _kStrokeWidth;
-    Rect rect = new Rect.fromLTWH(offsetX + inset, offsetY + inset, rectSize, rectSize);
+    Rect rect =
+        new Rect.fromLTWH(offsetX + inset, offsetY + inset, rectSize, rectSize);
     // Create an inner rectangle to cover inside of rectangle. This is needed to avoid
     // painting artefacts caused by overlayed paintings.
     Rect innerRect = rect.deflate(1.0);
-    ui.RRect rrect = new ui.RRect.fromRectXY(
-        rect, _kEdgeRadius, _kEdgeRadius);
+    ui.RRect rrect = new ui.RRect.fromRectXY(rect, _kEdgeRadius, _kEdgeRadius);
 
     // Outline of the empty rrect
     paint.style = ui.PaintingStyle.stroke;
@@ -130,11 +128,9 @@ class _RenderCheckbox extends RenderToggleable {
       paint
         ..style = ui.PaintingStyle.fill
         ..shader = new ui.Gradient.radial(
-          new Point(_kEdgeSize / 2.0, _kEdgeSize / 2.0),
-          _kEdgeSize * (_kMidpoint - position.value) * 8.0, <Color>[
-        const Color(0x00000000),
-        inactiveColor
-      ]);
+            new Point(_kEdgeSize / 2.0, _kEdgeSize / 2.0),
+            _kEdgeSize * (_kMidpoint - position.value) * 8.0,
+            <Color>[const Color(0x00000000), inactiveColor]);
       canvas.drawRect(innerRect, paint);
     }
 

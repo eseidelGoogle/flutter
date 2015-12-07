@@ -7,13 +7,19 @@ import "dart:typed_data";
 
 class _Vector {
   _Vector(int size)
-  : _offset = 0, _length = size, _elements = new Float64List(size);
+      : _offset = 0,
+        _length = size,
+        _elements = new Float64List(size);
 
   _Vector.fromValues(List<double> values)
-  : _offset = 0, _length = values.length, _elements = values;
+      : _offset = 0,
+        _length = values.length,
+        _elements = values;
 
   _Vector.fromVOL(List<double> values, int offset, int length)
-  : _offset = offset, _length = length, _elements = values;
+      : _offset = offset,
+        _length = length,
+        _elements = values;
 
   final int _offset;
 
@@ -29,8 +35,7 @@ class _Vector {
 
   double operator *(_Vector a) {
     double result = 0.0;
-    for (int i = 0; i < _length; i += 1)
-      result += this[i] * a[i];
+    for (int i = 0; i < _length; i += 1) result += this[i] * a[i];
     return result;
   }
 
@@ -39,9 +44,8 @@ class _Vector {
   String toString() {
     String result = "";
     for (int i = 0; i < _length; i++) {
-      if (i > 0)
-        result += ", ";
-        result += this[i].toString();
+      if (i > 0) result += ", ";
+      result += this[i].toString();
     }
     return result;
   }
@@ -49,9 +53,9 @@ class _Vector {
 
 class _Matrix {
   _Matrix(int rows, int cols)
-  : _rows = rows,
-    _columns = cols,
-    _elements = new Float64List(rows * cols);
+      : _rows = rows,
+        _columns = cols,
+        _elements = new Float64List(rows * cols);
 
   final int _rows;
   final int _columns;
@@ -62,20 +66,15 @@ class _Matrix {
     _elements[row * _columns + col] = value;
   }
 
-  _Vector getRow(int row) => new _Vector.fromVOL(
-    _elements,
-    row * _columns,
-    _columns
-  );
+  _Vector getRow(int row) =>
+      new _Vector.fromVOL(_elements, row * _columns, _columns);
 
   String toString() {
     String result = "";
     for (int i = 0; i < _rows; i++) {
-      if (i > 0)
-        result += "; ";
+      if (i > 0) result += "; ";
       for (int j = 0; j < _columns; j++) {
-        if (j > 0)
-          result += ", ";
+        if (j > 0) result += ", ";
         result += get(i, j).toString();
       }
     }
@@ -102,7 +101,7 @@ class LeastSquaresSolver {
 
   PolynomialFit solve(int degree) {
     if (degree > x.length) // not enough data to fit a curve
-      return null;
+        return null;
 
     PolynomialFit result = new PolynomialFit(degree);
 
@@ -114,8 +113,7 @@ class LeastSquaresSolver {
     _Matrix a = new _Matrix(n, m);
     for (int h = 0; h < m; h += 1) {
       a.set(0, h, w[h]);
-      for (int i = 1; i < n; i += 1)
-        a.set(i, h, a.get(i - 1, h) * x[h]);
+      for (int i = 1; i < n; i += 1) a.set(i, h, a.get(i - 1, h) * x[h]);
     }
 
     // Apply the Gram-Schmidt process to A to obtain its QR decomposition.
@@ -125,12 +123,12 @@ class LeastSquaresSolver {
     // Upper triangular matrix, row-major order.
     _Matrix r = new _Matrix(n, n);
     for (int j = 0; j < n; j += 1) {
-      for (int h = 0; h < m; h += 1)
-        q.set(j, h, a.get(j, h));
+      for (int h = 0; h < m; h += 1) q.set(j, h, a.get(j, h));
       for (int i = 0; i < j; i += 1) {
         double dot = q.getRow(j) * q.getRow(i);
-        for (int h = 0; h < m; h += 1)
-          q.set(j, h, q.get(j, h) - dot * q.get(i, h));
+        for (int h = 0;
+            h < m;
+            h += 1) q.set(j, h, q.get(j, h) - dot * q.get(i, h));
       }
 
       double norm = q.getRow(j).norm();
@@ -140,21 +138,20 @@ class LeastSquaresSolver {
       }
 
       double inverseNorm = 1.0 / norm;
-      for (int h = 0; h < m; h += 1)
-        q.set(j, h, q.get(j, h) * inverseNorm);
-      for (int i = 0; i < n; i += 1)
-        r.set(j, i, i < j ? 0.0 : q.getRow(j) * a.getRow(i));
+      for (int h = 0; h < m; h += 1) q.set(j, h, q.get(j, h) * inverseNorm);
+      for (int i = 0;
+          i < n;
+          i += 1) r.set(j, i, i < j ? 0.0 : q.getRow(j) * a.getRow(i));
     }
 
     // Solve R B = Qt W Y to find B.  This is easy because R is upper triangular.
     // We just work from bottom-right to top-left calculating B's coefficients.
     _Vector wy = new _Vector(m);
-    for (int h = 0; h < m; h += 1)
-      wy[h] = y[h] * w[h];
+    for (int h = 0; h < m; h += 1) wy[h] = y[h] * w[h];
     for (int i = n - 1; i >= 0; i -= 1) {
       result.coefficients[i] = q.getRow(i) * wy;
-      for (int j = n - 1; j > i; j -= 1)
-        result.coefficients[i] -= r.get(i, j) * result.coefficients[j];
+      for (int j = n - 1; j > i; j -= 1) result.coefficients[i] -=
+          r.get(i, j) * result.coefficients[j];
       result.coefficients[i] /= r.get(i, i);
     }
 
@@ -164,8 +161,7 @@ class LeastSquaresSolver {
     // error), and sumSquaredTotal is the total sum of squares (variance of the
     // data) where each has been weighted.
     double yMean = 0.0;
-    for (int h = 0; h < m; h += 1)
-      yMean += y[h];
+    for (int h = 0; h < m; h += 1) yMean += y[h];
     yMean /= m;
 
     double sumSquaredError = 0.0;
@@ -182,10 +178,10 @@ class LeastSquaresSolver {
       sumSquaredTotal += w[h] * w[h] * v * v;
     }
 
-    result.confidence = sumSquaredTotal <= 0.000001 ? 1.0 :
-                          1.0 - (sumSquaredError / sumSquaredTotal);
+    result.confidence = sumSquaredTotal <= 0.000001
+        ? 1.0
+        : 1.0 - (sumSquaredError / sumSquaredTotal);
 
     return result;
   }
-
 }

@@ -29,13 +29,14 @@ class _PointerState {
     _pointerCount += 1;
     _pointer = _pointerCount;
   }
-  
+
   bool get down => _down;
   bool _down = false;
   void setDown() {
     assert(!_down);
     _down = true;
   }
+
   void setUp() {
     assert(_down);
     _down = false;
@@ -57,99 +58,10 @@ class _PointerEventConverter {
       switch (datum.type) {
         case PointerType.DOWN:
           _PointerState state = _pointers.putIfAbsent(
-            datum.pointer,
-            () => new _PointerState(position)
-          );
+              datum.pointer, () => new _PointerState(position));
           state.startNewPointer();
           state.setDown();
           yield new PointerAddedEvent(
-            timeStamp: timeStamp,
-            pointer: state.pointer,
-            kind: kind,
-            position: position,
-            obscured: datum.obscured,
-            pressureMin: datum.pressureMin,
-            pressureMax: datum.pressureMax,
-            distance: datum.distance,
-            distanceMax: datum.distanceMax,
-            radiusMin: datum.radiusMin,
-            radiusMax: datum.radiusMax,
-            orientation: datum.orientation,
-            tilt: datum.tilt
-          );
-          yield new PointerDownEvent(
-            timeStamp: timeStamp,
-            pointer: state.pointer,
-            kind: kind,
-            position: position,
-            obscured: datum.obscured,
-            pressure: datum.pressure,
-            pressureMin: datum.pressureMin,
-            pressureMax: datum.pressureMax,
-            distanceMax: datum.distanceMax,
-            radiusMajor: datum.radiusMajor,
-            radiusMinor: datum.radiusMajor,
-            radiusMin: datum.radiusMin,
-            radiusMax: datum.radiusMax,
-            orientation: datum.orientation,
-            tilt: datum.tilt
-          );
-          break;
-        case PointerType.MOVE:
-          _PointerState state = _pointers[datum.pointer];
-          // If the service starts supporting hover pointers, then it must also
-          // start sending us ADDED and REMOVED data points. In the meantime, we
-          // only support "down" moves, and ignore spurious moves.
-          // See also: https://github.com/flutter/flutter/issues/720
-          if (state == null)
-            break;
-          assert(state.down);
-          Offset offset = position - state.lastPosition;
-          state.lastPosition = position;
-          yield new PointerMoveEvent(
-            timeStamp: timeStamp,
-            pointer: state.pointer,
-            kind: kind,
-            position: position,
-            delta: offset,
-            down: state.down,
-            obscured: datum.obscured,
-            pressure: datum.pressure,
-            pressureMin: datum.pressureMin,
-            pressureMax: datum.pressureMax,
-            distance: datum.distance,
-            distanceMax: datum.distanceMax,
-            radiusMajor: datum.radiusMajor,
-            radiusMinor: datum.radiusMajor,
-            radiusMin: datum.radiusMin,
-            radiusMax: datum.radiusMax,
-            orientation: datum.orientation,
-            tilt: datum.tilt
-          );
-          break;
-        case PointerType.UP:
-        case PointerType.CANCEL:
-          _PointerState state = _pointers[datum.pointer];
-          assert(state != null);
-          assert(position == state.lastPosition);
-          state.setUp();
-          if (datum.type == PointerType.UP) {
-            yield new PointerUpEvent(
-              timeStamp: timeStamp,
-              pointer: state.pointer,
-              kind: kind,
-              position: position,
-              obscured: datum.obscured,
-              pressureMax: datum.pressureMax,
-              distance: datum.distance,
-              distanceMax: datum.distanceMax,
-              radiusMin: datum.radiusMin,
-              radiusMax: datum.radiusMax,
-              orientation: datum.orientation,
-              tilt: datum.tilt
-            );
-          } else {
-            yield new PointerCancelEvent(
               timeStamp: timeStamp,
               pointer: state.pointer,
               kind: kind,
@@ -162,20 +74,100 @@ class _PointerEventConverter {
               radiusMin: datum.radiusMin,
               radiusMax: datum.radiusMax,
               orientation: datum.orientation,
-              tilt: datum.tilt
-            );
+              tilt: datum.tilt);
+          yield new PointerDownEvent(
+              timeStamp: timeStamp,
+              pointer: state.pointer,
+              kind: kind,
+              position: position,
+              obscured: datum.obscured,
+              pressure: datum.pressure,
+              pressureMin: datum.pressureMin,
+              pressureMax: datum.pressureMax,
+              distanceMax: datum.distanceMax,
+              radiusMajor: datum.radiusMajor,
+              radiusMinor: datum.radiusMajor,
+              radiusMin: datum.radiusMin,
+              radiusMax: datum.radiusMax,
+              orientation: datum.orientation,
+              tilt: datum.tilt);
+          break;
+        case PointerType.MOVE:
+          _PointerState state = _pointers[datum.pointer];
+          // If the service starts supporting hover pointers, then it must also
+          // start sending us ADDED and REMOVED data points. In the meantime, we
+          // only support "down" moves, and ignore spurious moves.
+          // See also: https://github.com/flutter/flutter/issues/720
+          if (state == null) break;
+          assert(state.down);
+          Offset offset = position - state.lastPosition;
+          state.lastPosition = position;
+          yield new PointerMoveEvent(
+              timeStamp: timeStamp,
+              pointer: state.pointer,
+              kind: kind,
+              position: position,
+              delta: offset,
+              down: state.down,
+              obscured: datum.obscured,
+              pressure: datum.pressure,
+              pressureMin: datum.pressureMin,
+              pressureMax: datum.pressureMax,
+              distance: datum.distance,
+              distanceMax: datum.distanceMax,
+              radiusMajor: datum.radiusMajor,
+              radiusMinor: datum.radiusMajor,
+              radiusMin: datum.radiusMin,
+              radiusMax: datum.radiusMax,
+              orientation: datum.orientation,
+              tilt: datum.tilt);
+          break;
+        case PointerType.UP:
+        case PointerType.CANCEL:
+          _PointerState state = _pointers[datum.pointer];
+          assert(state != null);
+          assert(position == state.lastPosition);
+          state.setUp();
+          if (datum.type == PointerType.UP) {
+            yield new PointerUpEvent(
+                timeStamp: timeStamp,
+                pointer: state.pointer,
+                kind: kind,
+                position: position,
+                obscured: datum.obscured,
+                pressureMax: datum.pressureMax,
+                distance: datum.distance,
+                distanceMax: datum.distanceMax,
+                radiusMin: datum.radiusMin,
+                radiusMax: datum.radiusMax,
+                orientation: datum.orientation,
+                tilt: datum.tilt);
+          } else {
+            yield new PointerCancelEvent(
+                timeStamp: timeStamp,
+                pointer: state.pointer,
+                kind: kind,
+                position: position,
+                obscured: datum.obscured,
+                pressureMin: datum.pressureMin,
+                pressureMax: datum.pressureMax,
+                distance: datum.distance,
+                distanceMax: datum.distanceMax,
+                radiusMin: datum.radiusMin,
+                radiusMax: datum.radiusMax,
+                orientation: datum.orientation,
+                tilt: datum.tilt);
           }
           yield new PointerRemovedEvent(
-            timeStamp: timeStamp,
-            pointer: state.pointer,
-            kind: kind,
-            obscured: datum.obscured,
-            pressureMin: datum.pressureMin,
-            pressureMax: datum.pressureMax,
-            distanceMax: datum.distanceMax,
-            radiusMin: datum.radiusMin,
-            radiusMax: datum.radiusMax
-          );
+              timeStamp: timeStamp,
+              pointer: state.pointer,
+              kind: kind,
+              obscured: datum.obscured,
+              pressureMin: datum.pressureMin,
+              pressureMax: datum.pressureMax,
+              distanceMax: datum.distanceMax,
+              radiusMin: datum.radiusMin,
+              radiusMax: datum.radiusMax);
           _pointers.remove(datum.pointer);
           break;
         default:
@@ -186,7 +178,8 @@ class _PointerEventConverter {
     }
   }
 
-  static const Map<PointerKind, PointerDeviceKind> _pointerKindMap = const <PointerKind, PointerDeviceKind>{
+  static const Map<PointerKind, PointerDeviceKind> _pointerKindMap =
+      const <PointerKind, PointerDeviceKind>{
     PointerKind.TOUCH: PointerDeviceKind.touch,
     PointerKind.MOUSE: PointerDeviceKind.mouse,
     PointerKind.STYLUS: PointerDeviceKind.stylus,
@@ -196,13 +189,12 @@ class _PointerEventConverter {
 
 class BindingObserver {
   bool didPopRoute() => false;
-  void didChangeSize(Size size) { }
+  void didChangeSize(Size size) {}
 }
 
 /// The glue between the render tree and the Flutter engine
 class FlutterBinding extends HitTestTarget {
-
-  FlutterBinding({ RenderBox root: null, RenderView renderViewOverride }) {
+  FlutterBinding({RenderBox root: null, RenderView renderViewOverride}) {
     assert(_instance == null);
     _instance = this;
 
@@ -240,8 +232,7 @@ class FlutterBinding extends HitTestTarget {
   void _handleMetricsChanged() {
     Size size = ui.window.size;
     _renderView.rootConstraints = new ViewConstraints(size: size);
-    for (BindingObserver observer in _observers)
-      observer.didChangeSize(size);
+    for (BindingObserver observer in _observers) observer.didChangeSize(size);
   }
 
   void _handlePersistentFrameCallback(Duration timeStamp) {
@@ -258,21 +249,19 @@ class FlutterBinding extends HitTestTarget {
 
   void _handlePopRoute() {
     for (BindingObserver observer in _observers) {
-      if (observer.didPopRoute())
-        return;
+      if (observer.didPopRoute()) return;
     }
   }
 
   void _handlePointerPacket(ByteData serializedPacket) {
     final mojo_bindings.Message message = new mojo_bindings.Message(
-      serializedPacket,
-      <mojo_core.MojoHandle>[],
-      serializedPacket.lengthInBytes,
-      0
-    );
+        serializedPacket,
+        <mojo_core.MojoHandle>[],
+        serializedPacket.lengthInBytes,
+        0);
     final PointerPacket packet = PointerPacket.deserialize(message);
-    for (PointerEvent event in _PointerEventConverter.expand(packet.pointers))
-      _handlePointerEvent(event);
+    for (PointerEvent event in _PointerEventConverter
+        .expand(packet.pointers)) _handlePointerEvent(event);
   }
 
   /// A router that routes all pointer events received from the engine
@@ -289,8 +278,7 @@ class FlutterBinding extends HitTestTarget {
       _hitTests[event.pointer] = hitTest(event.position);
     } else if (event is! PointerUpEvent) {
       assert(event.down == _hitTests.containsKey(event.pointer));
-      if (!event.down)
-        return; // we currently ignore add, remove, and hover move events
+      if (!event.down) return; // we currently ignore add, remove, and hover move events
     }
     assert(_hitTests[event.pointer] != null);
     dispatchEvent(event, _hitTests[event.pointer]);
@@ -311,8 +299,8 @@ class FlutterBinding extends HitTestTarget {
   /// Dispatch the given event to the path of the given hit test result
   void dispatchEvent(PointerEvent event, HitTestResult result) {
     assert(result != null);
-    for (HitTestEntry entry in result.path)
-      entry.target.handleEvent(event, entry);
+    for (HitTestEntry entry
+        in result.path) entry.target.handleEvent(event, entry);
   }
 
   void handleEvent(PointerEvent event, HitTestEntry entry) {

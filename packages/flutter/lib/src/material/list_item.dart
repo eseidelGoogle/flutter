@@ -7,14 +7,14 @@ import 'package:flutter/widgets.dart';
 import 'ink_well.dart';
 
 class ListItem extends StatelessComponent {
-  ListItem({
-    Key key,
-    this.left,
-    this.center,
-    this.right,
-    this.onTap,
-    this.onLongPress
-  }) : super(key: key) {
+  ListItem(
+      {Key key,
+      this.left,
+      this.center,
+      this.right,
+      this.onTap,
+      this.onLongPress})
+      : super(key: key) {
     assert(center != null);
   }
 
@@ -29,30 +29,19 @@ class ListItem extends StatelessComponent {
 
     if (left != null) {
       children.add(new Container(
-        margin: new EdgeDims.only(right: 16.0),
-        width: 40.0,
-        child: left
-      ));
+          margin: new EdgeDims.only(right: 16.0), width: 40.0, child: left));
     }
 
-    children.add(new Flexible(
-      child: center
-    ));
+    children.add(new Flexible(child: center));
 
     if (right != null) {
-      children.add(new Container(
-        margin: new EdgeDims.only(left: 16.0),
-        child: right
-      ));
+      children.add(
+          new Container(margin: new EdgeDims.only(left: 16.0), child: right));
     }
 
     return new Padding(
-      padding: const EdgeDims.symmetric(horizontal: 16.0),
-      child: new InkWell(
-        onTap: onTap,
-        onLongPress: onLongPress,
-        child: new Row(children)
-      )
-    );
+        padding: const EdgeDims.symmetric(horizontal: 16.0),
+        child: new InkWell(
+            onTap: onTap, onLongPress: onLongPress, child: new Row(children)));
   }
 }

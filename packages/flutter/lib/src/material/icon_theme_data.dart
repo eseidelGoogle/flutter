@@ -5,12 +5,11 @@
 enum IconThemeColor { white, black }
 
 class IconThemeData {
-  const IconThemeData({ this.color });
+  const IconThemeData({this.color});
   final IconThemeColor color;
 
   bool operator ==(dynamic other) {
-    if (other is! IconThemeData)
-      return false;
+    if (other is! IconThemeData) return false;
     final IconThemeData typedOther = other;
     return color == typedOther.color;
   }

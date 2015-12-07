@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 class Title extends StatelessComponent {
-  Title({ this.title, this.child, this.color });
+  Title({this.title, this.child, this.color});
 
   final Widget child;
   final String title;

@@ -7,10 +7,7 @@ import 'package:flutter/gestures.dart';
 import 'basic.dart';
 import 'framework.dart';
 
-enum EventRecorderMode {
-  stop,
-  record
-}
+enum EventRecorderMode { stop, record }
 
 typedef void EventsReadyCallback(Iterable<PointerEvent> events);
 
@@ -21,12 +18,11 @@ typedef void EventsReadyCallback(Iterable<PointerEvent> events);
 /// is entered again, the onEventsReady callback is invoked with a list of
 /// the recorded events.
 class EventRecorder extends StatefulComponent {
-  EventRecorder({
-    Key key,
-    this.child,
-    this.mode: EventRecorderMode.stop,
-    this.onEventsReady
-  });
+  EventRecorder(
+      {Key key,
+      this.child,
+      this.mode: EventRecorderMode.stop,
+      this.onEventsReady});
 
   final Widget child;
   final EventRecorderMode mode;
@@ -36,7 +32,6 @@ class EventRecorder extends StatefulComponent {
 }
 
 class _EventRecorderState extends State<EventRecorder> {
-
   final List<PointerEvent> _events = <PointerEvent>[];
 
   void didUpdateConfig(EventRecorder oldConfig) {
@@ -48,18 +43,15 @@ class _EventRecorderState extends State<EventRecorder> {
   }
 
   void _recordEvent(PointerEvent event) {
-    if (config.mode == EventRecorderMode.record)
-      _events.add(event);
+    if (config.mode == EventRecorderMode.record) _events.add(event);
   }
 
   Widget build(BuildContext context) {
     return new Listener(
-      onPointerDown: _recordEvent,
-      onPointerMove: _recordEvent,
-      onPointerUp: _recordEvent,
-      onPointerCancel: _recordEvent,
-      child: config.child
-    );
+        onPointerDown: _recordEvent,
+        onPointerMove: _recordEvent,
+        onPointerUp: _recordEvent,
+        onPointerCancel: _recordEvent,
+        child: config.child);
   }
-
 }

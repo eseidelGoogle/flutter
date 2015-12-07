@@ -17,14 +17,12 @@ const double _kCircularProgressIndicatorStrokeWidth = 3.0;
 // TODO(hansmuller) implement the support for buffer indicator
 
 abstract class ProgressIndicator extends StatefulComponent {
-  ProgressIndicator({
-    Key key,
-    this.value
-  }) : super(key: key);
+  ProgressIndicator({Key key, this.value}) : super(key: key);
 
   final double value; // Null for non-determinate progress indicator.
 
-  Color _getBackgroundColor(BuildContext context) => Theme.of(context).primarySwatch[200];
+  Color _getBackgroundColor(BuildContext context) =>
+      Theme.of(context).primarySwatch[200];
   Color _getValueColor(BuildContext context) => Theme.of(context).primaryColor;
 
   Widget _buildIndicator(BuildContext context, double performanceValue);
@@ -38,18 +36,15 @@ abstract class ProgressIndicator extends StatefulComponent {
 }
 
 class _ProgressIndicatorState extends State<ProgressIndicator> {
-
   ValuePerformance<double> _performance;
 
   void initState() {
     super.initState();
     _performance = new ValuePerformance<double>(
-      variable: new AnimatedValue<double>(0.0, end: 1.0, curve: Curves.ease),
-      duration: const Duration(milliseconds: 1500)
-    );
+        variable: new AnimatedValue<double>(0.0, end: 1.0, curve: Curves.ease),
+        duration: const Duration(milliseconds: 1500));
     _performance.addStatusListener((PerformanceStatus status) {
-      if (status == PerformanceStatus.completed)
-        _restartAnimation();
+      if (status == PerformanceStatus.completed) _restartAnimation();
     });
     _performance.play();
   }
@@ -60,26 +55,23 @@ class _ProgressIndicatorState extends State<ProgressIndicator> {
   }
 
   Widget build(BuildContext context) {
-    if (config.value != null)
-      return config._buildIndicator(context, _performance.value);
+    if (config.value != null) return config._buildIndicator(
+        context, _performance.value);
 
     return new BuilderTransition(
-      variables: <AnimatedValue<double>>[_performance.variable],
-      performance: _performance.view,
-      builder: (BuildContext context) {
-        return config._buildIndicator(context, _performance.value);
-      }
-    );
+        variables: <AnimatedValue<double>>[_performance.variable],
+        performance: _performance.view, builder: (BuildContext context) {
+      return config._buildIndicator(context, _performance.value);
+    });
   }
 }
 
 class _LinearProgressIndicatorPainter extends CustomPainter {
-  const _LinearProgressIndicatorPainter({
-    this.backgroundColor,
-    this.valueColor,
-    this.value,
-    this.performanceValue
-  });
+  const _LinearProgressIndicatorPainter(
+      {this.backgroundColor,
+      this.valueColor,
+      this.value,
+      this.performanceValue});
 
   final Color backgroundColor;
   final Color valueColor;
@@ -106,34 +98,27 @@ class _LinearProgressIndicatorPainter extends CustomPainter {
   }
 
   bool shouldRepaint(_LinearProgressIndicatorPainter oldPainter) {
-    return oldPainter.backgroundColor != backgroundColor
-        || oldPainter.valueColor != valueColor
-        || oldPainter.value != value
-        || oldPainter.performanceValue != performanceValue;
+    return oldPainter.backgroundColor != backgroundColor ||
+        oldPainter.valueColor != valueColor ||
+        oldPainter.value != value ||
+        oldPainter.performanceValue != performanceValue;
   }
 }
 
 class LinearProgressIndicator extends ProgressIndicator {
-  LinearProgressIndicator({
-    Key key,
-    double value
-  }) : super(key: key, value: value);
+  LinearProgressIndicator({Key key, double value})
+      : super(key: key, value: value);
 
   Widget _buildIndicator(BuildContext context, double performanceValue) {
     return new Container(
-      constraints: new BoxConstraints.tightFor(
-        width: double.INFINITY,
-        height: _kLinearProgressIndicatorHeight
-      ),
-      child: new CustomPaint(
-        painter: new _LinearProgressIndicatorPainter(
-          backgroundColor: _getBackgroundColor(context),
-          valueColor: _getValueColor(context),
-          value: value,
-          performanceValue: performanceValue
-        )
-      )
-    );
+        constraints: new BoxConstraints.tightFor(
+            width: double.INFINITY, height: _kLinearProgressIndicatorHeight),
+        child: new CustomPaint(
+            painter: new _LinearProgressIndicatorPainter(
+                backgroundColor: _getBackgroundColor(context),
+                valueColor: _getValueColor(context),
+                value: value,
+                performanceValue: performanceValue)));
   }
 }
 
@@ -144,11 +129,8 @@ class _CircularProgressIndicatorPainter extends CustomPainter {
   static const _kSweep = _kTwoPI - _kEpsilon;
   static const _kStartAngle = -math.PI / 2.0;
 
-  const _CircularProgressIndicatorPainter({
-    this.valueColor,
-    this.value,
-    this.performanceValue
-  });
+  const _CircularProgressIndicatorPainter(
+      {this.valueColor, this.value, this.performanceValue});
 
   final Color valueColor;
   final double value;
@@ -177,31 +159,25 @@ class _CircularProgressIndicatorPainter extends CustomPainter {
   }
 
   bool shouldRepaint(_CircularProgressIndicatorPainter oldPainter) {
-    return oldPainter.valueColor != valueColor
-        || oldPainter.value != value
-        || oldPainter.performanceValue != performanceValue;
+    return oldPainter.valueColor != valueColor ||
+        oldPainter.value != value ||
+        oldPainter.performanceValue != performanceValue;
   }
 }
 
 class CircularProgressIndicator extends ProgressIndicator {
-  CircularProgressIndicator({
-    Key key,
-    double value
-  }) : super(key: key, value: value);
+  CircularProgressIndicator({Key key, double value})
+      : super(key: key, value: value);
 
   Widget _buildIndicator(BuildContext context, double performanceValue) {
     return new Container(
-      constraints: new BoxConstraints(
-        minWidth: _kMinCircularProgressIndicatorSize,
-        minHeight: _kMinCircularProgressIndicatorSize
-      ),
-      child: new CustomPaint(
-        painter: new _CircularProgressIndicatorPainter(
-          valueColor: _getValueColor(context),
-          value: value,
-          performanceValue: performanceValue
-        )
-      )
-    );
+        constraints: new BoxConstraints(
+            minWidth: _kMinCircularProgressIndicatorSize,
+            minHeight: _kMinCircularProgressIndicatorSize),
+        child: new CustomPaint(
+            painter: new _CircularProgressIndicatorPainter(
+                valueColor: _getValueColor(context),
+                value: value,
+                performanceValue: performanceValue)));
   }
 }

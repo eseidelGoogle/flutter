@@ -34,8 +34,7 @@ class ImageResource {
   /// this object will call the listener synchronously.
   void addListener(ImageListener listener) {
     _listeners.add(listener);
-    if (_resolved)
-      listener(_image);
+    if (_resolved) listener(_image);
   }
 
   /// Stop listening for new concrete [ui.Image] objects.
@@ -55,11 +54,12 @@ class ImageResource {
 
   void _notifyListeners() {
     assert(_resolved);
-    List<ImageListener> localListeners = new List<ImageListener>.from(_listeners);
+    List<ImageListener> localListeners =
+        new List<ImageListener>.from(_listeners);
     for (ImageListener listener in localListeners) {
       try {
         listener(_image);
-      } catch(e) {
+      } catch (e) {
         print('Image listener had exception: $e');
       }
     }

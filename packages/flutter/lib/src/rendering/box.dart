@@ -17,7 +17,8 @@ export 'package:flutter/painting.dart' show FractionalOffset, TextBaseline;
 
 // This class should only be used in debug builds
 class _DebugSize extends Size {
-  _DebugSize(Size source, this._owner, this._canBeUsedByParent): super.copy(source);
+  _DebugSize(Size source, this._owner, this._canBeUsedByParent)
+      : super.copy(source);
   final RenderBox _owner;
   final bool _canBeUsedByParent;
 }
@@ -38,12 +39,11 @@ class _DebugSize extends Size {
 /// Note: `double.INFINITY` is a legal value for each constraint.
 class BoxConstraints extends Constraints {
   /// Constructs box constraints with the given constraints
-  const BoxConstraints({
-    this.minWidth: 0.0,
-    this.maxWidth: double.INFINITY,
-    this.minHeight: 0.0,
-    this.maxHeight: double.INFINITY
-  });
+  const BoxConstraints(
+      {this.minWidth: 0.0,
+      this.maxWidth: double.INFINITY,
+      this.minHeight: 0.0,
+      this.maxHeight: double.INFINITY});
 
   final double minWidth;
   final double maxWidth;
@@ -52,38 +52,34 @@ class BoxConstraints extends Constraints {
 
   /// Constructs box constraints that is respected only by the given size
   BoxConstraints.tight(Size size)
-    : minWidth = size.width,
-      maxWidth = size.width,
-      minHeight = size.height,
-      maxHeight = size.height;
+      : minWidth = size.width,
+        maxWidth = size.width,
+        minHeight = size.height,
+        maxHeight = size.height;
 
   /// Constructs box constraints that require the given width or height
-  const BoxConstraints.tightFor({
-    double width,
-    double height
-  }): minWidth = width != null ? width : 0.0,
-      maxWidth = width != null ? width : double.INFINITY,
-      minHeight = height != null ? height : 0.0,
-      maxHeight = height != null ? height : double.INFINITY;
+  const BoxConstraints.tightFor({double width, double height})
+      : minWidth = width != null ? width : 0.0,
+        maxWidth = width != null ? width : double.INFINITY,
+        minHeight = height != null ? height : 0.0,
+        maxHeight = height != null ? height : double.INFINITY;
 
   /// Constructs box constraints that forbid sizes larger than the given size
   BoxConstraints.loose(Size size)
-    : minWidth = 0.0,
-      maxWidth = size.width,
-      minHeight = 0.0,
-      maxHeight = size.height;
+      : minWidth = 0.0,
+        maxWidth = size.width,
+        minHeight = 0.0,
+        maxHeight = size.height;
 
   /// Constructs box constraints that expand to fill another box contraints
   ///
   /// If width or height is given, the constraints will require exactly the
   /// given value in the given dimension.
-  const BoxConstraints.expand({
-    double width,
-    double height
-  }): minWidth = width != null ? width : double.INFINITY,
-      maxWidth = width != null ? width : double.INFINITY,
-      minHeight = height != null ? height : double.INFINITY,
-      maxHeight = height != null ? height : double.INFINITY;
+  const BoxConstraints.expand({double width, double height})
+      : minWidth = width != null ? width : double.INFINITY,
+        maxWidth = width != null ? width : double.INFINITY,
+        minHeight = height != null ? height : double.INFINITY,
+        maxHeight = height != null ? height : double.INFINITY;
 
   /// Returns new box constraints that are smaller by the given edge dimensions
   BoxConstraints deflate(EdgeDims edges) {
@@ -93,54 +89,67 @@ class BoxConstraints extends Constraints {
     double deflatedMinWidth = math.max(0.0, minWidth - horizontal);
     double deflatedMinHeight = math.max(0.0, minHeight - vertical);
     return new BoxConstraints(
-      minWidth: deflatedMinWidth,
-      maxWidth: math.max(deflatedMinWidth, maxWidth - horizontal),
-      minHeight: deflatedMinHeight,
-      maxHeight: math.max(deflatedMinHeight, maxHeight - vertical)
-    );
+        minWidth: deflatedMinWidth,
+        maxWidth: math.max(deflatedMinWidth, maxWidth - horizontal),
+        minHeight: deflatedMinHeight,
+        maxHeight: math.max(deflatedMinHeight, maxHeight - vertical));
   }
 
   /// Returns new box constraints that remove the minimum width and height requirements
   BoxConstraints loosen() {
     return new BoxConstraints(
-      minWidth: 0.0,
-      maxWidth: maxWidth,
-      minHeight: 0.0,
-      maxHeight: maxHeight
-    );
+        minWidth: 0.0,
+        maxWidth: maxWidth,
+        minHeight: 0.0,
+        maxHeight: maxHeight);
   }
 
   /// Returns new box constraints that respect the given constraints while being as close as possible to the original constraints
   BoxConstraints enforce(BoxConstraints constraints) {
     return new BoxConstraints(
-      minWidth: clamp(min: constraints.minWidth, max: constraints.maxWidth, value: minWidth),
-      maxWidth: clamp(min: constraints.minWidth, max: constraints.maxWidth, value: maxWidth),
-      minHeight: clamp(min: constraints.minHeight, max: constraints.maxHeight, value: minHeight),
-      maxHeight: clamp(min: constraints.minHeight, max: constraints.maxHeight, value: maxHeight)
-    );
+        minWidth: clamp(
+            min: constraints.minWidth,
+            max: constraints.maxWidth,
+            value: minWidth),
+        maxWidth: clamp(
+            min: constraints.minWidth,
+            max: constraints.maxWidth,
+            value: maxWidth),
+        minHeight: clamp(
+            min: constraints.minHeight,
+            max: constraints.maxHeight,
+            value: minHeight),
+        maxHeight: clamp(
+            min: constraints.minHeight,
+            max: constraints.maxHeight,
+            value: maxHeight));
   }
 
   /// Returns new box constraints with a tight width as close to the given width as possible while still respecting the original box constraints
   BoxConstraints tightenWidth(double width) {
-    return new BoxConstraints(minWidth: math.max(math.min(maxWidth, width), minWidth),
-                              maxWidth: math.max(math.min(maxWidth, width), minWidth),
-                              minHeight: minHeight,
-                              maxHeight: maxHeight);
+    return new BoxConstraints(
+        minWidth: math.max(math.min(maxWidth, width), minWidth),
+        maxWidth: math.max(math.min(maxWidth, width), minWidth),
+        minHeight: minHeight,
+        maxHeight: maxHeight);
   }
 
   /// Returns new box constraints with a tight height as close to the given height as possible while still respecting the original box constraints
   BoxConstraints tightenHeight(double height) {
-    return new BoxConstraints(minWidth: minWidth,
-                              maxWidth: maxWidth,
-                              minHeight: math.max(math.min(maxHeight, height), minHeight),
-                              maxHeight: math.max(math.min(maxHeight, height), minHeight));
+    return new BoxConstraints(
+        minWidth: minWidth,
+        maxWidth: maxWidth,
+        minHeight: math.max(math.min(maxHeight, height), minHeight),
+        maxHeight: math.max(math.min(maxHeight, height), minHeight));
   }
 
   /// Returns box constraints with the same width constraints but with unconstrainted height
-  BoxConstraints widthConstraints() => new BoxConstraints(minWidth: minWidth, maxWidth: maxWidth);
+  BoxConstraints widthConstraints() =>
+      new BoxConstraints(minWidth: minWidth, maxWidth: maxWidth);
 
   /// Returns box constraints with the same height constraints but with unconstrainted width
-  BoxConstraints heightConstraints() => new BoxConstraints(minHeight: minHeight, maxHeight: maxHeight);
+  BoxConstraints heightConstraints() =>
+      new BoxConstraints(minHeight: minHeight, maxHeight: maxHeight);
 
   /// Returns the width that both satisfies the constraints and is as close as possible to the given width
   double constrainWidth([double width = double.INFINITY]) {
@@ -154,9 +163,10 @@ class BoxConstraints extends Constraints {
 
   /// Returns the size that both satisfies the constraints and is as close as possible to the given size
   Size constrain(Size size) {
-    Size result = new Size(constrainWidth(size.width), constrainHeight(size.height));
-    if (size is _DebugSize)
-      result = new _DebugSize(result, size._owner, size._canBeUsedByParent);
+    Size result =
+        new Size(constrainWidth(size.width), constrainHeight(size.height));
+    if (size is _DebugSize) result =
+        new _DebugSize(result, size._owner, size._canBeUsedByParent);
     return result;
   }
 
@@ -177,74 +187,66 @@ class BoxConstraints extends Constraints {
 
   /// Whether the given size satisfies the constraints
   bool isSatisfiedBy(Size size) {
-    return (minWidth <= size.width) && (size.width <= math.max(minWidth, maxWidth)) &&
-           (minHeight <= size.height) && (size.height <= math.max(minHeight, maxHeight));
+    return (minWidth <= size.width) &&
+        (size.width <= math.max(minWidth, maxWidth)) &&
+        (minHeight <= size.height) &&
+        (size.height <= math.max(minHeight, maxHeight));
   }
 
-  BoxConstraints operator*(double other) {
+  BoxConstraints operator *(double other) {
     return new BoxConstraints(
-      minWidth: minWidth * other,
-      maxWidth: maxWidth * other,
-      minHeight: minHeight * other,
-      maxHeight: maxHeight * other
-    );
+        minWidth: minWidth * other,
+        maxWidth: maxWidth * other,
+        minHeight: minHeight * other,
+        maxHeight: maxHeight * other);
   }
 
-  BoxConstraints operator/(double other) {
+  BoxConstraints operator /(double other) {
     return new BoxConstraints(
-      minWidth: minWidth / other,
-      maxWidth: maxWidth / other,
-      minHeight: minHeight / other,
-      maxHeight: maxHeight / other
-    );
+        minWidth: minWidth / other,
+        maxWidth: maxWidth / other,
+        minHeight: minHeight / other,
+        maxHeight: maxHeight / other);
   }
 
-  BoxConstraints operator~/(double other) {
+  BoxConstraints operator ~/(double other) {
     return new BoxConstraints(
-      minWidth: (minWidth ~/ other).toDouble(),
-      maxWidth: (maxWidth ~/ other).toDouble(),
-      minHeight: (minHeight ~/ other).toDouble(),
-      maxHeight: (maxHeight ~/ other).toDouble()
-    );
+        minWidth: (minWidth ~/ other).toDouble(),
+        maxWidth: (maxWidth ~/ other).toDouble(),
+        minHeight: (minHeight ~/ other).toDouble(),
+        maxHeight: (maxHeight ~/ other).toDouble());
   }
 
-  BoxConstraints operator%(double other) {
+  BoxConstraints operator %(double other) {
     return new BoxConstraints(
-      minWidth: minWidth % other,
-      maxWidth: maxWidth % other,
-      minHeight: minHeight % other,
-      maxHeight: maxHeight % other
-    );
+        minWidth: minWidth % other,
+        maxWidth: maxWidth % other,
+        minHeight: minHeight % other,
+        maxHeight: maxHeight % other);
   }
 
   /// Linearly interpolate between two BoxConstraints
   ///
   /// If either is null, this function interpolates from [BoxConstraints.zero].
   static BoxConstraints lerp(BoxConstraints a, BoxConstraints b, double t) {
-    if (a == null && b == null)
-      return null;
-    if (a == null)
-      return b * t;
-    if (b == null)
-      return a * (1.0 - t);
+    if (a == null && b == null) return null;
+    if (a == null) return b * t;
+    if (b == null) return a * (1.0 - t);
     return new BoxConstraints(
-      minWidth: ui.lerpDouble(a.minWidth, b.minWidth, t),
-      maxWidth: ui.lerpDouble(a.maxWidth, b.maxWidth, t),
-      minHeight: ui.lerpDouble(a.minHeight, b.minHeight, t),
-      maxHeight: ui.lerpDouble(a.maxHeight, b.maxHeight, t)
-    );
+        minWidth: ui.lerpDouble(a.minWidth, b.minWidth, t),
+        maxWidth: ui.lerpDouble(a.maxWidth, b.maxWidth, t),
+        minHeight: ui.lerpDouble(a.minHeight, b.minHeight, t),
+        maxHeight: ui.lerpDouble(a.maxHeight, b.maxHeight, t));
   }
 
   bool operator ==(dynamic other) {
-    if (identical(this, other))
-      return true;
-    if (other is! BoxConstraints)
-      return false;
+    if (identical(this, other)) return true;
+    if (other is! BoxConstraints) return false;
     final BoxConstraints typedOther = other;
     return minWidth == typedOther.minWidth &&
-           maxWidth == typedOther.maxWidth &&
-           minHeight == typedOther.minHeight &&
-           maxHeight == typedOther.maxHeight;
+        maxWidth == typedOther.maxWidth &&
+        minHeight == typedOther.minHeight &&
+        maxHeight == typedOther.maxHeight;
   }
 
   int get hashCode {
@@ -257,14 +259,14 @@ class BoxConstraints extends Constraints {
   }
 
   String toString() {
-    if (minWidth == double.INFINITY && minHeight == double.INFINITY)
-      return 'BoxConstraints(biggest)';
-    if (minWidth == 0 && maxWidth == double.INFINITY &&
-        minHeight == 0 && maxHeight == double.INFINITY)
-      return 'BoxConstraints(unconstrained)';
+    if (minWidth == double.INFINITY &&
+        minHeight == double.INFINITY) return 'BoxConstraints(biggest)';
+    if (minWidth == 0 &&
+        maxWidth == double.INFINITY &&
+        minHeight == 0 &&
+        maxHeight == double.INFINITY) return 'BoxConstraints(unconstrained)';
     String describe(double min, double max, String dim) {
-      if (min == max)
-        return '$dim=${min.toStringAsFixed(1)}';
+      if (min == max) return '$dim=${min.toStringAsFixed(1)}';
       return '${min.toStringAsFixed(1)}<=$dim<=${max.toStringAsFixed(1)}';
     }
     final String width = describe(minWidth, maxWidth, 'w');
@@ -290,19 +292,22 @@ class BoxParentData extends ParentData {
   // TODO(abarth): Switch to using an Offset rather than a Point here. This
   //               value is really the offset from the parent.
   Point _position = Point.origin;
+
   /// The point at which to paint the child in the parent's coordinate system
   Point get position => _position;
   void set position(Point value) {
     assert(RenderObject.debugDoingLayout);
     _position = value;
   }
+
   Offset get offset => _position.toOffset();
   String toString() => 'position=$position';
 }
 
 /// Abstract ParentData subclass for RenderBox subclasses that want the
 /// ContainerRenderObjectMixin.
-abstract class ContainerBoxParentDataMixin<ChildType extends RenderObject> extends BoxParentData with ContainerParentDataMixin<ChildType> { }
+abstract class ContainerBoxParentDataMixin<ChildType extends RenderObject>
+    extends BoxParentData with ContainerParentDataMixin<ChildType> {}
 
 /// A render object in a 2D cartesian coordinate system
 ///
@@ -323,10 +328,9 @@ abstract class ContainerBoxParentDataMixin<ChildType extends RenderObject> exten
 /// width value (and pass true for parentUsesSize). After the child determines
 /// its height, use the child's height to determine your size.
 abstract class RenderBox extends RenderObject {
-
   void setupParentData(RenderObject child) {
-    if (child.parentData is! BoxParentData)
-      child.parentData = new BoxParentData();
+    if (child.parentData is! BoxParentData) child.parentData =
+        new BoxParentData();
   }
 
   /// Returns the minimum width that this box could be without failing to paint
@@ -387,8 +391,10 @@ abstract class RenderBox extends RenderObject {
           // allowed to read our size is our parent, if they've said they will.
           // If you hit this assert trying to access a child's size, pass
           // "parentUsesSize: true" to that child's layout().
-          assert(debugDoingThisResize || debugDoingThisLayout ||
-                 (RenderObject.debugActiveLayout == parent && _size._canBeUsedByParent));
+          assert(debugDoingThisResize ||
+              debugDoingThisLayout ||
+              (RenderObject.debugActiveLayout == parent &&
+                  _size._canBeUsedByParent));
         }
         assert(_size == this._size);
       }
@@ -396,11 +402,12 @@ abstract class RenderBox extends RenderObject {
     });
     return _size;
   }
+
   bool get hasSize => _size != null;
   Size _size;
   void set size(Size value) {
     assert((sizedByParent && debugDoingThisResize) ||
-           (!sizedByParent && debugDoingThisLayout));
+        (!sizedByParent && debugDoingThisLayout));
     assert(() {
       if (value is _DebugSize) {
         if (value._owner != this) {
@@ -444,24 +451,25 @@ abstract class RenderBox extends RenderObject {
   /// Only call this function calling [layout] on this box. You are only
   /// allowed to call this from the parent of this box during that parent's
   /// [performLayout] or [paint] functions.
-  double getDistanceToBaseline(TextBaseline baseline, { bool onlyReal: false }) {
+  double getDistanceToBaseline(TextBaseline baseline, {bool onlyReal: false}) {
     assert(!needsLayout);
     assert(!_debugDoingBaseline);
     final RenderObject parent = this.parent;
     assert(() {
-      if (RenderObject.debugDoingLayout)
-        return (RenderObject.debugActiveLayout == parent) && parent.debugDoingThisLayout;
-      if (RenderObject.debugDoingPaint)
-        return ((RenderObject.debugActivePaint == parent) && parent.debugDoingThisPaint) ||
-               ((RenderObject.debugActivePaint == this) && debugDoingThisPaint);
+      if (RenderObject.debugDoingLayout) return (RenderObject.debugActiveLayout ==
+              parent) &&
+          parent.debugDoingThisLayout;
+      if (RenderObject.debugDoingPaint) return ((RenderObject.debugActivePaint ==
+                  parent) &&
+              parent.debugDoingThisPaint) ||
+          ((RenderObject.debugActivePaint == this) && debugDoingThisPaint);
       return false;
     });
     assert(_debugSetDoingBaseline(true));
     double result = getDistanceToActualBaseline(baseline);
     assert(_debugSetDoingBaseline(false));
     assert(parent == this.parent);
-    if (result == null && !onlyReal)
-      return size.height;
+    if (result == null && !onlyReal) return size.height;
     return result;
   }
 
@@ -473,9 +481,10 @@ abstract class RenderBox extends RenderObject {
   double getDistanceToActualBaseline(TextBaseline baseline) {
     assert(_debugDoingBaseline);
     _ancestorUsesBaseline = true;
-    if (_cachedBaselines == null)
-      _cachedBaselines = new Map<TextBaseline, double>();
-    _cachedBaselines.putIfAbsent(baseline, () => computeDistanceToActualBaseline(baseline));
+    if (_cachedBaselines == null) _cachedBaselines =
+        new Map<TextBaseline, double>();
+    _cachedBaselines.putIfAbsent(
+        baseline, () => computeDistanceToActualBaseline(baseline));
     return _cachedBaselines[baseline];
   }
 
@@ -506,8 +515,8 @@ abstract class RenderBox extends RenderObject {
       return !_size.isInfinite;
     });
     bool result = constraints.isSatisfiedBy(_size);
-    if (!result)
-      debugPrint("${this.runtimeType} does not meet its constraints. Constraints: $constraints, size: $_size");
+    if (!result) debugPrint(
+        "${this.runtimeType} does not meet its constraints. Constraints: $constraints, size: $_size");
     return result;
   }
 
@@ -529,11 +538,13 @@ abstract class RenderBox extends RenderObject {
     }
     super.markNeedsLayout();
   }
+
   void performResize() {
     // default behaviour for subclasses that have sizedByParent = true
     size = constraints.constrain(Size.zero);
     assert(!size.isInfinite);
   }
+
   void performLayout() {
     // descendants have to either override performLayout() to set both
     // width and height and lay out children, or, set sizedByParent to
@@ -550,11 +561,14 @@ abstract class RenderBox extends RenderObject {
   /// The caller is responsible for transforming [position] into the local
   /// coordinate space of the callee.  The callee is responsible for checking
   /// whether the given position is within its bounds.
-  bool hitTest(HitTestResult result, { Point position }) {
+  bool hitTest(HitTestResult result, {Point position}) {
     assert(!needsLayout);
-    if (position.x >= 0.0 && position.x < _size.width &&
-        position.y >= 0.0 && position.y < _size.height) {
-      if (hitTestChildren(result, position: position) || hitTestSelf(position)) {
+    if (position.x >= 0.0 &&
+        position.x < _size.width &&
+        position.y >= 0.0 &&
+        position.y < _size.height) {
+      if (hitTestChildren(result, position: position) ||
+          hitTestSelf(position)) {
         result.add(new BoxHitTestEntry(this, position));
         return true;
       }
@@ -572,7 +586,7 @@ abstract class RenderBox extends RenderObject {
   /// Typically children should be hit tested in reverse paint order so that
   /// hit tests at locations where children overlap hit the child that is
   /// visually "on top" (i.e., paints later).
-  bool hitTestChildren(HitTestResult result, { Point position }) => false;
+  bool hitTestChildren(HitTestResult result, {Point position}) => false;
 
   /// Multiply the transform from the parent's coordinate system to this box's
   /// coordinate system into the given transform
@@ -612,11 +626,12 @@ abstract class RenderBox extends RenderObject {
   /// the global coordinate sytem
   Point localToGlobal(Point point) {
     List<RenderObject> renderers = <RenderObject>[];
-    for (RenderObject renderer = this; renderer != null; renderer = renderer.parent)
-      renderers.add(renderer);
+    for (RenderObject renderer = this;
+        renderer != null;
+        renderer = renderer.parent) renderers.add(renderer);
     Matrix4 transform = new Matrix4.identity();
-    for (RenderObject renderer in renderers.reversed)
-      renderer.applyPaintTransform(transform);
+    for (RenderObject renderer
+        in renderers.reversed) renderer.applyPaintTransform(transform);
     return _transformPoint(transform, point);
   }
 
@@ -652,27 +667,27 @@ abstract class RenderBox extends RenderObject {
   }
 
   void debugPaint(PaintingContext context, Offset offset) {
-    if (debugPaintSizeEnabled)
-      debugPaintSize(context, offset);
-    if (debugPaintBaselinesEnabled)
-      debugPaintBaselines(context, offset);
-    if (debugPaintPointersEnabled)
-      debugPaintPointers(context, offset);
+    if (debugPaintSizeEnabled) debugPaintSize(context, offset);
+    if (debugPaintBaselinesEnabled) debugPaintBaselines(context, offset);
+    if (debugPaintPointersEnabled) debugPaintPointers(context, offset);
   }
+
   void debugPaintSize(PaintingContext context, Offset offset) {
     Paint paint = new Paint()
-     ..style = ui.PaintingStyle.stroke
-     ..strokeWidth = 1.0
-     ..color = debugPaintSizeColor;
+      ..style = ui.PaintingStyle.stroke
+      ..strokeWidth = 1.0
+      ..color = debugPaintSizeColor;
     context.canvas.drawRect(offset & size, paint);
   }
+
   void debugPaintBaselines(PaintingContext context, Offset offset) {
     Paint paint = new Paint()
-     ..style = ui.PaintingStyle.stroke
-     ..strokeWidth = 0.25;
+      ..style = ui.PaintingStyle.stroke
+      ..strokeWidth = 0.25;
     Path path;
     // ideographic baseline
-    double baselineI = getDistanceToBaseline(TextBaseline.ideographic, onlyReal: true);
+    double baselineI =
+        getDistanceToBaseline(TextBaseline.ideographic, onlyReal: true);
     if (baselineI != null) {
       paint.color = debugPaintIdeographicBaselineColor;
       path = new Path();
@@ -681,7 +696,8 @@ abstract class RenderBox extends RenderObject {
       context.canvas.drawPath(path, paint);
     }
     // alphabetic baseline
-    double baselineA = getDistanceToBaseline(TextBaseline.alphabetic, onlyReal: true);
+    double baselineA =
+        getDistanceToBaseline(TextBaseline.alphabetic, onlyReal: true);
     if (baselineA != null) {
       paint.color = debugPaintAlphabeticBaselineColor;
       path = new Path();
@@ -690,10 +706,12 @@ abstract class RenderBox extends RenderObject {
       context.canvas.drawPath(path, paint);
     }
   }
+
   void debugPaintPointers(PaintingContext context, Offset offset) {
     if (_debugActivePointers > 0) {
       Paint paint = new Paint()
-       ..color = new Color(debugPaintPointersColorValue | ((0x04000000 * depth) & 0xFF000000));
+        ..color = new Color(
+            debugPaintPointersColorValue | ((0x04000000 * depth) & 0xFF000000));
       context.canvas.drawRect(offset & size, paint);
     }
   }
@@ -710,8 +728,9 @@ abstract class RenderBox extends RenderObject {
 /// By convention, this class doesn't override any members of the superclass.
 /// Instead, it provides helpful functions that subclasses can call as
 /// appropriate.
-abstract class RenderBoxContainerDefaultsMixin<ChildType extends RenderBox, ParentDataType extends ContainerBoxParentDataMixin<ChildType>> implements ContainerRenderObjectMixin<ChildType, ParentDataType> {
-
+abstract class RenderBoxContainerDefaultsMixin<ChildType extends RenderBox,
+        ParentDataType extends ContainerBoxParentDataMixin<ChildType>>
+    implements ContainerRenderObjectMixin<ChildType, ParentDataType> {
   /// Returns the baseline of the first child with a baseline
   ///
   /// Useful when the children are displayed vertically in the same order they
@@ -722,8 +741,7 @@ abstract class RenderBoxContainerDefaultsMixin<ChildType extends RenderBox, Pare
     while (child != null) {
       final ParentDataType childParentData = child.parentData;
       double result = child.getDistanceToActualBaseline(baseline);
-      if (result != null)
-        return result + childParentData.position.y;
+      if (result != null) return result + childParentData.position.y;
       child = childParentData.nextSibling;
     }
     return null;
@@ -742,10 +760,8 @@ abstract class RenderBoxContainerDefaultsMixin<ChildType extends RenderBox, Pare
       double candidate = child.getDistanceToActualBaseline(baseline);
       if (candidate != null) {
         candidate += childParentData.position.y;
-        if (result != null)
-          result = math.min(result, candidate);
-        else
-          result = candidate;
+        if (result != null) result = math.min(result, candidate);
+        else result = candidate;
       }
       child = childParentData.nextSibling;
     }
@@ -756,15 +772,14 @@ abstract class RenderBoxContainerDefaultsMixin<ChildType extends RenderBox, Pare
   ///
   /// Stops walking once after the first child reports that it contains the
   /// given point. Returns whether any children contain the given point.
-  bool defaultHitTestChildren(HitTestResult result, { Point position }) {
+  bool defaultHitTestChildren(HitTestResult result, {Point position}) {
     // the x, y parameters have the top left of the node's box as the origin
     ChildType child = lastChild;
     while (child != null) {
       final ParentDataType childParentData = child.parentData;
       Point transformed = new Point(position.x - childParentData.position.x,
-                                    position.y - childParentData.position.y);
-      if (child.hitTest(result, position: transformed))
-        return true;
+          position.y - childParentData.position.y);
+      if (child.hitTest(result, position: transformed)) return true;
       child = childParentData.previousSibling;
     }
     return false;
@@ -782,8 +797,9 @@ abstract class RenderBoxContainerDefaultsMixin<ChildType extends RenderBox, Pare
 }
 
 class AnimatedFractionalOffsetValue extends AnimatedValue<FractionalOffset> {
-  AnimatedFractionalOffsetValue(FractionalOffset begin, { FractionalOffset end, Curve curve, Curve reverseCurve })
-    : super(begin, end: end, curve: curve, reverseCurve: reverseCurve);
+  AnimatedFractionalOffsetValue(FractionalOffset begin,
+      {FractionalOffset end, Curve curve, Curve reverseCurve})
+      : super(begin, end: end, curve: curve, reverseCurve: reverseCurve);
 
   FractionalOffset lerp(double t) => FractionalOffset.lerp(begin, end, t);
 }

@@ -28,14 +28,18 @@ export 'package:flutter/src/painting/box_painter.dart';
 /// The child is positioned at the top left of the box. To position a smaller
 /// child inside a larger parent, use [RenderPositionedBox] and
 /// [RenderConstrainedBox] rather than RenderOverflowBox.
-class RenderOverflowBox extends RenderBox with RenderObjectWithChildMixin<RenderBox> {
-  RenderOverflowBox({
-    RenderBox child,
-    double minWidth,
-    double maxWidth,
-    double minHeight,
-    double maxHeight
-  }) : _minWidth = minWidth, _maxWidth = maxWidth, _minHeight = minHeight, _maxHeight = maxHeight {
+class RenderOverflowBox extends RenderBox
+    with RenderObjectWithChildMixin<RenderBox> {
+  RenderOverflowBox(
+      {RenderBox child,
+      double minWidth,
+      double maxWidth,
+      double minHeight,
+      double maxHeight})
+      : _minWidth = minWidth,
+        _maxWidth = maxWidth,
+        _minHeight = minHeight,
+        _maxHeight = maxHeight {
     this.child = child;
   }
 
@@ -43,9 +47,8 @@ class RenderOverflowBox extends RenderBox with RenderObjectWithChildMixin<Render
   /// default) to use the constraint from the parent instead.
   double get minWidth => _minWidth;
   double _minWidth;
-  void set minWidth (double value) {
-    if (_minWidth == value)
-      return;
+  void set minWidth(double value) {
+    if (_minWidth == value) return;
     _minWidth = value;
     markNeedsLayout();
   }
@@ -54,9 +57,8 @@ class RenderOverflowBox extends RenderBox with RenderObjectWithChildMixin<Render
   /// default) to use the constraint from the parent instead.
   double get maxWidth => _maxWidth;
   double _maxWidth;
-  void set maxWidth (double value) {
-    if (_maxWidth == value)
-      return;
+  void set maxWidth(double value) {
+    if (_maxWidth == value) return;
     _maxWidth = value;
     markNeedsLayout();
   }
@@ -65,9 +67,8 @@ class RenderOverflowBox extends RenderBox with RenderObjectWithChildMixin<Render
   /// default) to use the constraint from the parent instead.
   double get minHeight => _minHeight;
   double _minHeight;
-  void set minHeight (double value) {
-    if (_minHeight == value)
-      return;
+  void set minHeight(double value) {
+    if (_minHeight == value) return;
     _minHeight = value;
     markNeedsLayout();
   }
@@ -76,20 +77,18 @@ class RenderOverflowBox extends RenderBox with RenderObjectWithChildMixin<Render
   /// default) to use the constraint from the parent instead.
   double get maxHeight => _maxHeight;
   double _maxHeight;
-  void set maxHeight (double value) {
-    if (_maxHeight == value)
-      return;
+  void set maxHeight(double value) {
+    if (_maxHeight == value) return;
     _maxHeight = value;
     markNeedsLayout();
   }
 
   BoxConstraints _getInnerConstraints(BoxConstraints constraints) {
     return new BoxConstraints(
-      minWidth: _minWidth ?? constraints.minWidth,
-      maxWidth: _maxWidth ?? constraints.maxWidth,
-      minHeight: _minHeight ?? constraints.minHeight,
-      maxHeight: _maxHeight ?? constraints.maxHeight
-    );
+        minWidth: _minWidth ?? constraints.minWidth,
+        maxWidth: _maxWidth ?? constraints.maxWidth,
+        minHeight: _minHeight ?? constraints.minHeight,
+        maxHeight: _maxHeight ?? constraints.maxHeight);
   }
 
   double getMinIntrinsicWidth(BoxConstraints constraints) {
@@ -109,8 +108,7 @@ class RenderOverflowBox extends RenderBox with RenderObjectWithChildMixin<Render
   }
 
   double computeDistanceToActualBaseline(TextBaseline baseline) {
-    if (child != null)
-      return child.getDistanceToActualBaseline(baseline);
+    if (child != null) return child.getDistanceToActualBaseline(baseline);
     return super.computeDistanceToActualBaseline(baseline);
   }
 
@@ -121,34 +119,33 @@ class RenderOverflowBox extends RenderBox with RenderObjectWithChildMixin<Render
   }
 
   void performLayout() {
-    if (child != null)
-      child.layout(_getInnerConstraints(constraints));
+    if (child != null) child.layout(_getInnerConstraints(constraints));
   }
 
-  bool hitTestChildren(HitTestResult result, { Point position }) {
+  bool hitTestChildren(HitTestResult result, {Point position}) {
     return child?.hitTest(result, position: position) ?? false;
   }
 
   void paint(PaintingContext context, Offset offset) {
-    if (child != null)
-      context.paintChild(child, offset);
+    if (child != null) context.paintChild(child, offset);
   }
 
   void debugDescribeSettings(List<String> settings) {
     super.debugDescribeSettings(settings);
     settings.add('minWidth: ${minWidth ?? "use parent minWidth constraint"}');
     settings.add('maxWidth: ${maxWidth ?? "use parent maxWidth constraint"}');
-    settings.add('minHeight: ${minHeight ?? "use parent minHeight constraint"}');
-    settings.add('maxHeight: ${maxHeight ?? "use parent maxHeight constraint"}');
+    settings
+        .add('minHeight: ${minHeight ?? "use parent minHeight constraint"}');
+    settings
+        .add('maxHeight: ${maxHeight ?? "use parent maxHeight constraint"}');
   }
 }
 
 /// A render box that's a specific size but passes its original constraints through to its child, which will probably overflow
-class RenderSizedOverflowBox extends RenderBox with RenderObjectWithChildMixin<RenderBox> {
-  RenderSizedOverflowBox({
-    RenderBox child,
-    Size requestedSize
-  }) : _requestedSize = requestedSize {
+class RenderSizedOverflowBox extends RenderBox
+    with RenderObjectWithChildMixin<RenderBox> {
+  RenderSizedOverflowBox({RenderBox child, Size requestedSize})
+      : _requestedSize = requestedSize {
     assert(requestedSize != null);
     this.child = child;
   }
@@ -156,10 +153,9 @@ class RenderSizedOverflowBox extends RenderBox with RenderObjectWithChildMixin<R
   /// The size this render box should attempt to be.
   Size get requestedSize => _requestedSize;
   Size _requestedSize;
-  void set requestedSize (Size value) {
+  void set requestedSize(Size value) {
     assert(value != null);
-    if (_requestedSize == value)
-      return;
+    if (_requestedSize == value) return;
     _requestedSize = value;
     markNeedsLayout();
   }
@@ -181,39 +177,41 @@ class RenderSizedOverflowBox extends RenderBox with RenderObjectWithChildMixin<R
   }
 
   double computeDistanceToActualBaseline(TextBaseline baseline) {
-    if (child != null)
-      return child.getDistanceToActualBaseline(baseline);
+    if (child != null) return child.getDistanceToActualBaseline(baseline);
     return super.computeDistanceToActualBaseline(baseline);
   }
 
   void performLayout() {
     size = constraints.constrain(_requestedSize);
-    if (child != null)
-      child.layout(constraints);
+    if (child != null) child.layout(constraints);
   }
 
-  bool hitTestChildren(HitTestResult result, { Point position }) {
+  bool hitTestChildren(HitTestResult result, {Point position}) {
     return child?.hitTest(result, position: position) ?? false;
   }
 
   void paint(PaintingContext context, Offset offset) {
-    if (child != null)
-      context.paintChild(child, offset);
+    if (child != null) context.paintChild(child, offset);
   }
 }
 
 /// Lays the child out as if it was in the tree, but without painting anything,
 /// without making the child available for hit testing, and without taking any
 /// room in the parent.
-class RenderOffStage extends RenderBox with RenderObjectWithChildMixin<RenderBox> {
-  RenderOffStage({ RenderBox child }) {
+class RenderOffStage extends RenderBox
+    with RenderObjectWithChildMixin<RenderBox> {
+  RenderOffStage({RenderBox child}) {
     this.child = child;
   }
 
-  double getMinIntrinsicWidth(BoxConstraints constraints) => constraints.minWidth;
-  double getMaxIntrinsicWidth(BoxConstraints constraints) => constraints.minWidth;
-  double getMinIntrinsicHeight(BoxConstraints constraints) => constraints.minHeight;
-  double getMaxIntrinsicHeight(BoxConstraints constraints) => constraints.minHeight;
+  double getMinIntrinsicWidth(BoxConstraints constraints) =>
+      constraints.minWidth;
+  double getMaxIntrinsicWidth(BoxConstraints constraints) =>
+      constraints.minWidth;
+  double getMinIntrinsicHeight(BoxConstraints constraints) =>
+      constraints.minHeight;
+  double getMaxIntrinsicHeight(BoxConstraints constraints) =>
+      constraints.minHeight;
 
   bool get sizedByParent => true;
 
@@ -222,10 +220,9 @@ class RenderOffStage extends RenderBox with RenderObjectWithChildMixin<RenderBox
   }
 
   void performLayout() {
-    if (child != null)
-      child.layout(constraints);
+    if (child != null) child.layout(constraints);
   }
 
-  bool hitTest(HitTestResult result, { Point position }) => false;
-  void paint(PaintingContext context, Offset offset) { }
+  bool hitTest(HitTestResult result, {Point position}) => false;
+  void paint(PaintingContext context, Offset offset) {}
 }

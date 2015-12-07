@@ -30,14 +30,14 @@ enum ScrollDirection {
 ///
 /// Viewport is the core scrolling primitive in the system, but it can be used
 /// in other situations.
-class RenderViewport extends RenderBox with RenderObjectWithChildMixin<RenderBox> {
-
-  RenderViewport({
-    RenderBox child,
-    Offset scrollOffset: Offset.zero,
-    ScrollDirection scrollDirection: ScrollDirection.vertical
-  }) : _scrollOffset = scrollOffset,
-       _scrollDirection = scrollDirection {
+class RenderViewport extends RenderBox
+    with RenderObjectWithChildMixin<RenderBox> {
+  RenderViewport(
+      {RenderBox child,
+      Offset scrollOffset: Offset.zero,
+      ScrollDirection scrollDirection: ScrollDirection.vertical})
+      : _scrollOffset = scrollOffset,
+        _scrollDirection = scrollDirection {
     assert(_offsetIsSane(scrollOffset, scrollDirection));
     this.child = child;
   }
@@ -59,8 +59,7 @@ class RenderViewport extends RenderBox with RenderObjectWithChildMixin<RenderBox
   Offset get scrollOffset => _scrollOffset;
   Offset _scrollOffset;
   void set scrollOffset(Offset value) {
-    if (value == _scrollOffset)
-      return;
+    if (value == _scrollOffset) return;
     assert(_offsetIsSane(value, scrollDirection));
     _scrollOffset = value;
     markNeedsPaint();
@@ -74,8 +73,7 @@ class RenderViewport extends RenderBox with RenderObjectWithChildMixin<RenderBox
   ScrollDirection get scrollDirection => _scrollDirection;
   ScrollDirection _scrollDirection;
   void set scrollDirection(ScrollDirection value) {
-    if (value == _scrollDirection)
-      return;
+    if (value == _scrollDirection) return;
     assert(_offsetIsSane(scrollOffset, value));
     _scrollDirection = value;
     markNeedsLayout();
@@ -98,26 +96,26 @@ class RenderViewport extends RenderBox with RenderObjectWithChildMixin<RenderBox
   }
 
   double getMinIntrinsicWidth(BoxConstraints constraints) {
-    if (child != null)
-      return child.getMinIntrinsicWidth(_getInnerConstraints(constraints));
+    if (child != null) return child
+        .getMinIntrinsicWidth(_getInnerConstraints(constraints));
     return super.getMinIntrinsicWidth(constraints);
   }
 
   double getMaxIntrinsicWidth(BoxConstraints constraints) {
-    if (child != null)
-      return child.getMaxIntrinsicWidth(_getInnerConstraints(constraints));
+    if (child != null) return child
+        .getMaxIntrinsicWidth(_getInnerConstraints(constraints));
     return super.getMaxIntrinsicWidth(constraints);
   }
 
   double getMinIntrinsicHeight(BoxConstraints constraints) {
-    if (child != null)
-      return child.getMinIntrinsicHeight(_getInnerConstraints(constraints));
+    if (child != null) return child
+        .getMinIntrinsicHeight(_getInnerConstraints(constraints));
     return super.getMinIntrinsicHeight(constraints);
   }
 
   double getMaxIntrinsicHeight(BoxConstraints constraints) {
-    if (child != null)
-      return child.getMaxIntrinsicHeight(_getInnerConstraints(constraints));
+    if (child != null) return child
+        .getMaxIntrinsicHeight(_getInnerConstraints(constraints));
     return super.getMaxIntrinsicHeight(constraints);
   }
 
@@ -142,16 +140,18 @@ class RenderViewport extends RenderBox with RenderObjectWithChildMixin<RenderBox
     int dxInDevicePixels = (scrollOffset.dx * devicePixelRatio).round();
     int dyInDevicePixels = (scrollOffset.dy * devicePixelRatio).round();
     return new Offset(dxInDevicePixels / devicePixelRatio,
-                      dyInDevicePixels / devicePixelRatio);
+        dyInDevicePixels / devicePixelRatio);
   }
 
   void paint(PaintingContext context, Offset offset) {
     if (child != null) {
       Offset roundedScrollOffset = _scrollOffsetRoundedToIntegerDevicePixels;
-      bool _needsClip = offset < Offset.zero
-          || !(offset & size).contains(((offset - roundedScrollOffset) & child.size).bottomRight);
+      bool _needsClip = offset < Offset.zero ||
+          !(offset & size).contains(
+              ((offset - roundedScrollOffset) & child.size).bottomRight);
       if (_needsClip) {
-        context.pushClipRect(needsCompositing, offset, Point.origin & size, (PaintingContext context, Offset offset) {
+        context.pushClipRect(needsCompositing, offset, Point.origin & size,
+            (PaintingContext context, Offset offset) {
           context.paintChild(child, offset - roundedScrollOffset);
         });
       } else {
@@ -165,7 +165,7 @@ class RenderViewport extends RenderBox with RenderObjectWithChildMixin<RenderBox
     transform.translate(-scrollOffset.dx, -scrollOffset.dy);
   }
 
-  bool hitTestChildren(HitTestResult result, { Point position }) {
+  bool hitTestChildren(HitTestResult result, {Point position}) {
     if (child != null) {
       assert(child.parentData is BoxParentData);
       Point transformed = position + _scrollOffsetRoundedToIntegerDevicePixels;

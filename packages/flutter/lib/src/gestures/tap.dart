@@ -17,13 +17,13 @@ typedef void GestureTapCancelCallback();
 /// pointer per gesture. That is, during tap recognition, extra pointer events
 /// are ignored: down-1, down-2, up-1, up-2 produces only one tap on up-1.
 class TapGestureRecognizer extends PrimaryPointerGestureRecognizer {
-  TapGestureRecognizer({
-    PointerRouter router,
-    this.onTapDown,
-    this.onTapUp,
-    this.onTap,
-    this.onTapCancel
-  }) : super(router: router, deadline: kPressTimeout);
+  TapGestureRecognizer(
+      {PointerRouter router,
+      this.onTapDown,
+      this.onTapUp,
+      this.onTap,
+      this.onTapCancel})
+      : super(router: router, deadline: kPressTimeout);
 
   GestureTapDownCallback onTapDown;
   GestureTapDownCallback onTapUp;
@@ -43,8 +43,7 @@ class TapGestureRecognizer extends PrimaryPointerGestureRecognizer {
 
   void resolve(GestureDisposition disposition) {
     if (_wonArena && disposition == GestureDisposition.rejected) {
-      if (onTapCancel != null)
-        onTapCancel();
+      if (onTapCancel != null) onTapCancel();
       _reset();
     }
     super.resolve(disposition);
@@ -67,16 +66,14 @@ class TapGestureRecognizer extends PrimaryPointerGestureRecognizer {
     super.rejectGesture(pointer);
     if (pointer == primaryPointer) {
       assert(state == GestureRecognizerState.defunct);
-      if (onTapCancel != null)
-        onTapCancel();
+      if (onTapCancel != null) onTapCancel();
       _reset();
     }
   }
 
   void _checkDown() {
     if (!_sentTapDown) {
-      if (onTapDown != null)
-        onTapDown(initialPosition);
+      if (onTapDown != null) onTapDown(initialPosition);
       _sentTapDown = true;
     }
   }
@@ -84,10 +81,8 @@ class TapGestureRecognizer extends PrimaryPointerGestureRecognizer {
   void _checkUp() {
     if (_wonArena && _finalPosition != null) {
       resolve(GestureDisposition.accepted);
-      if (onTapUp != null)
-        onTapUp(_finalPosition);
-      if (onTap != null)
-        onTap();
+      if (onTapUp != null) onTapUp(_finalPosition);
+      if (onTap != null) onTap();
       _reset();
     }
   }

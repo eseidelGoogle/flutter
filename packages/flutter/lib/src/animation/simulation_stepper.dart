@@ -15,8 +15,9 @@ import 'ticker.dart';
 /// AnimatedValue interface.
 class _TweenSimulation extends Simulation {
   _TweenSimulation(double begin, double end, Duration duration, Curve curve)
-    : _durationInSeconds = duration.inMicroseconds.toDouble() / Duration.MICROSECONDS_PER_SECOND,
-      _tween = new AnimatedValue<double>(begin, end: end, curve: curve) {
+      : _durationInSeconds = duration.inMicroseconds.toDouble() /
+            Duration.MICROSECONDS_PER_SECOND,
+        _tween = new AnimatedValue<double>(begin, end: end, curve: curve) {
     assert(_durationInSeconds > 0.0);
     assert(begin != null);
     assert(end != null);
@@ -66,7 +67,8 @@ class SimulationStepper {
   ///
   /// Returns a future that resolves when the timeline stops animating,
   /// typically when the timeline arives at the target value.
-  Future animateTo(double target, { Duration duration, Curve curve: Curves.linear }) {
+  Future animateTo(double target,
+      {Duration duration, Curve curve: Curves.linear}) {
     assert(duration > Duration.ZERO);
     assert(!isAnimating);
     return _start(new _TweenSimulation(value, target, duration, curve));
@@ -96,10 +98,10 @@ class SimulationStepper {
   }
 
   void _tick(Duration elapsed) {
-    double elapsedInSeconds = elapsed.inMicroseconds.toDouble() / Duration.MICROSECONDS_PER_SECOND;
+    double elapsedInSeconds =
+        elapsed.inMicroseconds.toDouble() / Duration.MICROSECONDS_PER_SECOND;
     _value = _simulation.x(elapsedInSeconds);
-    if (_simulation.isDone(elapsedInSeconds))
-      stop();
+    if (_simulation.isDone(elapsedInSeconds)) stop();
     _onTick(_value);
   }
 }

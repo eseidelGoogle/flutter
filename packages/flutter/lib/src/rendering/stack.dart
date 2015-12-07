@@ -15,7 +15,6 @@ import 'object.dart';
 /// width or height of the rectangle, convert it to a [Rect] using [toRect()]
 /// (passing the container's own Rect), and then examine that object.
 class RelativeRect {
-
   /// Creates a RelativeRect with the given values.
   const RelativeRect.fromLTRB(this.left, this.top, this.right, this.bottom);
 
@@ -23,7 +22,8 @@ class RelativeRect {
   /// and the RelativeRect (the output) are in the coordinate space of the
   /// rectangle described by the Size, with 0,0 being at the top left.
   factory RelativeRect.fromSize(Rect rect, Size container) {
-    return new RelativeRect.fromLTRB(rect.left, rect.top, container.width - rect.right, container.height - rect.bottom);
+    return new RelativeRect.fromLTRB(rect.left, rect.top,
+        container.width - rect.right, container.height - rect.bottom);
   }
 
   /// Creates a RelativeRect from two Rects. The second Rect provides the
@@ -40,14 +40,14 @@ class RelativeRect {
   /// argument instead.
   factory RelativeRect.fromRect(Rect rect, Rect container) {
     return new RelativeRect.fromLTRB(
-      rect.left - container.left,
-      rect.top - container.top,
-      container.right - rect.right,
-      container.bottom - rect.bottom
-    );
+        rect.left - container.left,
+        rect.top - container.top,
+        container.right - rect.right,
+        container.bottom - rect.bottom);
   }
 
-  static final RelativeRect fill = new RelativeRect.fromLTRB(0.0, 0.0, 0.0, 0.0);
+  static final RelativeRect fill =
+      new RelativeRect.fromLTRB(0.0, 0.0, 0.0, 0.0);
 
   /// Distance from the left side of the container to the left side of this rectangle.
   final double left;
@@ -63,12 +63,14 @@ class RelativeRect {
 
   /// Returns a new rectangle object translated by the given offset.
   RelativeRect shift(Offset offset) {
-    return new RelativeRect.fromLTRB(left + offset.dx, top + offset.dy, right + offset.dx, bottom + offset.dy);
+    return new RelativeRect.fromLTRB(left + offset.dx, top + offset.dy,
+        right + offset.dx, bottom + offset.dy);
   }
 
   /// Returns a new rectangle with edges moved outwards by the given delta.
   RelativeRect inflate(double delta) {
-    return new RelativeRect.fromLTRB(left - delta, top - delta, right + delta, bottom + delta);
+    return new RelativeRect.fromLTRB(
+        left - delta, top - delta, right + delta, bottom + delta);
   }
 
   /// Returns a new rectangle with edges moved inwards by the given delta.
@@ -79,48 +81,45 @@ class RelativeRect {
   /// Returns a new rectangle that is the intersection of the given rectangle and this rectangle.
   RelativeRect intersect(RelativeRect other) {
     return new RelativeRect.fromLTRB(
-      math.max(left, other.left),
-      math.max(top, other.top),
-      math.max(right, other.right),
-      math.max(bottom, other.bottom)
-    );
+        math.max(left, other.left),
+        math.max(top, other.top),
+        math.max(right, other.right),
+        math.max(bottom, other.bottom));
   }
 
   /// Convert this RelativeRect to a Rect, in the coordinate space of the container.
   Rect toRect(Rect container) {
-    return new Rect.fromLTRB(left, top, container.width - right, container.height - bottom);
+    return new Rect.fromLTRB(
+        left, top, container.width - right, container.height - bottom);
   }
 
   /// Linearly interpolate between two RelativeRects.
   ///
   /// If either rect is null, this function interpolates from [RelativeRect.fill].
   static RelativeRect lerp(RelativeRect a, RelativeRect b, double t) {
-    if (a == null && b == null)
-      return null;
-    if (a == null)
-      return new RelativeRect.fromLTRB(b.left * t, b.top * t, b.right * t, b.bottom * t);
+    if (a == null && b == null) return null;
+    if (a == null) return new RelativeRect.fromLTRB(
+        b.left * t, b.top * t, b.right * t, b.bottom * t);
     if (b == null) {
       double k = 1.0 - t;
-      return new RelativeRect.fromLTRB(b.left * k, b.top * k, b.right * k, b.bottom * k);
+      return new RelativeRect.fromLTRB(
+          b.left * k, b.top * k, b.right * k, b.bottom * k);
     }
     return new RelativeRect.fromLTRB(
-      lerpDouble(a.left, b.left, t),
-      lerpDouble(a.top, b.top, t),
-      lerpDouble(a.right, b.right, t),
-      lerpDouble(a.bottom, b.bottom, t)
-    );
+        lerpDouble(a.left, b.left, t),
+        lerpDouble(a.top, b.top, t),
+        lerpDouble(a.right, b.right, t),
+        lerpDouble(a.bottom, b.bottom, t));
   }
 
   bool operator ==(dynamic other) {
-    if (identical(this, other))
-      return true;
-    if (other is! RelativeRect)
-      return false;
+    if (identical(this, other)) return true;
+    if (other is! RelativeRect) return false;
     final RelativeRect typedOther = other;
     return left == typedOther.left &&
-           top == typedOther.top &&
-           right == typedOther.right &&
-           bottom == typedOther.bottom;
+        top == typedOther.top &&
+        right == typedOther.right &&
+        bottom == typedOther.bottom;
   }
 
   int get hashCode {
@@ -132,7 +131,8 @@ class RelativeRect {
     return value;
   }
 
-  String toString() => "RelativeRect.fromLTRB(${left.toStringAsFixed(1)}, ${top.toStringAsFixed(1)}, ${right.toStringAsFixed(1)}, ${bottom.toStringAsFixed(1)})";
+  String toString() =>
+      "RelativeRect.fromLTRB(${left.toStringAsFixed(1)}, ${top.toStringAsFixed(1)}, ${right.toStringAsFixed(1)}, ${bottom.toStringAsFixed(1)})";
 }
 
 /// Parent data for use with [RenderStack]
@@ -169,18 +169,12 @@ class StackParentData extends ContainerBoxParentDataMixin<RenderBox> {
   }
 
   void merge(StackParentData other) {
-    if (other.top != null)
-      top = other.top;
-    if (other.right != null)
-      right = other.right;
-    if (other.bottom != null)
-      bottom = other.bottom;
-    if (other.left != null)
-      left = other.left;
-    if (other.width != null)
-      width = other.width;
-    if (other.height != null)
-      height = other.height;
+    if (other.top != null) top = other.top;
+    if (other.right != null) right = other.right;
+    if (other.bottom != null) bottom = other.bottom;
+    if (other.left != null) left = other.left;
+    if (other.width != null) width = other.width;
+    if (other.height != null) height = other.height;
     super.merge(other);
   }
 
@@ -190,31 +184,37 @@ class StackParentData extends ContainerBoxParentDataMixin<RenderBox> {
   /// are non-null. Positioned children do not factor into determining the size
   /// of the stack but are instead placed relative to the non-positioned
   /// children in the stack.
-  bool get isPositioned => top != null || right != null || bottom != null || left != null || width != null || height != null;
+  bool get isPositioned => top != null ||
+      right != null ||
+      bottom != null ||
+      left != null ||
+      width != null ||
+      height != null;
 
-  String toString() => '${super.toString()}; top=$top; right=$right; bottom=$bottom; left=$left; width=$width; height=$height';
+  String toString() =>
+      '${super.toString()}; top=$top; right=$right; bottom=$bottom; left=$left; width=$width; height=$height';
 }
 
 abstract class RenderStackBase extends RenderBox
-    with ContainerRenderObjectMixin<RenderBox, StackParentData>,
-         RenderBoxContainerDefaultsMixin<RenderBox, StackParentData> {
-  RenderStackBase({
-    List<RenderBox> children,
-    alignment: const FractionalOffset(0.0, 0.0)
-  }) : _alignment = alignment {
+    with
+        ContainerRenderObjectMixin<RenderBox, StackParentData>,
+        RenderBoxContainerDefaultsMixin<RenderBox, StackParentData> {
+  RenderStackBase(
+      {List<RenderBox> children, alignment: const FractionalOffset(0.0, 0.0)})
+      : _alignment = alignment {
     addAll(children);
   }
 
   bool _hasVisualOverflow = false;
 
   void setupParentData(RenderBox child) {
-    if (child.parentData is! StackParentData)
-      child.parentData = new StackParentData();
+    if (child.parentData is! StackParentData) child.parentData =
+        new StackParentData();
   }
 
   FractionalOffset get alignment => _alignment;
   FractionalOffset _alignment;
-  void set alignment (FractionalOffset value) {
+  void set alignment(FractionalOffset value) {
     if (_alignment != value) {
       _alignment = value;
       markNeedsLayout();
@@ -226,8 +226,8 @@ abstract class RenderStackBase extends RenderBox
     RenderBox child = firstChild;
     while (child != null) {
       final StackParentData childParentData = child.parentData;
-      if (!childParentData.isPositioned)
-        width = math.max(width, child.getMinIntrinsicWidth(constraints));
+      if (!childParentData.isPositioned) width =
+          math.max(width, child.getMinIntrinsicWidth(constraints));
       assert(child.parentData == childParentData);
       child = childParentData.nextSibling;
     }
@@ -248,8 +248,7 @@ abstract class RenderStackBase extends RenderBox
       assert(child.parentData == childParentData);
       child = childParentData.nextSibling;
     }
-    if (!hasNonPositionedChildren)
-      return constraints.constrainWidth();
+    if (!hasNonPositionedChildren) return constraints.constrainWidth();
     assert(width == constraints.constrainWidth(width));
     return width;
   }
@@ -259,8 +258,8 @@ abstract class RenderStackBase extends RenderBox
     RenderBox child = firstChild;
     while (child != null) {
       final StackParentData childParentData = child.parentData;
-      if (!childParentData.isPositioned)
-        height = math.max(height, child.getMinIntrinsicHeight(constraints));
+      if (!childParentData.isPositioned) height =
+          math.max(height, child.getMinIntrinsicHeight(constraints));
       assert(child.parentData == childParentData);
       child = childParentData.nextSibling;
     }
@@ -281,8 +280,7 @@ abstract class RenderStackBase extends RenderBox
       assert(child.parentData == childParentData);
       child = childParentData.nextSibling;
     }
-    if (!hasNonPositionedChildren)
-      return constraints.constrainHeight();
+    if (!hasNonPositionedChildren) return constraints.constrainHeight();
     assert(height == constraints.constrainHeight(height));
     return height;
   }
@@ -337,35 +335,37 @@ abstract class RenderStackBase extends RenderBox
       } else {
         BoxConstraints childConstraints = const BoxConstraints();
 
-        if (childParentData.left != null && childParentData.right != null)
-          childConstraints = childConstraints.tightenWidth(size.width - childParentData.right - childParentData.left);
-        else if (childParentData.width != null)
-          childConstraints = childConstraints.tightenWidth(childParentData.width);
+        if (childParentData.left != null &&
+            childParentData.right != null) childConstraints = childConstraints
+            .tightenWidth(
+                size.width - childParentData.right - childParentData.left);
+        else if (childParentData.width != null) childConstraints =
+            childConstraints.tightenWidth(childParentData.width);
 
-        if (childParentData.top != null && childParentData.bottom != null)
-          childConstraints = childConstraints.tightenHeight(size.height - childParentData.bottom - childParentData.top);
-        else if (childParentData.height != null)
-          childConstraints = childConstraints.tightenHeight(childParentData.height);
+        if (childParentData.top != null &&
+            childParentData.bottom != null) childConstraints = childConstraints
+            .tightenHeight(
+                size.height - childParentData.bottom - childParentData.top);
+        else if (childParentData.height != null) childConstraints =
+            childConstraints.tightenHeight(childParentData.height);
 
         child.layout(childConstraints, parentUsesSize: true);
 
         double x = 0.0;
-        if (childParentData.left != null)
-          x = childParentData.left;
-        else if (childParentData.right != null)
-          x = size.width - childParentData.right - child.size.width;
+        if (childParentData.left != null) x = childParentData.left;
+        else if (childParentData.right != null) x =
+            size.width - childParentData.right - child.size.width;
 
-        if (x < 0.0 || x + child.size.width > size.width)
-          _hasVisualOverflow = true;
+        if (x < 0.0 || x + child.size.width > size.width) _hasVisualOverflow =
+            true;
 
         double y = 0.0;
-        if (childParentData.top != null)
-          y = childParentData.top;
-        else if (childParentData.bottom != null)
-          y = size.height - childParentData.bottom - child.size.height;
+        if (childParentData.top != null) y = childParentData.top;
+        else if (childParentData.bottom != null) y =
+            size.height - childParentData.bottom - child.size.height;
 
-        if (y < 0.0 || y + child.size.height > size.height)
-          _hasVisualOverflow = true;
+        if (y < 0.0 || y + child.size.height > size.height) _hasVisualOverflow =
+            true;
 
         childParentData.position = new Point(x, y);
       }
@@ -375,7 +375,7 @@ abstract class RenderStackBase extends RenderBox
     }
   }
 
-  bool hitTestChildren(HitTestResult result, { Point position }) {
+  bool hitTestChildren(HitTestResult result, {Point position}) {
     return defaultHitTestChildren(result, position: position);
   }
 
@@ -383,7 +383,8 @@ abstract class RenderStackBase extends RenderBox
 
   void paint(PaintingContext context, Offset offset) {
     if (_hasVisualOverflow) {
-      context.pushClipRect(needsCompositing, offset, Point.origin & size, paintStack);
+      context.pushClipRect(
+          needsCompositing, offset, Point.origin & size, paintStack);
     } else {
       paintStack(context, offset);
     }
@@ -421,13 +422,9 @@ abstract class RenderStackBase extends RenderBox
 /// the stack. If the child extends beyond the bounds of the stack, the stack
 /// will clip the child's painting to the bounds of the stack.
 class RenderStack extends RenderStackBase {
-  RenderStack({
-    List<RenderBox> children,
-    alignment: const FractionalOffset(0.0, 0.0)
-  }) : super(
-   children: children,
-   alignment: alignment
- );
+  RenderStack(
+      {List<RenderBox> children, alignment: const FractionalOffset(0.0, 0.0)})
+      : super(children: children, alignment: alignment);
 
   void paintStack(PaintingContext context, Offset offset) {
     defaultPaint(context, offset);
@@ -439,18 +436,16 @@ class RenderStack extends RenderStackBase {
 /// Note: although only one child is displayed, the cost of the layout algorithm is
 /// still O(N), like an ordinary stack.
 class RenderIndexedStack extends RenderStackBase {
-  RenderIndexedStack({
-    List<RenderBox> children,
-    alignment: const FractionalOffset(0.0, 0.0),
-    int index: 0
-  }) : _index = index, super(
-   children: children,
-   alignment: alignment
-  );
+  RenderIndexedStack(
+      {List<RenderBox> children,
+      alignment: const FractionalOffset(0.0, 0.0),
+      int index: 0})
+      : _index = index,
+        super(children: children, alignment: alignment);
 
   int get index => _index;
   int _index;
-  void set index (int value) {
+  void set index(int value) {
     if (_index != value) {
       _index = value;
       markNeedsLayout();
@@ -470,20 +465,18 @@ class RenderIndexedStack extends RenderStackBase {
     return child;
   }
 
-  bool hitTestChildren(HitTestResult result, { Point position }) {
-    if (firstChild == null)
-      return false;
+  bool hitTestChildren(HitTestResult result, {Point position}) {
+    if (firstChild == null) return false;
     assert(position != null);
     RenderBox child = _childAtIndex();
     final StackParentData childParentData = child.parentData;
     Point transformed = new Point(position.x - childParentData.position.x,
-                                  position.y - childParentData.position.y);
+        position.y - childParentData.position.y);
     return child.hitTest(result, position: transformed);
   }
 
   void paintStack(PaintingContext context, Offset offset) {
-    if (firstChild == null)
-      return;
+    if (firstChild == null) return;
     RenderBox child = _childAtIndex();
     final StackParentData childParentData = child.parentData;
     context.paintChild(child, childParentData.offset + offset);

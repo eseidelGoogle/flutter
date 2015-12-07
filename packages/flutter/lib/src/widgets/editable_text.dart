@@ -15,13 +15,13 @@ import 'framework.dart';
 const _kCursorBlinkHalfPeriod = 500; // milliseconds
 
 class TextRange {
-  const TextRange({ this.start, this.end });
+  const TextRange({this.start, this.end});
   const TextRange.collapsed(int position)
-    : start = position,
-      end = position;
+      : start = position,
+        end = position;
   const TextRange.empty()
-    : start = -1,
-      end = -1;
+      : start = -1,
+        end = -1;
 
   final int start;
   final int end;
@@ -111,9 +111,8 @@ class EditableString implements KeyboardClient {
     _delete(afterRange);
     _delete(beforeRange);
     selection = new TextRange(
-      start: math.max(selection.start - beforeLength, 0),
-      end: math.max(selection.end - beforeLength, 0)
-    );
+        start: math.max(selection.start - beforeLength, 0),
+        end: math.max(selection.end - beforeLength, 0));
     onUpdated();
   }
 
@@ -140,16 +139,16 @@ class EditableString implements KeyboardClient {
 }
 
 class EditableText extends StatefulComponent {
-  EditableText({
-    Key key,
-    this.value,
-    this.focused: false,
-    this.hideText: false,
-    this.style,
-    this.cursorColor,
-    this.onContentSizeChanged,
-    this.scrollOffset
-  }) : super(key: key);
+  EditableText(
+      {Key key,
+      this.value,
+      this.focused: false,
+      this.hideText: false,
+      this.style,
+      this.cursorColor,
+      this.onContentSizeChanged,
+      this.scrollOffset})
+      : super(key: key);
 
   final EditableString value;
   final bool focused;
@@ -173,7 +172,8 @@ class EditableTextState extends State<EditableText> {
   /// The cursor blink interval (the amount of time the cursor is in the "on"
   /// state or the "off" state). A complete cursor blink period is twice this
   /// value (half on, half off).
-  Duration get cursorBlinkInterval => new Duration(milliseconds: _kCursorBlinkHalfPeriod);
+  Duration get cursorBlinkInterval =>
+      new Duration(milliseconds: _kCursorBlinkHalfPeriod);
 
   void _cursorTick(Timer timer) {
     setState(() {
@@ -184,14 +184,11 @@ class EditableTextState extends State<EditableText> {
   void _startCursorTimer() {
     _showCursor = true;
     _cursorTimer = new Timer.periodic(
-      new Duration(milliseconds: _kCursorBlinkHalfPeriod),
-      _cursorTick
-    );
+        new Duration(milliseconds: _kCursorBlinkHalfPeriod), _cursorTick);
   }
 
   void dispose() {
-    if (_cursorTimer != null)
-      _stopCursorTimer();
+    if (_cursorTimer != null) _stopCursorTimer();
     super.dispose();
   }
 
@@ -206,39 +203,35 @@ class EditableTextState extends State<EditableText> {
     assert(config.focused != null);
     assert(config.cursorColor != null);
 
-    if (config.focused && _cursorTimer == null)
-      _startCursorTimer();
-    else if (!config.focused && _cursorTimer != null)
-      _stopCursorTimer();
+    if (config.focused && _cursorTimer == null) _startCursorTimer();
+    else if (!config.focused && _cursorTimer != null) _stopCursorTimer();
 
     return new SizedBox(
-      width: double.INFINITY,
-      child: new _EditableTextWidget(
-        value: config.value,
-        style: config.style,
-        cursorColor: config.cursorColor,
-        showCursor: _showCursor,
-        hideText: config.hideText,
-        onContentSizeChanged: config.onContentSizeChanged,
-        scrollOffset: config.scrollOffset
-      )
-    );
+        width: double.INFINITY,
+        child: new _EditableTextWidget(
+            value: config.value,
+            style: config.style,
+            cursorColor: config.cursorColor,
+            showCursor: _showCursor,
+            hideText: config.hideText,
+            onContentSizeChanged: config.onContentSizeChanged,
+            scrollOffset: config.scrollOffset));
   }
 }
 
 final String _kZeroWidthSpace = new String.fromCharCode(0x200B);
 
 class _EditableTextWidget extends LeafRenderObjectWidget {
-  _EditableTextWidget({
-    Key key,
-    this.value,
-    this.style,
-    this.cursorColor,
-    this.showCursor,
-    this.hideText,
-    this.onContentSizeChanged,
-    this.scrollOffset
-  }) : super(key: key);
+  _EditableTextWidget(
+      {Key key,
+      this.value,
+      this.style,
+      this.cursorColor,
+      this.showCursor,
+      this.hideText,
+      this.onContentSizeChanged,
+      this.scrollOffset})
+      : super(key: key);
 
   final EditableString value;
   final TextStyle style;
@@ -250,16 +243,15 @@ class _EditableTextWidget extends LeafRenderObjectWidget {
 
   RenderEditableParagraph createRenderObject() {
     return new RenderEditableParagraph(
-      text: _buildTextSpan(),
-      cursorColor: cursorColor,
-      showCursor: showCursor,
-      onContentSizeChanged: onContentSizeChanged,
-      scrollOffset: scrollOffset
-    );
+        text: _buildTextSpan(),
+        cursorColor: cursorColor,
+        showCursor: showCursor,
+        onContentSizeChanged: onContentSizeChanged,
+        scrollOffset: scrollOffset);
   }
 
-  void updateRenderObject(RenderEditableParagraph renderObject,
-                          _EditableTextWidget oldWidget) {
+  void updateRenderObject(
+      RenderEditableParagraph renderObject, _EditableTextWidget oldWidget) {
     renderObject.text = _buildTextSpan();
     renderObject.cursorColor = cursorColor;
     renderObject.showCursor = showCursor;
@@ -270,24 +262,21 @@ class _EditableTextWidget extends LeafRenderObjectWidget {
   // Construct a TextSpan that renders the EditableString using the chosen style.
   TextSpan _buildTextSpan() {
     if (!hideText && value.composing.isValid) {
-      TextStyle composingStyle = style.merge(
-        const TextStyle(decoration: underline)
-      );
+      TextStyle composingStyle =
+          style.merge(const TextStyle(decoration: underline));
 
       return new StyledTextSpan(style, <TextSpan>[
         new PlainTextSpan(value.textBefore(value.composing)),
-        new StyledTextSpan(composingStyle, <TextSpan>[
-          new PlainTextSpan(value.textInside(value.composing))
-        ]),
+        new StyledTextSpan(composingStyle,
+            <TextSpan>[new PlainTextSpan(value.textInside(value.composing))]),
         new PlainTextSpan(value.textAfter(value.composing))
       ]);
     }
 
     String text = value.text;
-    if (hideText)
-      text = new String.fromCharCodes(new List<int>.filled(text.length, 0x2022));
-    return new StyledTextSpan(style, <TextSpan>[
-      new PlainTextSpan(text.isEmpty ? _kZeroWidthSpace : text)
-    ]);
+    if (hideText) text =
+        new String.fromCharCodes(new List<int>.filled(text.length, 0x2022));
+    return new StyledTextSpan(style,
+        <TextSpan>[new PlainTextSpan(text.isEmpty ? _kZeroWidthSpace : text)]);
   }
 }

@@ -13,18 +13,18 @@ import 'theme.dart';
 import 'typography.dart';
 
 class ToolBar extends StatelessComponent {
-  ToolBar({
-    Key key,
-    this.left,
-    this.center,
-    this.right,
-    this.bottom,
-    this.tabBar,
-    this.elevation: 4,
-    this.backgroundColor,
-    this.textTheme,
-    this.padding: EdgeDims.zero
-  }) : super(key: key);
+  ToolBar(
+      {Key key,
+      this.left,
+      this.center,
+      this.right,
+      this.bottom,
+      this.tabBar,
+      this.elevation: 4,
+      this.backgroundColor,
+      this.textTheme,
+      this.padding: EdgeDims.zero})
+      : super(key: key);
 
   final Widget left;
   final Widget center;
@@ -36,29 +36,27 @@ class ToolBar extends StatelessComponent {
   final TextTheme textTheme;
   final EdgeDims padding;
 
-  ToolBar copyWith({
-    Key key,
-    Widget left,
-    Widget center,
-    List<Widget> right,
-    Widget bottom,
-    int elevation,
-    Color backgroundColor,
-    TextTheme textTheme,
-    EdgeDims padding
-  }) {
+  ToolBar copyWith(
+      {Key key,
+      Widget left,
+      Widget center,
+      List<Widget> right,
+      Widget bottom,
+      int elevation,
+      Color backgroundColor,
+      TextTheme textTheme,
+      EdgeDims padding}) {
     return new ToolBar(
-      key: key ?? this.key,
-      left: left ?? this.left,
-      center: center ?? this.center,
-      right: right ?? this.right,
-      bottom: bottom ?? this.bottom,
-      tabBar: tabBar ?? this.tabBar,
-      elevation: elevation ?? this.elevation,
-      backgroundColor: backgroundColor ?? this.backgroundColor,
-      textTheme: textTheme ?? this.textTheme,
-      padding: padding ?? this.padding
-    );
+        key: key ?? this.key,
+        left: left ?? this.left,
+        center: center ?? this.center,
+        right: right ?? this.right,
+        bottom: bottom ?? this.bottom,
+        tabBar: tabBar ?? this.tabBar,
+        elevation: elevation ?? this.elevation,
+        backgroundColor: backgroundColor ?? this.backgroundColor,
+        textTheme: textTheme ?? this.textTheme,
+        padding: padding ?? this.padding);
   }
 
   Widget build(BuildContext context) {
@@ -78,62 +76,43 @@ class ToolBar extends StatelessComponent {
     }
 
     final List<Widget> firstRow = <Widget>[];
-    if (left != null)
-      firstRow.add(left);
-    firstRow.add(
-      new Flexible(
+    if (left != null) firstRow.add(left);
+    firstRow.add(new Flexible(
         child: new Padding(
-          padding: new EdgeDims.only(left: 24.0),
-          child: center != null ? new DefaultTextStyle(style: centerStyle, child: center) : null
-        )
-      )
-    );
-    if (right != null)
-      firstRow.addAll(right);
+            padding: new EdgeDims.only(left: 24.0),
+            child: center != null
+                ? new DefaultTextStyle(style: centerStyle, child: center)
+                : null)));
+    if (right != null) firstRow.addAll(right);
 
     final List<Widget> rows = <Widget>[
       new Container(
-        height: kToolBarHeight,
-        child: new DefaultTextStyle(
-          style: sideStyle,
-          child: new Row(firstRow)
-        )
-      )
+          height: kToolBarHeight,
+          child:
+              new DefaultTextStyle(style: sideStyle, child: new Row(firstRow)))
     ];
     if (bottom != null) {
-      rows.add(
-        new DefaultTextStyle(
+      rows.add(new DefaultTextStyle(
           style: centerStyle,
           child: new Container(
-            height: kExtendedToolBarHeight - kToolBarHeight,
-            child: bottom
-          )
-        )
-      );
+              height: kExtendedToolBarHeight - kToolBarHeight, child: bottom)));
     }
-    if (tabBar != null)
-      rows.add(tabBar);
+    if (tabBar != null) rows.add(tabBar);
 
     EdgeDims combinedPadding = new EdgeDims.symmetric(horizontal: 8.0);
-    if (padding != null)
-      combinedPadding += padding;
+    if (padding != null) combinedPadding += padding;
 
     Widget contents = new Material(
-      color: color,
-      elevation: elevation,
-      child: new Container(
-        padding: combinedPadding,
-        child: new Column(
-          rows,
-          justifyContent: FlexJustifyContent.collapse
-        )
-      )
-    );
+        color: color,
+        elevation: elevation,
+        child: new Container(
+            padding: combinedPadding,
+            child:
+                new Column(rows, justifyContent: FlexJustifyContent.collapse)));
 
-    if (iconThemeData != null)
-      contents = new IconTheme(data: iconThemeData, child: contents);
+    if (iconThemeData != null) contents =
+        new IconTheme(data: iconThemeData, child: contents);
 
     return contents;
   }
-
 }

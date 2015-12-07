@@ -9,11 +9,7 @@ import 'theme_data.dart';
 export 'theme_data.dart' show ThemeData, ThemeBrightness;
 
 class Theme extends InheritedWidget {
-  Theme({
-    Key key,
-    this.data,
-    Widget child
-  }) : super(key: key, child: child) {
+  Theme({Key key, this.data, Widget child}) : super(key: key, child: child) {
     assert(child != null);
     assert(data != null);
   }

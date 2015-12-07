@@ -27,31 +27,20 @@ const double _kMinFlingVelocity = 365.0;
 const Duration _kBaseSettleDuration = const Duration(milliseconds: 246);
 
 class Drawer extends StatelessComponent {
-  Drawer({
-    Key key,
-    this.elevation: 16,
-    this.child
-  }) : super(key: key);
+  Drawer({Key key, this.elevation: 16, this.child}) : super(key: key);
 
   final int elevation;
   final Widget child;
 
   Widget build(BuildContext context) {
     return new ConstrainedBox(
-      constraints: const BoxConstraints.expand(width: _kWidth),
-      child: new Material(
-        elevation: elevation,
-        child: child
-      )
-    );
+        constraints: const BoxConstraints.expand(width: _kWidth),
+        child: new Material(elevation: elevation, child: child));
   }
 }
 
 class DrawerController extends StatefulComponent {
-  DrawerController({
-    GlobalKey key,
-    this.child
-  }) : super(key: key);
+  DrawerController({GlobalKey key, this.child}) : super(key: key);
 
   final Widget child;
 
@@ -86,7 +75,8 @@ class DrawerControllerState extends State<DrawerController> {
     if (_historyEntry == null) {
       ModalRoute route = ModalRoute.of(context);
       if (route != null) {
-        _historyEntry = new LocalHistoryEntry(onRemove: _handleHistoryEntryRemoved);
+        _historyEntry =
+            new LocalHistoryEntry(onRemove: _handleHistoryEntryRemoved);
         route.addLocalHistoryEntry(_historyEntry);
       }
     }
@@ -132,8 +122,7 @@ class DrawerControllerState extends State<DrawerController> {
   }
 
   void _settle(Offset velocity) {
-    if (_performance.isDismissed)
-      return;
+    if (_performance.isDismissed) return;
     if (velocity.dx.abs() >= _kMinFlingVelocity) {
       _performance.fling(velocity: velocity.dx / _width);
     } else if (_performance.progress < 0.5) {
@@ -151,7 +140,8 @@ class DrawerControllerState extends State<DrawerController> {
     _performance.fling(velocity: -1.0);
   }
 
-  final AnimatedColorValue _color = new AnimatedColorValue(Colors.transparent, end: Colors.black54);
+  final AnimatedColorValue _color =
+      new AnimatedColorValue(Colors.transparent, end: Colors.black54);
 
   Widget build(BuildContext context) {
     HitTestBehavior behavior;
@@ -159,50 +149,37 @@ class DrawerControllerState extends State<DrawerController> {
     if (_performance.status == PerformanceStatus.dismissed) {
       behavior = HitTestBehavior.translucent;
       child = new Align(
-        alignment: const FractionalOffset(0.0, 0.5),
-        widthFactor: 1.0,
-        child: new Container(width: _kEdgeDragWidth)
-      );
+          alignment: const FractionalOffset(0.0, 0.5),
+          widthFactor: 1.0,
+          child: new Container(width: _kEdgeDragWidth));
     } else {
       _performance.updateVariable(_color);
       child = new RepaintBoundary(
-        child: new Stack(<Widget>[
-          new GestureDetector(
+          child: new Stack(<Widget>[
+        new GestureDetector(
             onTap: close,
             child: new DecoratedBox(
-              decoration: new BoxDecoration(
-                backgroundColor: _color.value
-              ),
-              child: new Container()
-            )
-          ),
-          new Align(
+                decoration: new BoxDecoration(backgroundColor: _color.value),
+                child: new Container())),
+        new Align(
             alignment: const FractionalOffset(0.0, 0.5),
             child: new Listener(
-              onPointerDown: _handlePointerDown,
-              child: new Align(
-                alignment: const FractionalOffset(1.0, 0.5),
-                widthFactor: _performance.progress,
-                child: new SizeObserver(
-                  onSizeChanged: _handleSizeChanged,
-                  child: new RepaintBoundary(
-                    child: new Focus(
-                      key: new GlobalObjectKey(config.key),
-                      child: config.child
-                    )
-                  )
-                )
-              )
-            )
-          )
-        ])
-      );
+                onPointerDown: _handlePointerDown,
+                child: new Align(
+                    alignment: const FractionalOffset(1.0, 0.5),
+                    widthFactor: _performance.progress,
+                    child: new SizeObserver(
+                        onSizeChanged: _handleSizeChanged,
+                        child: new RepaintBoundary(
+                            child: new Focus(
+                                key: new GlobalObjectKey(config.key),
+                                child: config.child))))))
+      ]));
     }
     return new GestureDetector(
-      onHorizontalDragUpdate: _move,
-      onHorizontalDragEnd: _settle,
-      behavior: behavior,
-      child: child
-    );
+        onHorizontalDragUpdate: _move,
+        onHorizontalDragEnd: _settle,
+        behavior: behavior,
+        child: child);
   }
 }

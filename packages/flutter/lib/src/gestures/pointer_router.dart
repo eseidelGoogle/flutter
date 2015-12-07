@@ -9,14 +9,16 @@ typedef void PointerRoute(PointerEvent event);
 
 /// A routing table for [PointerEvent] events.
 class PointerRouter {
-  final Map<int, List<PointerRoute>> _routeMap = new Map<int, List<PointerRoute>>();
+  final Map<int, List<PointerRoute>> _routeMap =
+      new Map<int, List<PointerRoute>>();
 
   /// Adds a route to the routing table.
   ///
   /// Whenever this object routes a [PointerEvent] corresponding to
   /// pointer, call route.
   void addRoute(int pointer, PointerRoute route) {
-    List<PointerRoute> routes = _routeMap.putIfAbsent(pointer, () => new List<PointerRoute>());
+    List<PointerRoute> routes =
+        _routeMap.putIfAbsent(pointer, () => new List<PointerRoute>());
     assert(!routes.contains(route));
     routes.add(route);
   }
@@ -30,8 +32,7 @@ class PointerRouter {
     List<PointerRoute> routes = _routeMap[pointer];
     assert(routes.contains(route));
     routes.remove(route);
-    if (routes.isEmpty)
-      _routeMap.remove(pointer);
+    if (routes.isEmpty) _routeMap.remove(pointer);
   }
 
   /// Call the routes registed for this pointer event.
@@ -39,9 +40,8 @@ class PointerRouter {
   /// Calls the routes in the order in which they were added to the route.
   void route(PointerEvent event) {
     List<PointerRoute> routes = _routeMap[event.pointer];
-    if (routes == null)
-      return;
-    for (PointerRoute route in new List<PointerRoute>.from(routes))
-      route(event);
+    if (routes == null) return;
+    for (PointerRoute route
+        in new List<PointerRoute>.from(routes)) route(event);
   }
 }

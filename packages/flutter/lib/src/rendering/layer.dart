@@ -17,7 +17,7 @@ export 'basic_types.dart';
 /// are uploaded into the engine and displayed by the compositor. This class is
 /// the base class for all composited layers.
 abstract class Layer {
-  Layer({ this.offset: Offset.zero });
+  Layer({this.offset: Offset.zero});
 
   /// Offset from parent in the parent's coordinate system.
   Offset offset;
@@ -36,8 +36,7 @@ abstract class Layer {
 
   /// Removes this layer from its parent layer's child list
   void detach() {
-    if (_parent != null)
-      _parent._remove(this);
+    if (_parent != null) _parent._remove(this);
   }
 
   /// Replaces this layer with the given layer in the parent layer's child list
@@ -47,16 +46,13 @@ abstract class Layer {
     assert(newLayer._nextSibling == null);
     assert(newLayer._previousSibling == null);
     newLayer._nextSibling = _nextSibling;
-    if (_nextSibling != null)
-      newLayer._nextSibling._previousSibling = newLayer;
+    if (_nextSibling != null) newLayer._nextSibling._previousSibling = newLayer;
     newLayer._previousSibling = _previousSibling;
-    if (_previousSibling != null)
-      newLayer._previousSibling._nextSibling = newLayer;
+    if (_previousSibling != null) newLayer._previousSibling._nextSibling =
+        newLayer;
     newLayer._parent = _parent;
-    if (_parent._firstChild == this)
-      _parent._firstChild = newLayer;
-    if (_parent._lastChild == this)
-      _parent._lastChild = newLayer;
+    if (_parent._firstChild == this) _parent._firstChild = newLayer;
+    if (_parent._lastChild == this) _parent._lastChild = newLayer;
     _nextSibling = null;
     _previousSibling = null;
     _parent = null;
@@ -72,22 +68,24 @@ abstract class Layer {
 
   dynamic debugOwner;
 
-  String toStringDeep([String prefixLineOne = '', String prefixOtherLines = '']) {
+  String toStringDeep(
+      [String prefixLineOne = '', String prefixOtherLines = '']) {
     String result = '$prefixLineOne$this\n';
     final String childrenDescription = debugDescribeChildren(prefixOtherLines);
-    final String settingsPrefix = childrenDescription != '' ? '$prefixOtherLines \u2502 ' : '$prefixOtherLines   ';
+    final String settingsPrefix = childrenDescription != ''
+        ? '$prefixOtherLines \u2502 '
+        : '$prefixOtherLines   ';
     List<String> settings = <String>[];
     debugDescribeSettings(settings);
-    result += settings.map((String setting) => "$settingsPrefix$setting\n").join();
-    if (childrenDescription == '')
-      result += '$prefixOtherLines\n';
+    result +=
+        settings.map((String setting) => "$settingsPrefix$setting\n").join();
+    if (childrenDescription == '') result += '$prefixOtherLines\n';
     result += childrenDescription;
     return result;
   }
 
   void debugDescribeSettings(List<String> settings) {
-    if (debugOwner != null)
-      settings.add('owner: $debugOwner');
+    if (debugOwner != null) settings.add('owner: $debugOwner');
     settings.add('offset: $offset');
   }
 
@@ -96,8 +94,8 @@ abstract class Layer {
 
 /// A composited layer containing a [Picture]
 class PictureLayer extends Layer {
-  PictureLayer({ Offset offset: Offset.zero, this.paintBounds })
-    : super(offset: offset);
+  PictureLayer({Offset offset: Offset.zero, this.paintBounds})
+      : super(offset: offset);
 
   /// The rectangle in this layer's coodinate system that bounds the recording
   ///
@@ -123,12 +121,12 @@ class PictureLayer extends Layer {
 /// A layer that indicates to the compositor that it should display
 /// certain statistics within it
 class StatisticsLayer extends Layer {
-  StatisticsLayer({
-    Offset offset: Offset.zero,
-    this.paintBounds,
-    this.optionsMask,
-    this.rasterizerThreshold
-  }) : super(offset: offset);
+  StatisticsLayer(
+      {Offset offset: Offset.zero,
+      this.paintBounds,
+      this.optionsMask,
+      this.rasterizerThreshold})
+      : super(offset: offset);
 
   /// The rectangle in this layer's coodinate system that bounds the recording
   Rect paintBounds;
@@ -145,10 +143,9 @@ class StatisticsLayer extends Layer {
   }
 }
 
-
 /// A composited layer that has a list of children
 class ContainerLayer extends Layer {
-  ContainerLayer({ Offset offset: Offset.zero }) : super(offset: offset);
+  ContainerLayer({Offset offset: Offset.zero}) : super(offset: offset);
 
   /// The first composited layer in this layer's child list
   Layer get firstChild => _firstChild;
@@ -158,7 +155,7 @@ class ContainerLayer extends Layer {
   Layer get lastChild => _lastChild;
   Layer _lastChild;
 
-  bool _debugUltimatePreviousSiblingOf(Layer child, { Layer equals }) {
+  bool _debugUltimatePreviousSiblingOf(Layer child, {Layer equals}) {
     while (child._previousSibling != null) {
       assert(child._previousSibling != child);
       child = child._previousSibling;
@@ -166,7 +163,7 @@ class ContainerLayer extends Layer {
     return child == equals;
   }
 
-  bool _debugUltimateNextSiblingOf(Layer child, { Layer equals }) {
+  bool _debugUltimateNextSiblingOf(Layer child, {Layer equals}) {
     while (child._nextSibling != null) {
       assert(child._nextSibling != child);
       child = child._nextSibling;
@@ -184,11 +181,9 @@ class ContainerLayer extends Layer {
     assert(child._previousSibling == null);
     child._parent = this;
     child._previousSibling = _lastChild;
-    if (_lastChild != null)
-      _lastChild._nextSibling = child;
+    if (_lastChild != null) _lastChild._nextSibling = child;
     _lastChild = child;
-    if (_firstChild == null)
-      _firstChild = child;
+    if (_firstChild == null) _firstChild = child;
   }
 
   void _remove(Layer child) {
@@ -245,13 +240,15 @@ class ContainerLayer extends Layer {
       Layer child = _firstChild;
       int count = 1;
       while (child != _lastChild) {
-        result += '${child.toStringDeep("$prefix \u251C\u2500child $count: ", "$prefix \u2502")}';
+        result +=
+            '${child.toStringDeep("$prefix \u251C\u2500child $count: ", "$prefix \u2502")}';
         count += 1;
         child = child._nextSibling;
       }
       if (child != null) {
         assert(child == _lastChild);
-        result += '${child.toStringDeep("$prefix \u2514\u2500child $count: ", "$prefix  ")}';
+        result +=
+            '${child.toStringDeep("$prefix \u2514\u2500child $count: ", "$prefix  ")}';
       }
     }
     return result;
@@ -260,7 +257,8 @@ class ContainerLayer extends Layer {
 
 /// A composite layer that clips its children using a rectangle
 class ClipRectLayer extends ContainerLayer {
-  ClipRectLayer({ Offset offset: Offset.zero, this.clipRect }) : super(offset: offset);
+  ClipRectLayer({Offset offset: Offset.zero, this.clipRect})
+      : super(offset: offset);
 
   /// The rectangle to clip in the parent's coordinate system
   Rect clipRect;
@@ -282,7 +280,8 @@ class ClipRectLayer extends ContainerLayer {
 
 /// A composite layer that clips its children using a rounded rectangle
 class ClipRRectLayer extends ContainerLayer {
-  ClipRRectLayer({ Offset offset: Offset.zero, this.bounds, this.clipRRect }) : super(offset: offset);
+  ClipRRectLayer({Offset offset: Offset.zero, this.bounds, this.clipRRect})
+      : super(offset: offset);
 
   /// Unused
   Rect bounds;
@@ -295,7 +294,8 @@ class ClipRRectLayer extends ContainerLayer {
 
   void addToScene(ui.SceneBuilder builder, Offset layerOffset) {
     Offset childOffset = offset + layerOffset;
-    builder.pushClipRRect(clipRRect.shift(childOffset), bounds.shift(childOffset));
+    builder.pushClipRRect(
+        clipRRect.shift(childOffset), bounds.shift(childOffset));
     addChildrenToScene(builder, childOffset);
     builder.pop();
   }
@@ -309,7 +309,8 @@ class ClipRRectLayer extends ContainerLayer {
 
 /// A composite layer that clips its children using a path
 class ClipPathLayer extends ContainerLayer {
-  ClipPathLayer({ Offset offset: Offset.zero, this.bounds, this.clipPath }) : super(offset: offset);
+  ClipPathLayer({Offset offset: Offset.zero, this.bounds, this.clipPath})
+      : super(offset: offset);
 
   /// Unused
   Rect bounds;
@@ -322,7 +323,8 @@ class ClipPathLayer extends ContainerLayer {
 
   void addToScene(ui.SceneBuilder builder, Offset layerOffset) {
     Offset childOffset = offset + layerOffset;
-    builder.pushClipPath(clipPath.shift(childOffset), bounds.shift(childOffset));
+    builder.pushClipPath(
+        clipPath.shift(childOffset), bounds.shift(childOffset));
     addChildrenToScene(builder, childOffset);
     builder.pop();
   }
@@ -336,14 +338,16 @@ class ClipPathLayer extends ContainerLayer {
 
 /// A composited layer that applies a transformation matrix to its children
 class TransformLayer extends ContainerLayer {
-  TransformLayer({ Offset offset: Offset.zero, this.transform }) : super(offset: offset);
+  TransformLayer({Offset offset: Offset.zero, this.transform})
+      : super(offset: offset);
 
   /// The matrix to apply
   Matrix4 transform;
 
   void addToScene(ui.SceneBuilder builder, Offset layerOffset) {
     Matrix4 offsetTransform = new Matrix4.identity();
-    offsetTransform.translate(offset.dx + layerOffset.dx, offset.dy + layerOffset.dy);
+    offsetTransform.translate(
+        offset.dx + layerOffset.dx, offset.dy + layerOffset.dy);
     builder.pushTransform((offsetTransform * transform).storage);
     addChildrenToScene(builder, Offset.zero);
     builder.pop();
@@ -358,7 +362,8 @@ class TransformLayer extends ContainerLayer {
 
 /// A composited layer that makes its children partially transparent
 class OpacityLayer extends ContainerLayer {
-  OpacityLayer({ Offset offset: Offset.zero, this.bounds, this.alpha }) : super(offset: offset);
+  OpacityLayer({Offset offset: Offset.zero, this.bounds, this.alpha})
+      : super(offset: offset);
 
   /// Unused
   Rect bounds;

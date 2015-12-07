@@ -5,13 +5,13 @@
 import 'box.dart';
 import 'object.dart';
 
-class MultiChildLayoutParentData extends ContainerBoxParentDataMixin<RenderBox> {
+class MultiChildLayoutParentData
+    extends ContainerBoxParentDataMixin<RenderBox> {
   /// An object representing the identity of this child.
   Object id;
 
   void merge(MultiChildLayoutParentData other) {
-    if (other.id != null)
-      id = other.id;
+    if (other.id != null) id = other.id;
     super.merge(other);
   }
 
@@ -53,7 +53,8 @@ abstract class MultiChildLayoutDelegate {
     childParentData.position = position;
   }
 
-  void _callPerformLayout(Size size, BoxConstraints constraints, RenderBox firstChild) {
+  void _callPerformLayout(
+      Size size, BoxConstraints constraints, RenderBox firstChild) {
     final Map<Object, RenderBox> previousIdToChild = _idToChild;
 
     Set<RenderBox> debugPreviousChildrenNeedingLayout;
@@ -103,28 +104,27 @@ abstract class MultiChildLayoutDelegate {
 /// size of the parent, but the size of the parent cannot depend on the sizes of
 /// the children.
 class RenderCustomMultiChildLayoutBox extends RenderBox
-  with ContainerRenderObjectMixin<RenderBox, MultiChildLayoutParentData>,
-       RenderBoxContainerDefaultsMixin<RenderBox, MultiChildLayoutParentData> {
-  RenderCustomMultiChildLayoutBox({
-    List<RenderBox> children,
-    MultiChildLayoutDelegate delegate
-  }) : _delegate = delegate {
+    with
+        ContainerRenderObjectMixin<RenderBox, MultiChildLayoutParentData>,
+        RenderBoxContainerDefaultsMixin<RenderBox, MultiChildLayoutParentData> {
+  RenderCustomMultiChildLayoutBox(
+      {List<RenderBox> children, MultiChildLayoutDelegate delegate})
+      : _delegate = delegate {
     assert(delegate != null);
     addAll(children);
   }
 
   void setupParentData(RenderBox child) {
-    if (child.parentData is! MultiChildLayoutParentData)
-      child.parentData = new MultiChildLayoutParentData();
+    if (child.parentData is! MultiChildLayoutParentData) child.parentData =
+        new MultiChildLayoutParentData();
   }
 
   /// The delegate that controls the layout of the children.
   MultiChildLayoutDelegate get delegate => _delegate;
   MultiChildLayoutDelegate _delegate;
-  void set delegate (MultiChildLayoutDelegate newDelegate) {
+  void set delegate(MultiChildLayoutDelegate newDelegate) {
     assert(newDelegate != null);
-    if (_delegate == newDelegate)
-      return;
+    if (_delegate == newDelegate) return;
     _delegate = newDelegate;
     markNeedsLayout();
   }
@@ -163,7 +163,7 @@ class RenderCustomMultiChildLayoutBox extends RenderBox
     defaultPaint(context, offset);
   }
 
-  bool hitTestChildren(HitTestResult result, { Point position }) {
+  bool hitTestChildren(HitTestResult result, {Point position}) {
     return defaultHitTestChildren(result, position: position);
   }
 }

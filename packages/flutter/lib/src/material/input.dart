@@ -13,20 +13,19 @@ export 'package:flutter/rendering.dart' show ValueChanged;
 export 'package:flutter/services.dart' show KeyboardType;
 
 class Input extends Scrollable {
-  Input({
-    GlobalKey key,
-    this.initialValue: '',
-    this.placeholder,
-    this.hideText: false,
-    this.isDense: false,
-    this.onChanged,
-    this.keyboardType: KeyboardType.TEXT,
-    this.onSubmitted
-  }) : super(
-    key: key,
-    initialScrollOffset: 0.0,
-    scrollDirection: ScrollDirection.horizontal
-  );
+  Input(
+      {GlobalKey key,
+      this.initialValue: '',
+      this.placeholder,
+      this.hideText: false,
+      this.isDense: false,
+      this.onChanged,
+      this.keyboardType: KeyboardType.TEXT,
+      this.onSubmitted})
+      : super(
+            key: key,
+            initialScrollOffset: 0.0,
+            scrollDirection: ScrollDirection.horizontal);
 
   final String initialValue;
   final KeyboardType keyboardType;
@@ -53,10 +52,9 @@ class InputState extends ScrollableState<Input> {
     super.initState();
     _value = config.initialValue;
     _editableValue = new EditableString(
-      text: _value,
-      onUpdated: _handleTextUpdated,
-      onSubmitted: _handleTextSubmitted
-    );
+        text: _value,
+        onUpdated: _handleTextUpdated,
+        onSubmitted: _handleTextSubmitted);
   }
 
   void _handleTextUpdated() {
@@ -64,14 +62,12 @@ class InputState extends ScrollableState<Input> {
       setState(() {
         _value = _editableValue.text;
       });
-      if (config.onChanged != null)
-        config.onChanged(_value);
+      if (config.onChanged != null) config.onChanged(_value);
     }
   }
 
   void _handleTextSubmitted() {
-    if (config.onSubmitted != null)
-      config.onSubmitted(_value);
+    if (config.onSubmitted != null) config.onSubmitted(_value);
   }
 
   Widget buildContent(BuildContext context) {
@@ -81,8 +77,8 @@ class InputState extends ScrollableState<Input> {
     if (focused && !_keyboardHandle.attached) {
       _keyboardHandle = keyboard.show(_editableValue.stub, config.keyboardType);
       _keyboardHandle.setText(_editableValue.text);
-      _keyboardHandle.setSelection(_editableValue.selection.start,
-                                   _editableValue.selection.end);
+      _keyboardHandle.setSelection(
+          _editableValue.selection.start, _editableValue.selection.end);
     } else if (!focused && _keyboardHandle.attached) {
       _keyboardHandle.release();
     }
@@ -92,10 +88,9 @@ class InputState extends ScrollableState<Input> {
 
     if (config.placeholder != null && _value.isEmpty) {
       Widget child = new Opacity(
-        key: const ValueKey<String>('placeholder'),
-        child: new Text(config.placeholder, style: textStyle),
-        opacity: themeData.hintOpacity
-      );
+          key: const ValueKey<String>('placeholder'),
+          child: new Text(config.placeholder, style: textStyle),
+          opacity: themeData.hintOpacity);
       textChildren.add(child);
     }
 
@@ -103,55 +98,47 @@ class InputState extends ScrollableState<Input> {
     Color cursorColor = themeData.accentColor;
     if (themeData.primarySwatch != null) {
       cursorColor = themeData.primarySwatch[200];
-      focusHighlightColor = focused ? themeData.primarySwatch[400] : themeData.hintColor;
+      focusHighlightColor =
+          focused ? themeData.primarySwatch[400] : themeData.hintColor;
     }
 
     textChildren.add(new EditableText(
-      value: _editableValue,
-      focused: focused,
-      style: textStyle,
-      hideText: config.hideText,
-      cursorColor: cursorColor,
-      onContentSizeChanged: _handleContentSizeChanged,
-      scrollOffset: scrollOffsetVector
-    ));
+        value: _editableValue,
+        focused: focused,
+        style: textStyle,
+        hideText: config.hideText,
+        cursorColor: cursorColor,
+        onContentSizeChanged: _handleContentSizeChanged,
+        scrollOffset: scrollOffsetVector));
 
     return new Listener(
-      child: new SizeObserver(
-        onSizeChanged: _handleContainerSizeChanged,
-        child: new Container(
-          child: new Stack(textChildren),
-          margin: config.isDense ?
-            const EdgeDims.symmetric(vertical: 4.0) :
-            const EdgeDims.symmetric(vertical: 8.0),
-          padding: const EdgeDims.symmetric(vertical: 8.0),
-          decoration: new BoxDecoration(
-            border: new Border(
-              bottom: new BorderSide(
-                color: focusHighlightColor,
-                width: focused ? 2.0 : 1.0
-              )
-            )
-          )
-        )
-      ),
-      behavior: HitTestBehavior.opaque,
-      onPointerDown: (_) {
-        // TODO(ianh): https://github.com/flutter/engine/issues/1530
-        if (Focus.at(context, config)) {
-          assert(_keyboardHandle.attached);
-          _keyboardHandle.showByRequest();
-        } else {
-          Focus.moveTo(context, config);
-          // we'll get told to rebuild and we'll take care of the keyboard then
-        }
+        child: new SizeObserver(
+            onSizeChanged: _handleContainerSizeChanged,
+            child: new Container(
+                child: new Stack(textChildren),
+                margin: config.isDense
+                    ? const EdgeDims.symmetric(vertical: 4.0)
+                    : const EdgeDims.symmetric(vertical: 8.0),
+                padding: const EdgeDims.symmetric(vertical: 8.0),
+                decoration: new BoxDecoration(
+                    border: new Border(
+                        bottom: new BorderSide(
+                            color: focusHighlightColor,
+                            width: focused ? 2.0 : 1.0))))),
+        behavior: HitTestBehavior.opaque, onPointerDown: (_) {
+      // TODO(ianh): https://github.com/flutter/engine/issues/1530
+      if (Focus.at(context, config)) {
+        assert(_keyboardHandle.attached);
+        _keyboardHandle.showByRequest();
+      } else {
+        Focus.moveTo(context, config);
+        // we'll get told to rebuild and we'll take care of the keyboard then
       }
-    );
+    });
   }
 
   void dispose() {
-    if (_keyboardHandle.attached)
-      _keyboardHandle.release();
+    if (_keyboardHandle.attached) _keyboardHandle.release();
     super.dispose();
   }
 
@@ -172,9 +159,8 @@ class InputState extends ScrollableState<Input> {
     // Set the scroll offset to match the content width so that the cursor
     // (which is always at the end of the text) will be visible.
     scrollTo(scrollBehavior.updateExtents(
-      contentExtent: _contentWidth,
-      containerExtent: _containerWidth,
-      scrollOffset: _contentWidth
-    ));
+        contentExtent: _contentWidth,
+        containerExtent: _containerWidth,
+        scrollOffset: _contentWidth));
   }
 }

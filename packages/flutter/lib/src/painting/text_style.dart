@@ -23,21 +23,20 @@ const lineThrough = const <TextDecoration>[TextDecoration.lineThrough];
 
 /// An immutable style in which paint text
 class TextStyle {
-  const TextStyle({
-    this.inherit: true,
-    this.color,
-    this.fontFamily,
-    this.fontSize,
-    this.fontWeight,
-    this.fontStyle,
-    this.letterSpacing,
-    this.textAlign,
-    this.textBaseline,
-    this.height,
-    this.decoration,
-    this.decorationColor,
-    this.decorationStyle
-  });
+  const TextStyle(
+      {this.inherit: true,
+      this.color,
+      this.fontFamily,
+      this.fontSize,
+      this.fontWeight,
+      this.fontStyle,
+      this.letterSpacing,
+      this.textAlign,
+      this.textBaseline,
+      this.height,
+      this.decoration,
+      this.decorationColor,
+      this.decorationStyle});
 
   /// Whether null values are replaced with their value in an ancestor text style.
   final bool inherit;
@@ -71,7 +70,8 @@ class TextStyle {
   final double height;
 
   /// A list of decorations to paint near the text.
-  final List<TextDecoration> decoration; // TODO(ianh): Switch this to a Set<> once Dart supports constant Sets
+  final List<
+      TextDecoration> decoration; // TODO(ianh): Switch this to a Set<> once Dart supports constant Sets
 
   /// The color in which to paint the text decorations.
   final Color decorationColor;
@@ -81,100 +81,93 @@ class TextStyle {
 
   /// Returns a new text style that matches this text style but with the given
   /// values replaced.
-  TextStyle copyWith({
-    Color color,
-    String fontFamily,
-    double fontSize,
-    FontWeight fontWeight,
-    FontStyle fontStyle,
-    double letterSpacing,
-    TextAlign textAlign,
-    TextBaseline textBaseline,
-    double height,
-    List<TextDecoration> decoration,
-    Color decorationColor,
-    TextDecorationStyle decorationStyle
-  }) {
+  TextStyle copyWith(
+      {Color color,
+      String fontFamily,
+      double fontSize,
+      FontWeight fontWeight,
+      FontStyle fontStyle,
+      double letterSpacing,
+      TextAlign textAlign,
+      TextBaseline textBaseline,
+      double height,
+      List<TextDecoration> decoration,
+      Color decorationColor,
+      TextDecorationStyle decorationStyle}) {
     return new TextStyle(
-      inherit: inherit,
-      color: color != null ? color : this.color,
-      fontFamily: fontFamily != null ? fontFamily : this.fontFamily,
-      fontSize: fontSize != null ? fontSize : this.fontSize,
-      fontWeight: fontWeight != null ? fontWeight : this.fontWeight,
-      fontStyle: fontStyle != null ? fontStyle : this.fontStyle,
-      letterSpacing: letterSpacing != null ? letterSpacing : this.letterSpacing,
-      textAlign: textAlign != null ? textAlign : this.textAlign,
-      textBaseline: textBaseline != null ? textBaseline : this.textBaseline,
-      height: height != null ? height : this.height,
-      decoration: decoration != null ? decoration : this.decoration,
-      decorationColor: decorationColor != null ? decorationColor : this.decorationColor,
-      decorationStyle: decorationStyle != null ? decorationStyle : this.decorationStyle
-    );
+        inherit: inherit,
+        color: color != null ? color : this.color,
+        fontFamily: fontFamily != null ? fontFamily : this.fontFamily,
+        fontSize: fontSize != null ? fontSize : this.fontSize,
+        fontWeight: fontWeight != null ? fontWeight : this.fontWeight,
+        fontStyle: fontStyle != null ? fontStyle : this.fontStyle,
+        letterSpacing:
+            letterSpacing != null ? letterSpacing : this.letterSpacing,
+        textAlign: textAlign != null ? textAlign : this.textAlign,
+        textBaseline: textBaseline != null ? textBaseline : this.textBaseline,
+        height: height != null ? height : this.height,
+        decoration: decoration != null ? decoration : this.decoration,
+        decorationColor:
+            decorationColor != null ? decorationColor : this.decorationColor,
+        decorationStyle:
+            decorationStyle != null ? decorationStyle : this.decorationStyle);
   }
 
   /// Returns a new text style that matches this text style but with some values
   /// replaced by the non-null parameters of the given text style. If the given
   /// text style is null, simply returns this text style.
   TextStyle merge(TextStyle other) {
-    if (other == null)
-      return this;
+    if (other == null) return this;
     assert(other.inherit);
     return copyWith(
-      color: other.color,
-      fontFamily: other.fontFamily,
-      fontSize: other.fontSize,
-      fontWeight: other.fontWeight,
-      fontStyle: other.fontStyle,
-      letterSpacing: other.letterSpacing,
-      textAlign: other.textAlign,
-      textBaseline: other.textBaseline,
-      height: other.height,
-      decoration: other.decoration,
-      decorationColor: other.decorationColor,
-      decorationStyle: other.decorationStyle
-    );
+        color: other.color,
+        fontFamily: other.fontFamily,
+        fontSize: other.fontSize,
+        fontWeight: other.fontWeight,
+        fontStyle: other.fontStyle,
+        letterSpacing: other.letterSpacing,
+        textAlign: other.textAlign,
+        textBaseline: other.textBaseline,
+        height: other.height,
+        decoration: other.decoration,
+        decorationColor: other.decorationColor,
+        decorationStyle: other.decorationStyle);
   }
 
   ui.TextStyle get textStyle {
     return new ui.TextStyle(
-      color: color,
-      decoration: decoration,
-      decorationColor: decorationColor,
-      decorationStyle: decorationStyle,
-      fontWeight: fontWeight,
-      fontStyle: fontStyle,
-      fontFamily: fontFamily,
-      fontSize: fontSize,
-      letterSpacing: letterSpacing
-    );
+        color: color,
+        decoration: decoration,
+        decorationColor: decorationColor,
+        decorationStyle: decorationStyle,
+        fontWeight: fontWeight,
+        fontStyle: fontStyle,
+        fontFamily: fontFamily,
+        fontSize: fontSize,
+        letterSpacing: letterSpacing);
   }
 
   ui.ParagraphStyle get paragraphStyle {
     return new ui.ParagraphStyle(
-      textAlign: textAlign,
-      textBaseline: textBaseline,
-      lineHeight: height
-    );
+        textAlign: textAlign, textBaseline: textBaseline, lineHeight: height);
   }
 
   bool operator ==(dynamic other) {
-    if (identical(this, other))
-      return true;
-    if (other is! TextStyle)
-      return false;
+    if (identical(this, other)) return true;
+    if (other is! TextStyle) return false;
     final TextStyle typedOther = other;
     return inherit == typedOther.inherit &&
-           color == typedOther.color &&
-           fontFamily == typedOther.fontFamily &&
-           fontSize == typedOther.fontSize &&
-           fontWeight == typedOther.fontWeight &&
-           fontStyle == typedOther.fontStyle &&
-           letterSpacing == typedOther.letterSpacing &&
-           textAlign == typedOther.textAlign &&
-           textBaseline == typedOther.textBaseline &&
-           decoration == typedOther.decoration &&
-           decorationColor == typedOther.decorationColor &&
-           decorationStyle == typedOther.decorationStyle;
+        color == typedOther.color &&
+        fontFamily == typedOther.fontFamily &&
+        fontSize == typedOther.fontSize &&
+        fontWeight == typedOther.fontWeight &&
+        fontStyle == typedOther.fontStyle &&
+        letterSpacing == typedOther.letterSpacing &&
+        textAlign == typedOther.textAlign &&
+        textBaseline == typedOther.textBaseline &&
+        decoration == typedOther.decoration &&
+        decorationColor == typedOther.decorationColor &&
+        decorationStyle == typedOther.decorationStyle;
   }
 
   int get hashCode {
@@ -198,12 +191,9 @@ class TextStyle {
   String toString([String prefix = '']) {
     List<String> result = <String>[];
     result.add('${prefix}inhert: $inherit');
-    if (color != null)
-      result.add('${prefix}color: $color');
-    if (fontFamily != null)
-      result.add('${prefix}family: "$fontFamily"');
-    if (fontSize != null)
-      result.add('${prefix}size: $fontSize');
+    if (color != null) result.add('${prefix}color: $color');
+    if (fontFamily != null) result.add('${prefix}family: "$fontFamily"');
+    if (fontSize != null) result.add('${prefix}size: $fontSize');
     if (fontWeight != null) {
       switch (fontWeight) {
         case FontWeight.w100:
@@ -245,8 +235,8 @@ class TextStyle {
           break;
       }
     }
-    if (letterSpacing != null)
-      result.add('${prefix}letterSpacing: $letterSpacing');
+    if (letterSpacing != null) result
+        .add('${prefix}letterSpacing: $letterSpacing');
     if (textAlign != null) {
       switch (textAlign) {
         case TextAlign.left:
@@ -270,7 +260,9 @@ class TextStyle {
           break;
       }
     }
-    if (decoration != null || decorationColor != null || decorationStyle != null) {
+    if (decoration != null ||
+        decorationColor != null ||
+        decorationStyle != null) {
       String decorationDescription = '${prefix}decoration: ';
       bool haveDecorationDescription = false;
       if (decorationStyle != null) {
@@ -294,18 +286,15 @@ class TextStyle {
         haveDecorationDescription = true;
       }
       if (decorationColor != null) {
-        if (haveDecorationDescription)
-          decorationDescription += ' ';
+        if (haveDecorationDescription) decorationDescription += ' ';
         decorationDescription += '$decorationColor';
         haveDecorationDescription = true;
       }
       if (decoration != null) {
-        if (haveDecorationDescription)
-          decorationDescription += ' ';
+        if (haveDecorationDescription) decorationDescription += ' ';
         bool multipleDecorations = false;
         for (TextDecoration value in decoration) {
-          if (multipleDecorations)
-            decorationDescription += '+';
+          if (multipleDecorations) decorationDescription += '+';
           switch (value) {
             case TextDecoration.none:
               decorationDescription += 'none';
@@ -327,8 +316,7 @@ class TextStyle {
       assert(haveDecorationDescription);
       result.add(decorationDescription);
     }
-    if (result.isEmpty)
-      return '$prefix<no style specified>';
+    if (result.isEmpty) return '$prefix<no style specified>';
     return result.join('\n');
   }
 }

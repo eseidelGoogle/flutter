@@ -13,30 +13,28 @@ class _StorageEntryIdentifier {
     keys ??= <Key>[];
     keys.add(key);
   }
+
   GlobalKey scopeKey;
   bool operator ==(dynamic other) {
-    if (other is! _StorageEntryIdentifier)
-      return false;
+    if (other is! _StorageEntryIdentifier) return false;
     final _StorageEntryIdentifier typedOther = other;
     if (clientType != typedOther.clientType ||
         scopeKey != typedOther.scopeKey ||
-        keys?.length != typedOther.keys?.length)
-      return false;
+        keys?.length != typedOther.keys?.length) return false;
     if (keys != null) {
       for (int index = 0; index < keys.length; index += 1) {
-        if (keys[index] != typedOther.keys[index])
-          return false;
+        if (keys[index] != typedOther.keys[index]) return false;
       }
     }
     return true;
   }
+
   int get hashCode {
     int value = 373;
     value = 37 * value + clientType.hashCode;
     value = 37 * value + scopeKey.hashCode;
     if (keys != null) {
-      for (Key key in keys)
-        value = 37 * value + key.hashCode;
+      for (Key key in keys) value = 37 * value + key.hashCode;
     }
     return value;
   }
@@ -69,17 +67,16 @@ class PageStorageBucket {
     _storage ??= <_StorageEntryIdentifier, dynamic>{};
     _storage[_computeStorageIdentifier(context)] = data;
   }
+
   dynamic readState(BuildContext context) {
-    return _storage != null ? _storage[_computeStorageIdentifier(context)] : null;
+    return _storage != null
+        ? _storage[_computeStorageIdentifier(context)]
+        : null;
   }
 }
 
 class PageStorage extends StatelessComponent {
-  PageStorage({
-    Key key,
-    this.child,
-    this.bucket
-  }) : super(key: key);
+  PageStorage({Key key, this.child, this.bucket}) : super(key: key);
 
   final Widget child;
   final PageStorageBucket bucket;

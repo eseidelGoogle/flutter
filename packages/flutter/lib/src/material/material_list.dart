@@ -7,12 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'constants.dart';
 import 'scrollbar_painter.dart';
 
-enum MaterialListType {
-  oneLine,
-  oneLineWithAvatar,
-  twoLine,
-  threeLine
-}
+enum MaterialListType { oneLine, oneLineWithAvatar, twoLine, threeLine }
 
 Map<MaterialListType, double> _kItemExtent = const <MaterialListType, double>{
   MaterialListType.oneLine: kOneLineListItemHeight,
@@ -22,14 +17,14 @@ Map<MaterialListType, double> _kItemExtent = const <MaterialListType, double>{
 };
 
 class MaterialList<T> extends StatefulComponent {
-  MaterialList({
-    Key key,
-    this.initialScrollOffset,
-    this.onScroll,
-    this.items,
-    this.itemBuilder,
-    this.type: MaterialListType.twoLine
-  }) : super(key: key);
+  MaterialList(
+      {Key key,
+      this.initialScrollOffset,
+      this.onScroll,
+      this.items,
+      this.itemBuilder,
+      this.type: MaterialListType.twoLine})
+      : super(key: key);
 
   final double initialScrollOffset;
   final ScrollListener onScroll;
@@ -41,7 +36,6 @@ class MaterialList<T> extends StatefulComponent {
 }
 
 class _MaterialListState<T> extends State<MaterialList<T>> {
-
   void initState() {
     super.initState();
     _scrollbarPainter = new ScrollbarPainter();
@@ -51,14 +45,13 @@ class _MaterialListState<T> extends State<MaterialList<T>> {
 
   Widget build(BuildContext context) {
     return new ScrollableList<T>(
-      initialScrollOffset: config.initialScrollOffset,
-      scrollDirection: ScrollDirection.vertical,
-      onScroll: config.onScroll,
-      items: config.items,
-      itemBuilder: config.itemBuilder,
-      itemExtent: _kItemExtent[config.type],
-      padding: const EdgeDims.symmetric(vertical: 8.0),
-      scrollableListPainter: _scrollbarPainter
-    );
+        initialScrollOffset: config.initialScrollOffset,
+        scrollDirection: ScrollDirection.vertical,
+        onScroll: config.onScroll,
+        items: config.items,
+        itemBuilder: config.itemBuilder,
+        itemExtent: _kItemExtent[config.type],
+        padding: const EdgeDims.symmetric(vertical: 8.0),
+        scrollableListPainter: _scrollbarPainter);
   }
 }

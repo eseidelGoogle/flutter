@@ -7,20 +7,16 @@ import 'recognizer.dart';
 import 'constants.dart';
 import 'events.dart';
 
-enum ScaleState {
-  ready,
-  possible,
-  accepted,
-  started
-}
+enum ScaleState { ready, possible, accepted, started }
 
 typedef void GestureScaleStartCallback(Point focalPoint);
 typedef void GestureScaleUpdateCallback(double scale, Point focalPoint);
 typedef void GestureScaleEndCallback();
 
 class ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
-  ScaleGestureRecognizer({ PointerRouter router, this.onStart, this.onUpdate, this.onEnd })
-    : super(router: router);
+  ScaleGestureRecognizer(
+      {PointerRouter router, this.onStart, this.onUpdate, this.onEnd})
+      : super(router: router);
 
   GestureScaleStartCallback onStart;
   GestureScaleUpdateCallback onUpdate;
@@ -32,7 +28,8 @@ class ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
   double _currentSpan;
   Map<int, Point> _pointerLocations;
 
-  double get _scaleFactor => _initialSpan > 0.0 ? _currentSpan / _initialSpan : 1.0;
+  double get _scaleFactor =>
+      _initialSpan > 0.0 ? _currentSpan / _initialSpan : 1.0;
 
   void addPointer(PointerEvent event) {
     startTrackingPointer(event.pointer);
@@ -67,27 +64,25 @@ class ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
 
     // Compute the focal point
     Point focalPoint = Point.origin;
-    for (int pointer in _pointerLocations.keys)
-      focalPoint += _pointerLocations[pointer].toOffset();
+    for (int pointer in _pointerLocations.keys) focalPoint +=
+        _pointerLocations[pointer].toOffset();
     focalPoint = new Point(focalPoint.x / count, focalPoint.y / count);
 
     // Span is the average deviation from focal point
     double totalDeviation = 0.0;
-    for (int pointer in _pointerLocations.keys)
-      totalDeviation += (focalPoint - _pointerLocations[pointer]).distance;
+    for (int pointer in _pointerLocations.keys) totalDeviation +=
+        (focalPoint - _pointerLocations[pointer]).distance;
     _currentSpan = count > 0 ? totalDeviation / count : 0.0;
 
     if (configChanged) {
       _initialSpan = _currentSpan;
       if (_state == ScaleState.started) {
-        if (onEnd != null)
-          onEnd();
+        if (onEnd != null) onEnd();
         _state = ScaleState.accepted;
       }
     }
 
-    if (_state == ScaleState.ready)
-      _state = ScaleState.possible;
+    if (_state == ScaleState.ready) _state = ScaleState.possible;
 
     if (_state == ScaleState.possible &&
         (_currentSpan - _initialSpan).abs() > kScaleSlop) {
@@ -96,12 +91,11 @@ class ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
 
     if (_state == ScaleState.accepted && !configChanged) {
       _state = ScaleState.started;
-      if (onStart != null)
-        onStart(focalPoint);
+      if (onStart != null) onStart(focalPoint);
     }
 
-    if (_state == ScaleState.started && onUpdate != null)
-      onUpdate(_scaleFactor, focalPoint);
+    if (_state == ScaleState.started &&
+        onUpdate != null) onUpdate(_scaleFactor, focalPoint);
   }
 
   void acceptGesture(int pointer) {
@@ -112,17 +106,17 @@ class ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
   }
 
   void didStopTrackingLastPointer(int pointer) {
-    switch(_state) {
+    switch (_state) {
       case ScaleState.possible:
         resolve(GestureDisposition.rejected);
         break;
       case ScaleState.ready:
-        assert(false);  // We should have not seen a pointer yet
+        assert(false); // We should have not seen a pointer yet
         break;
       case ScaleState.accepted:
         break;
       case ScaleState.started:
-        assert(false);  // We should be in the accepted state when user is done
+        assert(false); // We should be in the accepted state when user is done
         break;
     }
     _state = ScaleState.ready;

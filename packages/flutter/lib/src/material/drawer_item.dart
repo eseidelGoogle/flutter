@@ -10,13 +10,9 @@ import 'ink_well.dart';
 import 'theme.dart';
 
 class DrawerItem extends StatelessComponent {
-  const DrawerItem({
-    Key key,
-    this.icon,
-    this.child,
-    this.onPressed,
-    this.selected: false
-  }) : super(key: key);
+  const DrawerItem(
+      {Key key, this.icon, this.child, this.onPressed, this.selected: false})
+      : super(key: key);
 
   final String icon;
   final Widget child;
@@ -25,8 +21,9 @@ class DrawerItem extends StatelessComponent {
 
   ColorFilter _getIconColorFilter(ThemeData themeData) {
     if (selected) {
-      if (themeData.brightness == ThemeBrightness.dark)
-        return new ColorFilter.mode(themeData.accentColor, TransferMode.srcATop);
+      if (themeData.brightness ==
+          ThemeBrightness.dark) return new ColorFilter.mode(
+          themeData.accentColor, TransferMode.srcATop);
       return new ColorFilter.mode(themeData.primaryColor, TransferMode.srcATop);
     }
     return new ColorFilter.mode(Colors.black45, TransferMode.dstIn);
@@ -35,10 +32,9 @@ class DrawerItem extends StatelessComponent {
   TextStyle _getTextStyle(ThemeData themeData) {
     TextStyle result = themeData.text.body2;
     if (selected) {
-      if (themeData.brightness == ThemeBrightness.dark)
-        result = result.copyWith(color: themeData.accentColor);
-      else
-        result = result.copyWith(color: themeData.primaryColor);
+      if (themeData.brightness == ThemeBrightness.dark) result =
+          result.copyWith(color: themeData.accentColor);
+      else result = result.copyWith(color: themeData.primaryColor);
     }
     return result;
   }
@@ -48,35 +44,19 @@ class DrawerItem extends StatelessComponent {
 
     List<Widget> flexChildren = new List<Widget>();
     if (icon != null) {
-      flexChildren.add(
-        new Padding(
+      flexChildren.add(new Padding(
           padding: const EdgeDims.symmetric(horizontal: 16.0),
           child: new Icon(
-            icon: icon,
-            colorFilter: _getIconColorFilter(themeData)
-          )
-        )
-      );
+              icon: icon, colorFilter: _getIconColorFilter(themeData))));
     }
-    flexChildren.add(
-      new Flexible(
+    flexChildren.add(new Flexible(
         child: new Padding(
-          padding: const EdgeDims.symmetric(horizontal: 16.0),
-          child: new DefaultTextStyle(
-            style: _getTextStyle(themeData),
-            child: child
-          )
-        )
-      )
-    );
+            padding: const EdgeDims.symmetric(horizontal: 16.0),
+            child: new DefaultTextStyle(
+                style: _getTextStyle(themeData), child: child))));
 
     return new Container(
-      height: 48.0,
-      child: new InkWell(
-        onTap: onPressed,
-        child: new Row(flexChildren)
-      )
-    );
+        height: 48.0,
+        child: new InkWell(onTap: onPressed, child: new Row(flexChildren)));
   }
-
 }

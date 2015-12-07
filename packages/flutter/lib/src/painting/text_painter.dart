@@ -29,8 +29,7 @@ class PlainTextSpan extends TextSpan {
   }
 
   bool operator ==(dynamic other) {
-    if (other is! PlainTextSpan)
-      return false;
+    if (other is! PlainTextSpan) return false;
     final PlainTextSpan typedOther = other;
     return text == typedOther.text;
   }
@@ -55,25 +54,20 @@ class StyledTextSpan extends TextSpan {
 
   void build(ui.ParagraphBuilder builder) {
     builder.pushStyle(style.textStyle);
-    for (TextSpan child in children)
-      child.build(builder);
+    for (TextSpan child in children) child.build(builder);
     builder.pop();
   }
 
   ui.ParagraphStyle get paragraphStyle => style.paragraphStyle;
 
   bool operator ==(dynamic other) {
-    if (identical(this, other))
-      return true;
-    if (other is! StyledTextSpan)
-      return false;
+    if (identical(this, other)) return true;
+    if (other is! StyledTextSpan) return false;
     final StyledTextSpan typedOther = other;
     if (style != typedOther.style ||
-        children.length != typedOther.children.length)
-      return false;
+        children.length != typedOther.children.length) return false;
     for (int i = 0; i < children.length; ++i) {
-      if (children[i] != typedOther.children[i])
-        return false;
+      if (children[i] != typedOther.children[i]) return false;
     }
     return true;
   }
@@ -81,8 +75,7 @@ class StyledTextSpan extends TextSpan {
   int get hashCode {
     int value = 373;
     value = 37 * value + style.hashCode;
-    for (TextSpan child in children)
-      value = 37 * value + child.hashCode;
+    for (TextSpan child in children) value = 37 * value + child.hashCode;
     return value;
   }
 
@@ -91,8 +84,7 @@ class StyledTextSpan extends TextSpan {
     result.add('$prefix$runtimeType:');
     var indent = '$prefix  ';
     result.add('${style.toString(indent)}');
-    for (TextSpan child in children)
-      result.add(child.toString(indent));
+    for (TextSpan child in children) result.add(child.toString(indent));
     return result.join('\n');
   }
 }
@@ -107,11 +99,11 @@ class TextPainter {
   bool _needsLayout = true;
 
   TextSpan _text;
+
   /// The (potentially styled) text to paint
   TextSpan get text => _text;
   void set text(TextSpan value) {
-    if (_text == value)
-      return;
+    if (_text == value) return;
     _text = value;
     ui.ParagraphBuilder builder = new ui.ParagraphBuilder();
     _text.build(builder);
@@ -122,8 +114,7 @@ class TextPainter {
   /// The minimum width at which to layout the text
   double get minWidth => _paragraph.minWidth;
   void set minWidth(value) {
-    if (_paragraph.minWidth == value)
-      return;
+    if (_paragraph.minWidth == value) return;
     _paragraph.minWidth = value;
     _needsLayout = true;
   }
@@ -131,8 +122,7 @@ class TextPainter {
   /// The maximum width at which to layout the text
   double get maxWidth => _paragraph.maxWidth;
   void set maxWidth(value) {
-    if (_paragraph.maxWidth == value)
-      return;
+    if (_paragraph.maxWidth == value) return;
     _paragraph.maxWidth = value;
     _needsLayout = true;
   }
@@ -140,8 +130,7 @@ class TextPainter {
   /// The minimum height at which to layout the text
   double get minHeight => _paragraph.minHeight;
   void set minHeight(value) {
-    if (_paragraph.minHeight == value)
-      return;
+    if (_paragraph.minHeight == value) return;
     _paragraph.minHeight = value;
     _needsLayout = true;
   }
@@ -149,8 +138,7 @@ class TextPainter {
   /// The maximum height at which to layout the text
   double get maxHeight => _paragraph.maxHeight;
   void set maxHeight(value) {
-    if (_paragraph.maxHeight == value)
-      return;
+    if (_paragraph.maxHeight == value) return;
     _paragraph.maxHeight = value;
   }
 
@@ -205,15 +193,16 @@ class TextPainter {
 
   /// Compute the visual position of the glyphs for painting the text
   void layout() {
-    if (!_needsLayout)
-      return;
+    if (!_needsLayout) return;
     _paragraph.layout();
     _needsLayout = false;
   }
 
   /// Paint the text onto the given canvas at the given offset
   void paint(ui.Canvas canvas, ui.Offset offset) {
-    assert(!_needsLayout && "Please call layout() before paint() to position the text before painting it." is String);
+    assert(!_needsLayout &&
+        "Please call layout() before paint() to position the text before painting it."
+        is String);
     _paragraph.paint(canvas, offset);
   }
 }

@@ -8,11 +8,7 @@ import 'constants.dart';
 import 'events.dart';
 import 'velocity_tracker.dart';
 
-enum DragState {
-  ready,
-  possible,
-  accepted
-}
+enum DragState { ready, possible, accepted }
 
 typedef void GestureDragStartCallback(Point globalPosition);
 typedef void GestureDragUpdateCallback(double delta);
@@ -26,14 +22,17 @@ typedef void _GesturePolymorphicUpdateCallback<T>(T delta);
 
 bool _isFlingGesture(Offset velocity) {
   assert(velocity != null);
-  double velocitySquared = velocity.dx * velocity.dx + velocity.dy * velocity.dy;
-  return velocitySquared > kMinFlingVelocity * kMinFlingVelocity
-      && velocitySquared < kMaxFlingVelocity * kMaxFlingVelocity;
+  double velocitySquared =
+      velocity.dx * velocity.dx + velocity.dy * velocity.dy;
+  return velocitySquared > kMinFlingVelocity * kMinFlingVelocity &&
+      velocitySquared < kMaxFlingVelocity * kMaxFlingVelocity;
 }
 
-abstract class _DragGestureRecognizer<T extends dynamic> extends OneSequenceGestureRecognizer {
-  _DragGestureRecognizer({ PointerRouter router, this.onStart, this.onUpdate, this.onEnd })
-    : super(router: router);
+abstract class _DragGestureRecognizer<T extends dynamic>
+    extends OneSequenceGestureRecognizer {
+  _DragGestureRecognizer(
+      {PointerRouter router, this.onStart, this.onUpdate, this.onEnd})
+      : super(router: router);
 
   GestureDragStartCallback onStart;
   _GesturePolymorphicUpdateCallback<T> onUpdate;
@@ -67,12 +66,11 @@ abstract class _DragGestureRecognizer<T extends dynamic> extends OneSequenceGest
       tracker.addPosition(event.timeStamp, event.position);
       T delta = _getDragDelta(event);
       if (_state == DragState.accepted) {
-        if (onUpdate != null)
-          onUpdate(delta);
+        if (onUpdate != null) onUpdate(delta);
       } else {
         _pendingDragDelta += delta;
-        if (_hasSufficientPendingDragDeltaToAccept)
-          resolve(GestureDisposition.accepted);
+        if (_hasSufficientPendingDragDeltaToAccept) resolve(
+            GestureDisposition.accepted);
       }
     }
     stopTrackingIfPointerNoLongerDown(event);
@@ -83,10 +81,9 @@ abstract class _DragGestureRecognizer<T extends dynamic> extends OneSequenceGest
       _state = DragState.accepted;
       T delta = _pendingDragDelta;
       _pendingDragDelta = _initialPendingDragDelta;
-      if (onStart != null)
-        onStart(_initialPosition);
-      if (delta != _initialPendingDragDelta && onUpdate != null)
-        onUpdate(delta);
+      if (onStart != null) onStart(_initialPosition);
+      if (delta != _initialPendingDragDelta &&
+          onUpdate != null) onUpdate(delta);
     }
   }
 
@@ -103,8 +100,7 @@ abstract class _DragGestureRecognizer<T extends dynamic> extends OneSequenceGest
       assert(tracker != null);
 
       Offset velocity = tracker.getVelocity();
-      if (velocity != null && _isFlingGesture(velocity))
-        onEnd(velocity);
+      if (velocity != null && _isFlingGesture(velocity)) onEnd(velocity);
       onEnd(Offset.zero);
     }
     _velocityTrackers.clear();
@@ -117,38 +113,43 @@ abstract class _DragGestureRecognizer<T extends dynamic> extends OneSequenceGest
 }
 
 class VerticalDragGestureRecognizer extends _DragGestureRecognizer<double> {
-  VerticalDragGestureRecognizer({
-    PointerRouter router,
-    GestureDragStartCallback onStart,
-    GestureDragUpdateCallback onUpdate,
-    GestureDragEndCallback onEnd
-  }) : super(router: router, onStart: onStart, onUpdate: onUpdate, onEnd: onEnd);
+  VerticalDragGestureRecognizer(
+      {PointerRouter router,
+      GestureDragStartCallback onStart,
+      GestureDragUpdateCallback onUpdate,
+      GestureDragEndCallback onEnd})
+      : super(
+            router: router, onStart: onStart, onUpdate: onUpdate, onEnd: onEnd);
 
   double get _initialPendingDragDelta => 0.0;
   double _getDragDelta(PointerEvent event) => event.delta.dy;
-  bool get _hasSufficientPendingDragDeltaToAccept => _pendingDragDelta.abs() > kTouchSlop;
+  bool get _hasSufficientPendingDragDeltaToAccept =>
+      _pendingDragDelta.abs() > kTouchSlop;
 }
 
 class HorizontalDragGestureRecognizer extends _DragGestureRecognizer<double> {
-  HorizontalDragGestureRecognizer({
-    PointerRouter router,
-    GestureDragStartCallback onStart,
-    GestureDragUpdateCallback onUpdate,
-    GestureDragEndCallback onEnd
-  }) : super(router: router, onStart: onStart, onUpdate: onUpdate, onEnd: onEnd);
+  HorizontalDragGestureRecognizer(
+      {PointerRouter router,
+      GestureDragStartCallback onStart,
+      GestureDragUpdateCallback onUpdate,
+      GestureDragEndCallback onEnd})
+      : super(
+            router: router, onStart: onStart, onUpdate: onUpdate, onEnd: onEnd);
 
   double get _initialPendingDragDelta => 0.0;
   double _getDragDelta(PointerEvent event) => event.delta.dx;
-  bool get _hasSufficientPendingDragDeltaToAccept => _pendingDragDelta.abs() > kTouchSlop;
+  bool get _hasSufficientPendingDragDeltaToAccept =>
+      _pendingDragDelta.abs() > kTouchSlop;
 }
 
 class PanGestureRecognizer extends _DragGestureRecognizer<Offset> {
-  PanGestureRecognizer({
-    PointerRouter router,
-    GesturePanStartCallback onStart,
-    GesturePanUpdateCallback onUpdate,
-    GesturePanEndCallback onEnd
-  }) : super(router: router, onStart: onStart, onUpdate: onUpdate, onEnd: onEnd);
+  PanGestureRecognizer(
+      {PointerRouter router,
+      GesturePanStartCallback onStart,
+      GesturePanUpdateCallback onUpdate,
+      GesturePanEndCallback onEnd})
+      : super(
+            router: router, onStart: onStart, onUpdate: onUpdate, onEnd: onEnd);
 
   Offset get _initialPendingDragDelta => Offset.zero;
   Offset _getDragDelta(PointerEvent event) => event.delta;

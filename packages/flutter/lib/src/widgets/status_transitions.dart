@@ -7,10 +7,7 @@ import 'package:flutter/animation.dart';
 import 'framework.dart';
 
 abstract class StatusTransitionComponent extends StatefulComponent {
-  StatusTransitionComponent({
-    Key key,
-    this.performance
-  }) : super(key: key) {
+  StatusTransitionComponent({Key key, this.performance}) : super(key: key) {
     assert(performance != null);
   }
 
