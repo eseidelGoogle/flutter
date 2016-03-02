@@ -1,0 +1,7 @@
+name: icons
+material-design-icons:
+  - name: content/add
+  - name: action/account_balance
+  - name: action/account_circle
+assets:
+  - flutter.yaml

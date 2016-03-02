@@ -1,0 +1,6 @@
+name: icons
+description: A minimal Flutter project.
+dependencies:
+  flutter:
+    path: ../../packages/flutter
+  yaml: any

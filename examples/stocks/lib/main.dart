@@ -94,6 +94,7 @@ class StocksAppState extends State<StocksApp> {
 
   Future<LocaleQueryData> _onLocaleChanged(Locale locale) async {
     String localeString = locale.toString();
+    print(localeString);
     await initializeMessages(localeString);
     Intl.defaultLocale = localeString;
     return StockStrings.instance;
