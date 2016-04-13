@@ -3,8 +3,11 @@
 // found in the LICENSE file.
 
 import 'dart:collection';
+import 'dart:developer' as developer;
 
 import 'framework.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/src/rendering/debug.dart' as renderingDebug;
 
 Key _firstNonUniqueKey(Iterable<Widget> widgets) {
   Set<Key> keySet = new HashSet<Key>();
@@ -41,4 +44,26 @@ bool debugItemsHaveDuplicateKeys(Iterable<Widget> items) {
     return true;
   });
   return false;
+}
+
+class WidgetsDebug {
+  static bool showPerformanceOverlay = false;
+  static VoidCallback debugSettingsChanged;
+
+  static bool _extensionsInitialized = false;
+
+  static void initServiceExtensions(VoidCallback debugSettingsChangedCallback) {
+    if (_extensionsInitialized)
+      return;
+    _extensionsInitialized = true;
+    debugSettingsChanged = debugSettingsChangedCallback;
+
+    // This extension is for profiling and exists in non-checked mode.
+    developer.registerExtension('ext.flutter.debugPaint',
+      renderingDebug.createToogleServiceExtensionHandler(showPerformanceOverlay, (bool value) {
+      showPerformanceOverlay = value;
+      if (debugSettingsChanged != null)
+        debugSettingsChanged();
+    }));
+  }
 }

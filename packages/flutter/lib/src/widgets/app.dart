@@ -12,6 +12,7 @@ import 'asset_vendor.dart';
 import 'banner.dart';
 import 'basic.dart';
 import 'binding.dart';
+import 'debug.dart';
 import 'framework.dart';
 import 'locale_query.dart';
 import 'media_query.dart';
@@ -145,6 +146,14 @@ class WidgetsAppState<T extends WidgetsApp> extends State<T> implements BindingO
   }
 
   @override
+  void didChangeDebugFlags() {
+    setState(() {
+      // The properties of WidgetsDebug have changed. We use them in our build
+      // function, so we need setState(), but we don't cache anything locally.
+    });
+  }
+
+  @override
   void didChangeLocale(Locale locale) {
     if (config.onLocaleChanged != null) {
       config.onLocaleChanged(locale).then((LocaleQueryData data) {
@@ -194,7 +203,7 @@ class WidgetsAppState<T extends WidgetsApp> extends State<T> implements BindingO
         child: result
       );
     }
-    if (config.showPerformanceOverlay) {
+    if (config.showPerformanceOverlay || WidgetsDebug.showPerformanceOverlay) {
       result = new Stack(
         children: <Widget>[
           result,

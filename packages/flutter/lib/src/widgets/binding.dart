@@ -10,6 +10,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 
+import 'debug.dart';
 import 'framework.dart';
 
 export 'dart:ui' show AppLifecycleState, Locale;
@@ -19,6 +20,7 @@ class BindingObserver {
   void didChangeMetrics() { }
   void didChangeLocale(Locale locale) { }
   void didChangeAppLifecycleState(AppLifecycleState state) { }
+  void didChangeDebugFlags() {}
 }
 
 /// A concrete binding for applications based on the Widgets framework.
@@ -50,6 +52,7 @@ class WidgetFlutterBinding extends BindingBase with Scheduler, Gesturer, Service
     ui.window.onLocaleChanged = handleLocaleChanged;
     ui.window.onPopRoute = handlePopRoute;
     ui.window.onAppLifecycleStateChanged = handleAppLifecycleStateChanged;
+    WidgetsDebug.initServiceExtensions(handleDebugFlagsChanged);
   }
 
   /// The one static instance of this class.
@@ -73,6 +76,15 @@ class WidgetFlutterBinding extends BindingBase with Scheduler, Gesturer, Service
     super.handleMetricsChanged();
     for (BindingObserver observer in _observers)
       observer.didChangeMetrics();
+  }
+
+  void handleDebugFlagsChanged() {
+    dispatchDebugFlagsChanged();
+  }
+
+  void dispatchDebugFlagsChanged() {
+    for (BindingObserver observer in _observers)
+      observer.didChangeDebugFlags();
   }
 
   void handleLocaleChanged() {

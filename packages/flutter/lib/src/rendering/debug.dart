@@ -77,6 +77,24 @@ List<String> debugDescribeTransform(Matrix4 transform) {
   return matrix;
 }
 
+/// Generator for simple toggle-only developer extension handlers.
+developer.ServiceExtensionHandler createToogleServiceExtensionHandler(bool value, ValueChanged<bool> valueChanged) {
+  return (String method, Map<String, String> parameters) {
+    if (parameters.containsKey('enabled')) {
+      value = parameters['enabled'] == 'true';
+      valueChanged(value);
+    }
+
+    return new Future<developer.ServiceExtensionResponse>.value(
+      new developer.ServiceExtensionResponse.result(JSON.encode({
+        'type': '_extensionType',
+        'method': method,
+        'enabled': value
+      }))
+    );
+  };
+}
+
 bool _extensionsInitialized = false;
 
 void initServiceExtensions() {
@@ -86,34 +104,24 @@ void initServiceExtensions() {
   _extensionsInitialized = true;
 
   assert(() {
-    developer.registerExtension('ext.flutter.debugPaint', _debugPaint);
+    ValueChanged<bool> debugPaintChanged = (bool value) {
+      debugPaintSizeEnabled = value;
+
+      // Redraw everything - mark the world as dirty.
+      RenderObjectVisitor visitor;
+      visitor = (RenderObject child) {
+        child.markNeedsPaint();
+        child.visitChildren(visitor);
+      };
+      Renderer.instance?.renderView?.visitChildren(visitor);
+    };
+
+    developer.registerExtension('ext.flutter.foo',
+      createToogleServiceExtensionHandler(debugPaintSizeEnabled, debugPaintChanged));
     developer.registerExtension('ext.flutter.timeDilation', _timeDilation);
 
     return true;
   });
-}
-
-/// Toggle the [debugPaintSizeEnabled] setting.
-Future<developer.ServiceExtensionResponse> _debugPaint(String method, Map<String, String> parameters) {
-  if (parameters.containsKey('enabled')) {
-    debugPaintSizeEnabled = parameters['enabled'] == 'true';
-
-    // Redraw everything - mark the world as dirty.
-    RenderObjectVisitor visitor;
-    visitor = (RenderObject child) {
-      child.markNeedsPaint();
-      child.visitChildren(visitor);
-    };
-    Renderer.instance?.renderView?.visitChildren(visitor);
-  }
-
-  return new Future<developer.ServiceExtensionResponse>.value(
-    new developer.ServiceExtensionResponse.result(JSON.encode({
-      'type': '_extensionType',
-      'method': method,
-      'enabled': debugPaintSizeEnabled
-    }))
-  );
 }
 
 /// Manipulate the scheduler's [timeDilation] field.
