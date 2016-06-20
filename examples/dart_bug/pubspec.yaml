@@ -1,0 +1,5 @@
+name: dart_bug
+description: A new flutter project.
+dependencies:
+  flutter:
+    path: ../../packages/flutter
