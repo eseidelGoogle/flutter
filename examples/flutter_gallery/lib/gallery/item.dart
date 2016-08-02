@@ -65,6 +65,13 @@ final List<GalleryItem> kAllGalleryItems = <GalleryItem>[
     routeName: ContactsDemo.routeName,
     buildRoute: (BuildContext context) => new ContactsDemo()
   ),
+  new GalleryItem(
+    title: 'Calculator',
+    subtitle:'A simple calculator app',
+    category: 'Demos',
+    routeName: CalculatorDemo.routeName,
+    buildRoute: (BuildContext context) => new CalculatorDemo()
+  ),
   // Components
   new GalleryItem(
     title: 'Buttons',
