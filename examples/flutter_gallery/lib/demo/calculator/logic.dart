@@ -62,7 +62,7 @@ class LeadingNegToken extends ExpressionToken {
   LeadingNegToken() : super('-');
 }
 
-enum Operation { Addition, Subtraction, Multiplication, Division }
+enum Operation { Addition, Subtraction, Multiplication, Division, Mod }
 
 /// A token that represents an arithmetic operation symbol.
 class OperationToken extends ExpressionToken {
@@ -82,6 +82,8 @@ class OperationToken extends ExpressionToken {
         return '  \u00D7  ';
       case Operation.Division:
         return '  \u00F7  ';
+      case Operation.Mod:
+        return '  %  ';
     }
     assert(operation != null);
     return null;
@@ -298,6 +300,7 @@ class CalcExpression {
           currentTermValue -= nextTermValue;
           break;
         case Operation.Multiplication:
+        case Operation.Mod:
         case Operation.Division:
           // Logic error.
           assert(false);
@@ -317,6 +320,7 @@ class CalcExpression {
     num currentValue = firstNumToken.number;
     while (list.length > 0) {
       bool isDivision = false;
+      bool isMod = false;
       OperationToken nextOpToken = list.first;
       switch (nextOpToken.operation) {
         case Operation.Addition:
@@ -324,6 +328,9 @@ class CalcExpression {
           // We have reached the end of the current term
           return currentValue;
         case Operation.Multiplication:
+          break;
+        case Operation.Mod:
+          isMod = true;
           break;
         case Operation.Division:
           isDivision = true;
@@ -335,6 +342,8 @@ class CalcExpression {
       num nextNumber = nextNumToken.number;
       if (isDivision)
         currentValue /= nextNumber;
+      else if (isMod)
+        currentValue %= nextNumber;
       else
         currentValue *= nextNumber;
     }
