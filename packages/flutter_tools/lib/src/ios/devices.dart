@@ -37,6 +37,7 @@ class IOSDevice extends Device {
     _informerPath = _checkForCommand('ideviceinfo');
     _iproxyPath = _checkForCommand('iproxy');
     _debuggerPath = _checkForCommand('idevicedebug');
+    _screenshotPath = _checkForCommand('idevicescreenshot');
     _loggerPath = _checkForCommand('idevicesyslog');
     _pusherPath = _checkForCommand(
         'ios-deploy',
@@ -60,6 +61,9 @@ class IOSDevice extends Device {
 
   String _debuggerPath;
   String get debuggerPath => _debuggerPath;
+
+  String _screenshotPath;
+  String get screenshotPath => _screenshotPath;
 
   String _loggerPath;
   String get loggerPath => _loggerPath;
@@ -382,15 +386,15 @@ class IOSDevice extends Device {
   }
 
   @override
-  bool get supportsScreenshot => false;
+  bool get supportsScreenshot => (screenshotPath != null);
 
   @override
   Future<bool> takeScreenshot(File outputFile) {
     // We could use idevicescreenshot here (installed along with the brew
     // ideviceinstaller tools). It however requires a developer disk image on
     // the device.
-
-    return new Future<bool>.value(false);
+    runCheckedSync(<String>[screenshotPath, outputFile.path]);
+    return new Future<bool>.value(true);
   }
 }
 
