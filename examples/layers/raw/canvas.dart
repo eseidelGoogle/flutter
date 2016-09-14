@@ -6,7 +6,6 @@
 // with gradients and transforms.
 
 import 'dart:ui' as ui;
-import 'dart:math' as math;
 import 'dart:typed_data';
 
 ui.Picture paint(ui.Rect paintBounds) {
@@ -26,39 +25,15 @@ ui.Picture paint(ui.Rect paintBounds) {
   canvas.drawPaint(new ui.Paint()..color = const ui.Color(0xFFFFFFFF));
 
   ui.Size size = paintBounds.size;
-  ui.Point mid = size.center(ui.Point.origin);
-  double radius = size.shortestSide / 2.0;
-
-  canvas.save();
-  canvas.translate(-mid.x/2.0, ui.window.size.height*2.0);
-  canvas.clipRect(
-      new ui.Rect.fromLTRB(0.0, -ui.window.size.height, ui.window.size.width, radius));
-
-  canvas.translate(mid.x, mid.y);
-  paint.color = const ui.Color.fromARGB(128, 255, 0, 255);
-  canvas.rotate(math.PI/4.0);
-
-  ui.Gradient yellowBlue = new ui.Gradient.linear(
-    <ui.Point>[new ui.Point(-radius, -radius), new ui.Point(0.0, 0.0)],
-    <ui.Color>[const ui.Color(0xFFFFFF00), const ui.Color(0xFF0000FF)]
-  );
-  canvas.drawRect(new ui.Rect.fromLTRB(-radius, -radius, radius, radius),
-                  new ui.Paint()..shader = yellowBlue);
-
-  // Scale x and y by 0.5.
-  Float64List scaleMatrix = new Float64List.fromList(<double>[
-      0.5, 0.0, 0.0, 0.0,
-      0.0, 0.5, 0.0, 0.0,
-      0.0, 0.0, 1.0, 0.0,
-      0.0, 0.0, 0.0, 1.0,
-  ]);
-  canvas.transform(scaleMatrix);
-  paint.color = const ui.Color.fromARGB(128, 0, 255, 0);
-  canvas.drawCircle(ui.Point.origin, radius, paint);
-  canvas.restore();
+  double radius = size.shortestSide * 3.0;
 
   paint.color = const ui.Color.fromARGB(128, 255, 0, 0);
-  canvas.drawCircle(new ui.Point(150.0, 300.0), radius, paint);
+  paint.isAntiAlias = false;
+  canvas.drawCircle(new ui.Point(radius - 100, radius - 100), radius, paint);
+
+  paint.color = const ui.Color.fromARGB(128, 0, 0, 255);
+  paint.isAntiAlias = true;
+  canvas.drawCircle(new ui.Point(radius, radius), radius, paint);
 
   // When we're done issuing painting commands, we end the recording an receive
   // a Picture, which is an immutable record of the commands we've issued. You
