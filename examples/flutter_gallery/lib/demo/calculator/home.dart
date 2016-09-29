@@ -177,6 +177,10 @@ class KeyPad extends StatelessWidget {
               child: new Column(
                 children: <Widget>[
                   new KeyRow(<Widget>[
+                    new NumberKey(10, calcState),
+                    new NumberKey(11, calcState)
+                  ]),
+                  new KeyRow(<Widget>[
                     new NumberKey(7, calcState),
                     new NumberKey(8, calcState),
                     new NumberKey(9, calcState)
