@@ -324,8 +324,8 @@ class _DialogRoute<T> extends PopupRoute<T> {
 ///  * [AlertDialog], for dialogs that have a row of buttons below the body.
 ///  * [Dialog], on which [SimpleDialog] and [AlertDialog] are based.
 ///  * <https://material.google.com/components/dialogs.html>
-Future<dynamic/*=T*/> showDialog/*<T>*/({ BuildContext context, Widget child }) {
-  return Navigator.push(context, new _DialogRoute<dynamic/*=T*/>(
+Future<T> showDialog<T>({ BuildContext context, Widget child }) {
+  return Navigator.push(context, new _DialogRoute<T>(
     child: child,
     theme: Theme.of(context, shadowThemeOnly: true),
   ));

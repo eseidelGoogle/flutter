@@ -93,7 +93,7 @@ class AnalyzeContinuously extends AnalyzeBase {
           printTrace('error code: ${error.code}');
       }
 
-      dumpErrors(errors.map/*<String>*/((AnalysisError error) => error.toLegacyString()));
+      dumpErrors(errors.map<String>((AnalysisError error) => error.toLegacyString()));
 
       // Print an analysis summary.
       String errorsMessage;

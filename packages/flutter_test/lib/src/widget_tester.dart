@@ -225,7 +225,7 @@ class WidgetTester extends WidgetController implements HitTestDispatcher, Ticker
         await binding.pump(duration, phase);
         count += 1;
       }
-    }).then/*<int>*/((Null _) => count);
+    }).then<int>((Null _) => count);
   }
 
   @override

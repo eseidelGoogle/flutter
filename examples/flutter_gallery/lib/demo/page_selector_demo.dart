@@ -9,7 +9,7 @@ class PageSelectorDemo extends StatelessWidget {
   static const String routeName = '/page-selector';
 
   void _handleArrowButtonPress(BuildContext context, int delta) {
-    final TabBarSelectionState<IconData> selection = TabBarSelection.of/*<IconData>*/(context);
+    final TabBarSelectionState<IconData> selection = TabBarSelection.of<IconData>(context);
     if (!selection.valueIsChanging)
       selection.value = selection.values[(selection.index + delta).clamp(0, selection.values.length - 1)];
   }
